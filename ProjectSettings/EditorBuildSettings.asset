@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/MenuM.unity
     guid: 09c0516bcc524f14caf909974afc95e1
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/Opciones.unity
+    guid: ed5891e42b3be3447b4f99801c4d7105
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
