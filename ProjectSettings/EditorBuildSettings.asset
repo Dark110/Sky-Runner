@@ -4,6 +4,9 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/MenuM.unity
+    guid: 09c0516bcc524f14caf909974afc95e1
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
