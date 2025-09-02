@@ -3,18 +3,18 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    public void OnPlayButton()
+    public void Jugar()
     {
      
         SceneManager.LoadScene("SkyRunner");
     }
 
-    public void OnOptionsButton()
+    public void Opciones()
     {
         SceneManager.LoadScene("Opciones");
     }
     
-    public void OnExitButton()
+    public void Salir()
     {
         Application.Quit();
         Debug.Log("Salir del juego");
