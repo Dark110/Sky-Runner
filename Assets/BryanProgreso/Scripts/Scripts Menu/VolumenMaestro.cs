@@ -2,15 +2,8 @@ using UnityEngine;
 
 public class VolumenMaestro : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void CambiarVolumen(float valor)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        AudioListener.volume = valor;
     }
 }
