@@ -1,12 +1,11 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class MovimientoJugador : MonoBehaviour
 {
-    public float Vel = 2000f;
-    public bool ControlSuavidad = true;
-    public float NivelSuavidad = 2f;
-    public float IzqDer = 5000f;
+    [Header("Velocidades")]
+    public float Vel = 15f;            // Velocidad de movimiento general
+    public float NivelSuavidad = 2f;   // (Opcional) Suavidad en el control
+    public float IzqDer = 0f;          // Valor que recoge del input
 
     private Vector3 JugadorMov;
 
@@ -15,22 +14,19 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Update()
     {
-
 #if UNITY_EDITOR
-        //detecta el movimiento del celular de Izquierda y Derecha
+        // Movimiento con teclado (A-D o flechas izquierda/derecha)
         IzqDer = Input.GetAxis("Horizontal");
-
-        Debug.Log(IzqDer);
 #else
- //detecta el movimiento del celular de Izquierda y Derecha
+        // Movimiento con acelerómetro en móvil
         IzqDer = Input.acceleration.x;
 #endif
 
-        //Guarda el movimento en su actualizacion
+        // Guardar el movimiento en vector (solo en X)
         JugadorMov = new Vector3(IzqDer, 0, 0);
-        transform.Translate(JugadorMov * Time.deltaTime);
 
-        // el if y else para que el jugador escoga que lado
+        // Aplicar el movimiento multiplicado por Vel
+        transform.Translate(JugadorMov * Vel * Time.deltaTime);
     }
 
     public void izquierda(bool lado)
