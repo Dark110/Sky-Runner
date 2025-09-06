@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class MovimientoJugador : MonoBehaviour
 {
-    public float Vel = 50f;
+    public float Vel = 2000f;
     public bool ControlSuavidad = true;
-    public float NivelSuavidad = 1f;
-    float IzqDer = 50f;
+    public float NivelSuavidad = 2f;
+    public float IzqDer = 5000f;
 
     private Vector3 JugadorMov;
 

@@ -2,25 +2,33 @@ using UnityEngine;
 
 public class Camara : MonoBehaviour
 {
+    [Header("Jugador a seguir")]
     public Transform jugadorCam;                  // El objeto (jugador) a seguir
-    public Vector3 offset = new Vector3(0, 5, -8); // Distancia de la cámara al jugador
+
+    [Header("Configuración de la cámara")]
+    public Vector3 offset = new Vector3(0, 0, -8); // Distancia de la cámara al jugador
+    [Range(0.1f, 10f)]
     public float movimientoCam = 2.5f;           // Suavidad del movimiento
-    public bool verJugador = true;               // Opcional: que mire al jugador
+    public bool verJugador = true;               // Si la cámara debe mirar al jugador
 
     void LateUpdate()
     {
-        if (jugadorCam == null) return;
+        if (jugadorCam == null) return; // Seguridad por si no asignaste el jugador
 
-        // Posición deseada
+        // Calculamos la posición deseada (jugador + offset)
         Vector3 posicionDeseada = jugadorCam.position + offset;
 
-        // Suavizar movimiento
-        Vector3 posicionSuavizada = Vector3.Lerp(transform.position, posicionDeseada, movimientoCam * Time.deltaTime);
+        // Movemos la cámara suavemente hacia esa posición
+        Vector3 posicionSuavizada = Vector3.Lerp(
+            transform.position,
+            posicionDeseada,
+            movimientoCam * Time.deltaTime
+        );
 
-        // Aplicar movimiento
+        // Aplicamos la posición suavizada
         transform.position = posicionSuavizada;
 
-        // Mirar al jugador si está activado
+        // Hacemos que la cámara mire al jugador si está activado
         if (verJugador)
         {
             transform.LookAt(jugadorCam);
