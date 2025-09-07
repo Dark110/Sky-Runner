@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Obstaculo : MonoBehaviour
 {
     public GameObject PrefabObstaculo;
-    public float AparicionObstaculos = 0.5f; // tiempo entre cada spawn
+    public float AparicionObstaculos = 1f; // tiempo entre cada spawn
     public float RangoRandom = 2f;
     public float PosicionY = 0f;
     public float PosicionZ = 0f;
