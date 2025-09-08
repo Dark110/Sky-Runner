@@ -12,10 +12,13 @@ EditorBuildSettings:
     path: Assets/BryanProgreso/Escenas/Opciones.unity
     guid: ed5891e42b3be3447b4f99801c4d7105
   - enabled: 1
-    path: Assets/BryanProgreso/Escenas/JugarMenu.unity
-    guid: 1fb4271f22ded9d449dc0ed489d525e8
-  - enabled: 1
-    path: Assets/BryanProgreso/Escenas/SkyRunner.unity
+    path: Assets/BryanProgreso/Escenas/SkyRunnerM.unity
     guid: 13b05992673485b4896cbe7f232ecaaf
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/SkyTutorial.unity
+    guid: c02cd4a25831c414d973512da138b89c
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/Gameplay.unity
+    guid: c242e6ac91f426548813e32f3ea96a83
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

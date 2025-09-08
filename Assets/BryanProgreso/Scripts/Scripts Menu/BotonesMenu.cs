@@ -7,10 +7,18 @@ public class MenuManager : MonoBehaviour
      public void Jugar()
     {
 
-        SceneManager.LoadScene("SkyRunner");
+        SceneManager.LoadScene("SkyRunnerM");
     }
 
-     public void Opciones()
+
+
+    public void Gameplay()
+    {
+
+        SceneManager.LoadScene("Gameplay");
+    }
+
+    public void Opciones()
     {
         SceneManager.LoadScene("Opciones");
     }
