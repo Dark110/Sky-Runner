@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class MovimientoJugador : MonoBehaviour
 {
     [Header("Velocidades")]
@@ -9,19 +9,17 @@ public class MovimientoJugador : MonoBehaviour
     public float IzqDer = 0f;          // Valor que recoge del input
 
     private Vector3 JugadorMov;
-    private Rigidbody rb;
+    private CharacterController movimiento;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        // Bloquea el movimiento en Y y Z, y todas las rotaciones
-        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        movimiento = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR
-        IzqDer = -Input.GetAxis("Horizontal"); // Invertir el eje
+        IzqDer = -Input.GetAxis("Horizontal"); // Invertir el eje si lo necesitas
 #else
         IzqDer = Input.acceleration.x;
 #endif
@@ -30,9 +28,8 @@ public class MovimientoJugador : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Solo mueve en X, mantiene Y y Z fijos
-        Vector3 nuevaPos = rb.position + new Vector3(JugadorMov.x, 0, 0) * Vel * Time.fixedDeltaTime;
-        rb.MovePosition(nuevaPos);
+        // Mueve solo en X, ajusta la velocidad
+        movimiento.Move(JugadorMov * Vel * Time.fixedDeltaTime);
     }
 
     public void izquierda(bool lado)
