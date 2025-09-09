@@ -5,10 +5,16 @@ using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
-    public TMP_Text gameOverText; // Asigna el objeto TMP_Text desde el Inspector
-    public string nombreMenu = "MenuInicio"; // Cambia por el nombre de tu escena de menú
+    public TMP_Text gameOverText;
+    public string nombreMenu = "MenuInicio";
 
     private bool gameOver = false;
+
+    private void Start()
+    {
+        if (gameOverText != null)
+            gameOverText.enabled = false; // Oculta el texto al iniciar
+    }
 
     private void OnCollisionEnter(Collision collision)
     {

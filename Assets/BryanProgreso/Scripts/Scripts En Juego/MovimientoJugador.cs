@@ -20,7 +20,7 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Update()
     {
-#if UNITY_EDITOR
+#if UNITY_STANDALONE || UNITY_EDITOR
         IzqDer = Input.GetAxis("Horizontal");
 #else
         IzqDer = Input.acceleration.x;
