@@ -21,7 +21,7 @@ public class MovimientoJugador : MonoBehaviour
     private void Update()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR
-        IzqDer = Input.GetAxis("Horizontal");
+        IzqDer = -Input.GetAxis("Horizontal"); // Invertir el eje
 #else
         IzqDer = Input.acceleration.x;
 #endif
