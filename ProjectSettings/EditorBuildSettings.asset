@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/Gameplay.unity
     guid: c242e6ac91f426548813e32f3ea96a83
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/Gameover.unity
+    guid: 921bce0862f4e614a9d6b7e5a7fc30f9
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

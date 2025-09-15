@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class GameOverManager : MonoBehaviour
 {
-    public string nombreEscena = "MenuInicio";
+    public string nombreEscena = "MenuInici";
     private bool gameOver = false;
 
-    // Trigger (recomendado para obstáculos en movimiento y triggers)
+    // Trigger 
     private void OnTriggerEnter(Collider other)
     {
         if (gameOver) return;
@@ -18,7 +18,7 @@ public class GameOverManager : MonoBehaviour
         }
     }
 
-    // Colisión directa (por compatibilidad si usas colliders sólidos)
+    // Colisión directa 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         if (gameOver) return;
