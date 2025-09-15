@@ -1,44 +1,41 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class MovimientoJugador : MonoBehaviour
+public class MovimientoParacaidista : MonoBehaviour
 {
     [Header("Velocidades")]
-    public float Vel = 15f;            // Velocidad de movimiento general
-    public float NivelSuavidad = 2f;   // (Opcional) Suavidad en el control
-    public float IzqDer = 0f;          // Valor que recoge del input
+    public float Velocidad = 10f;       // Velocidad de movimiento
+    public float NivelSuavidad = 2f;    // (opcional, para suavizar input)
 
-    private Vector3 JugadorMov;
-    private CharacterController movimiento;
+    private CharacterController controller;
+    private Vector3 movimiento;
 
     private void Awake()
     {
-        movimiento = GetComponent<CharacterController>();
+        controller = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR
-        IzqDer = -Input.GetAxis("Horizontal"); // Invertir el eje si lo necesitas
+        float inputX = Input.GetAxis("Horizontal"); // Movimiento lateral
+        float inputY = Input.GetAxis("Vertical");   // Movimiento arriba/abajo
 #else
-        IzqDer = Input.acceleration.x;
+        float inputX = Input.acceleration.x;
+        float inputY = Input.acceleration.y;
 #endif
-        JugadorMov = new Vector3(IzqDer, 0, 0);
+
+        // Vector de movimiento solo en X y Y
+        movimiento = new Vector3(inputX, inputY, 0);
+
+        // Normalizamos para que no se mueva más rápido en diagonal
+        if (movimiento.magnitude > 1f)
+            movimiento.Normalize();
     }
 
     private void FixedUpdate()
     {
-        // Mueve solo en X, ajusta la velocidad
-        movimiento.Move(JugadorMov * Vel * Time.fixedDeltaTime);
-    }
-
-    public void izquierda(bool lado)
-    {
-        // Para controles táctiles si los usas
-    }
-
-    public void derecha(bool lado)
-    {
-        // Para controles táctiles si los usas
+        // Aplicamos el movimiento con colisiones
+        controller.Move(movimiento * Velocidad * Time.fixedDeltaTime);
     }
 }
