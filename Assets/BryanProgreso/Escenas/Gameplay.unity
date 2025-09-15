@@ -410,8 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99acdc61e6fbe05489dd31ed4828fbcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameOverText: {fileID: 88313044}
-  nombreMenu: MenuInicio
+  nombreEscena: MenuInicio
 --- !u!143 &161221255
 CharacterController:
   m_ObjectHideFlags: 0
@@ -710,7 +709,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -375.4, y: 241}
+  m_AnchoredPosition: {x: -346.9, y: 202.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &566130461
@@ -806,12 +805,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 721553512}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -50.4}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 50.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1507380876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &721553514
 MonoBehaviour:
@@ -828,13 +827,10 @@ MonoBehaviour:
   PrefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
   AparicionObstaculos: 1
   PosicionesX:
-  - -4
   - -2
   - 0
   - 2
-  - 4
-  - 6
-  PosicionY: 1
+  PosicionY: 0
   MaximoObs: 10
 --- !u!1 &1507380875
 GameObject:
@@ -866,6 +862,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 161221248}
+  - {fileID: 721553513}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1512483630
@@ -1262,7 +1259,6 @@ SceneRoots:
   - {fileID: 1745609698}
   - {fileID: 1578139634}
   - {fileID: 1507380876}
-  - {fileID: 721553513}
   - {fileID: 178776269}
   - {fileID: 566130464}
   - {fileID: 1678354865}

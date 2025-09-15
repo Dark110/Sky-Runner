@@ -1,37 +1,32 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
-using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
-    public TMP_Text gameOverText;
-    public string nombreMenu = "MenuInicio";
-
+    public string nombreEscena = "MenuInicio";
     private bool gameOver = false;
 
-    private void Start()
+    // Trigger (recomendado para obstáculos en movimiento y triggers)
+    private void OnTriggerEnter(Collider other)
     {
-        if (gameOverText != null)
-            gameOverText.enabled = false; // Oculta el texto al iniciar
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!gameOver && collision.gameObject.CompareTag("Obstaculo"))
+        if (gameOver) return;
+        if (other.CompareTag("Obstaculo"))
         {
             gameOver = true;
-            StartCoroutine(GameOverRoutine());
+            Debug.Log("Trigger detectado con: " + other.name);
+            SceneManager.LoadScene(nombreEscena);
         }
     }
 
-    IEnumerator GameOverRoutine()
+    // Colisión directa (por compatibilidad si usas colliders sólidos)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (gameOverText != null)
-            gameOverText.enabled = true;
-
-        yield return new WaitForSeconds(3f);
-
-        SceneManager.LoadScene(nombreMenu);
+        if (gameOver) return;
+        if (hit.gameObject.CompareTag("Obstaculo"))
+        {
+            gameOver = true;
+            Debug.Log("Controller hit con: " + hit.gameObject.name);
+            SceneManager.LoadScene(nombreEscena);
+        }
     }
 }
