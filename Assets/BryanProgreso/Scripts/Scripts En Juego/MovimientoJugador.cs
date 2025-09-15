@@ -25,10 +25,10 @@ public class MovimientoParacaidista : MonoBehaviour
         float inputY = Input.acceleration.y;
 #endif
 
-        // Vector de movimiento solo en X y Y
+        // Vector de movimiento X y Y
         movimiento = new Vector3(inputX, inputY, 0);
 
-        // Normalizamos para que no se mueva más rápido en diagonal
+        // Normalizacion para que se mueva bien en diagonal
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
     }

@@ -63,7 +63,7 @@ public class ObstaculoSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("PrefabObstaculo no está asignado o no hay posiciones X!");
+            Debug.LogWarning("PrefabObstaculo no está asignado");
         }
     }
 }
