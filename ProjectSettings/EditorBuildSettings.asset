@@ -4,6 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/PepeProgreso/Escenas/Test.unity
+    guid: 0973b5a348c7b2e439a5bf36cfb83a01
+  - enabled: 1
+    path: Assets/PepeProgreso/Escenas/TestNvl2.unity
+    guid: 6f97a535023b06747bc71e1e5d0d0938
+  - enabled: 1
+    path: Assets/PepeProgreso/Escenas/MenuNivel.unity
+    guid: ac59bbb63440db84da94d6e012b9a862
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
