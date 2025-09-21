@@ -17,9 +17,15 @@ public class MovimientoJugador : MonoBehaviour
     private bool arriba = false;
     private bool abajo = false;
 
+    // ?? Variables para invulnerabilidad
+    public bool Invunerabilidad = false;
+    public float TiempoInvulnerable = 3f;
+    private Renderer rend;
+
     private void Start()
     {
         VelActual = Vel;
+        rend = GetComponent<Renderer>(); // para cambiar el color del jugador
     }
 
     private void Update()
@@ -34,7 +40,7 @@ public class MovimientoJugador : MonoBehaviour
         ArribaAbajo = Input.acceleration.y; // minúscula
 #endif
 
-        // Guardar el movimiento en vector (solo en X)
+        // Guardar el movimiento en vector (solo en X y Y)
         JugadorMov = new Vector3(IzqDer, ArribaAbajo, 0);
 
         // Aplicar el movimiento multiplicado por VelActual
@@ -61,9 +67,10 @@ public class MovimientoJugador : MonoBehaviour
         abajo = SubeBaja;
     }
 
+    // ?? PowerUp de Velocidad
     public void ActPowerUP(float aumento_vel, float duracion_Powerup)
     {
-        StartCoroutine(PowerVelocidad(aumento_vel, duracion_Powerup)); // corregido StartCoroutine
+        StartCoroutine(PowerVelocidad(aumento_vel, duracion_Powerup));
     }
 
     private IEnumerator PowerVelocidad(float MulVel, float TiempoPower)
@@ -71,5 +78,31 @@ public class MovimientoJugador : MonoBehaviour
         VelActual = Vel * MulVel; // mayor velocidad al jugador
         yield return new WaitForSeconds(TiempoPower);
         VelActual = Vel; // se desactiva el power up
+    }
+
+    // ?? PowerUp de Invulnerabilidad
+    public void ActivarPowerUP_Inv()
+    {
+        if (!Invunerabilidad)
+        {
+            StartCoroutine(InvulnerableTemporal());
+        }
+    }
+
+    private IEnumerator InvulnerableTemporal()
+    {
+        Invunerabilidad = true;
+        Debug.Log("Jugador ahora es invulnerable");
+
+        // Cambio de color para identificar la invulnerabilidad
+        rend.material.color = Color.yellow;
+
+        yield return new WaitForSeconds(TiempoInvulnerable);
+
+        Invunerabilidad = false;
+        Debug.Log("Jugador ya no es invulnerable");
+
+        // Restaurar color original
+        rend.material.color = Color.white;
     }
 }

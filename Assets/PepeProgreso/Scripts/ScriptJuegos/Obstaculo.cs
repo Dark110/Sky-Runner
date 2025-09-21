@@ -51,4 +51,23 @@ public class Obstaculo : MonoBehaviour
             Debug.LogWarning("PrefabObstaculo no está asignado en el Inspector!");
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        MovimientoJugador PilotoPlayer = collision.gameObject.GetComponent<MovimientoJugador>();
+
+        // El if original que activa el jugador al tocar un obstaculo
+        if (PilotoPlayer != null)
+        {
+            // El if y el else para saber si recibio daño o es invunerable el jugador
+            if (PilotoPlayer.Invunerabilidad)
+            {
+                Debug.Log("Esta recibiendo daño");
+            }
+            else
+            {
+                Debug.Log("El jugador tiene el power up de la invunerabilidad");
+            }
+        }
+    }
 }
