@@ -1,23 +1,15 @@
 using UnityEngine;
-using System.Collections; // Necesario para IEnumerator
+using System.Collections;
 
 public class MovimientoJugador : MonoBehaviour
 {
     [Header("Velocidades")]
     public float Vel = 15f;
-    public float NivelSuavidad = 2f;
-    public float IzqDer = 0f;
-    public float ArribaAbajo = 0f;
-    private float VelActual; // Esta variable te va permitir cambiar la velocidad al tocar un power up de velocidad
+    private float VelActual;
 
     private Vector3 JugadorMov;
 
-    private bool ladoIzquierda = false;
-    private bool ladoDerecho = false;
-    private bool arriba = false;
-    private bool abajo = false;
-
-    // ?? Variables para invulnerabilidad
+    // Invulnerabilidad
     public bool Invunerabilidad = false;
     public float TiempoInvulnerable = 3f;
     private Renderer rend;
@@ -25,49 +17,23 @@ public class MovimientoJugador : MonoBehaviour
     private void Start()
     {
         VelActual = Vel;
-        rend = GetComponent<Renderer>(); // para cambiar el color del jugador
+        rend = GetComponent<Renderer>();
     }
 
     private void Update()
     {
 #if UNITY_EDITOR
-        // Movimiento con teclado (A-D o flechas izquierda/derecha)
-        IzqDer = Input.GetAxis("Horizontal");
-        ArribaAbajo = Input.GetAxis("Vertical");
+        float IzqDer = Input.GetAxis("Horizontal");
+        float ArribaAbajo = Input.GetAxis("Vertical");
 #else
-        // Movimiento con acelerómetro en móvil
-        IzqDer = Input.acceleration.x;
-        ArribaAbajo = Input.acceleration.y; // minúscula
+        float IzqDer = Input.acceleration.x;
+        float ArribaAbajo = Input.acceleration.y;
 #endif
-
-        // Guardar el movimiento en vector (solo en X y Y)
         JugadorMov = new Vector3(IzqDer, ArribaAbajo, 0);
-
-        // Aplicar el movimiento multiplicado por VelActual
         transform.Translate(JugadorMov * VelActual * Time.deltaTime);
     }
 
-    public void izquierda(bool lado)
-    {
-        ladoIzquierda = lado;
-    }
-
-    public void derecha(bool lado)
-    {
-        ladoDerecho = lado;
-    }
-
-    public void Arriba(bool SubeBaja)
-    {
-        arriba = SubeBaja;
-    }
-
-    public void Abajo(bool SubeBaja)
-    {
-        abajo = SubeBaja;
-    }
-
-    // ?? PowerUp de Velocidad
+    // PowerUp de velocidad
     public void ActPowerUP(float aumento_vel, float duracion_Powerup)
     {
         StartCoroutine(PowerVelocidad(aumento_vel, duracion_Powerup));
@@ -75,34 +41,54 @@ public class MovimientoJugador : MonoBehaviour
 
     private IEnumerator PowerVelocidad(float MulVel, float TiempoPower)
     {
-        VelActual = Vel * MulVel; // mayor velocidad al jugador
+        VelActual = Vel * MulVel;
         yield return new WaitForSeconds(TiempoPower);
-        VelActual = Vel; // se desactiva el power up
+        VelActual = Vel;
     }
 
-    // ?? PowerUp de Invulnerabilidad
+    // PowerUp de invulnerabilidad
     public void ActivarPowerUP_Inv()
     {
         if (!Invunerabilidad)
-        {
             StartCoroutine(InvulnerableTemporal());
-        }
     }
 
     private IEnumerator InvulnerableTemporal()
     {
         Invunerabilidad = true;
         Debug.Log("Jugador ahora es invulnerable");
-
-        // Cambio de color para identificar la invulnerabilidad
         rend.material.color = Color.yellow;
 
         yield return new WaitForSeconds(TiempoInvulnerable);
 
         Invunerabilidad = false;
         Debug.Log("Jugador ya no es invulnerable");
-
-        // Restaurar color original
         rend.material.color = Color.white;
+    }
+
+    // DetecciÃ³n de power-ups
+    private void OnTriggerEnter(Collider other)
+    {
+        // Bala mÃ¡gica
+        if (other.CompareTag("PowerUpBala"))
+        {
+            Debug.Log("Jugador recogiÃ³ Bala MÃ¡gica");
+            // Se dispara automÃ¡ticamente desde el Power-Up
+            Destroy(other.gameObject);
+        }
+
+        // Power-Up de velocidad
+        if (other.CompareTag("PowerUpVelocidad"))
+        {
+            ActPowerUP(2f, 5f);
+            Destroy(other.gameObject);
+        }
+
+        // Power-Up de invulnerabilidad
+        if (other.CompareTag("piloto"))
+        {
+            ActivarPowerUP_Inv();
+            Destroy(other.gameObject);
+        }
     }
 }
