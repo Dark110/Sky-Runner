@@ -18,6 +18,13 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("Gameplay");
     }
 
+    public void Nivel2()
+    {
+
+        SceneManager.LoadScene("GameplayLvL2");
+    }
+
+
     public void Opciones()
     {
         SceneManager.LoadScene("Opciones");
