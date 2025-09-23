@@ -659,9 +659,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vel: 12
-  NivelSuavidad: 1
-  IzqDer: 0
-  ArribaAbajo: 0
   Invunerabilidad: 0
   TiempoInvulnerable: 3
 --- !u!136 &971500260
