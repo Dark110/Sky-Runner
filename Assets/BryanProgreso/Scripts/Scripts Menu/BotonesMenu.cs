@@ -5,10 +5,10 @@ public class MenuManager : MonoBehaviour
 {
     
      public void Jugar()
-    {
+     {
 
         SceneManager.LoadScene("SkyRunnerM");
-    }
+     }
 
 
 
@@ -32,13 +32,19 @@ public class MenuManager : MonoBehaviour
 
    
      public void Menu()
-    {
+     {
         SceneManager.LoadScene("MenuInicio");
-    }
+     }
 
      public void Salir()
-    {
+     {
         Application.Quit();
         Debug.Log("Salir del juego");
+     }
+
+    // Metod para ir a la escena de puntaje despues de perder o ganar la partida
+    public void PuntajeRecordEscena()
+    {
+        SceneManager.LoadScene("RecordPuntaje");
     }
 }
