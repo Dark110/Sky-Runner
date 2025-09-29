@@ -437,59 +437,6 @@ Transform:
   - {fileID: 524265857}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1037496987
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1037496989}
-  - component: {fileID: 1037496988}
-  m_Layer: 0
-  m_Name: Spawner OBS 2 Seg
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1037496988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037496987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d8bd75bfeedfe34daa8a15ae599473d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jugador: {fileID: 161221248}
-  prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  distanciaZ: 30.5
-  offsetX: 5
-  offsetY: 3
-  altura: 1
-  tiempoEntreSpawn: 2.2
-  maxObstaculos: 15
-  distanciaDetras: 10
---- !u!4 &1037496989
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037496987}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
-  m_LocalPosition: {x: -2.1, y: 1.38, z: 39.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1172232242
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,13 +468,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 161221248}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  distanciaZ: 25.5
-  offsetX: 7.1
+  distanciaZMin: 18
+  distanciaZMax: 30
+  offsetX: 5
   offsetY: 3
-  altura: 1
-  tiempoEntreSpawn: 1
+  alturaBase: 1
+  tiempoEntreSpawn: 1.5
   maxObstaculos: 15
   distanciaDetras: 10
+  homingMin: 1
+  homingMax: 3
+  velZMin: 3
+  velZMax: 7
 --- !u!4 &1172232244
 Transform:
   m_ObjectHideFlags: 0
@@ -912,6 +864,64 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1650826973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1650826975}
+  - component: {fileID: 1650826974}
+  m_Layer: 0
+  m_Name: Spawner OBS (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1650826974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650826973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8bd75bfeedfe34daa8a15ae599473d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 161221248}
+  prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
+  distanciaZMin: 25
+  distanciaZMax: 30
+  offsetX: 5
+  offsetY: 3
+  alturaBase: 1
+  tiempoEntreSpawn: 2.5
+  maxObstaculos: 15
+  distanciaDetras: 10
+  homingMin: 1
+  homingMax: 3
+  velZMin: 3
+  velZMax: 7
+--- !u!4 &1650826975
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650826973}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
+  m_LocalPosition: {x: -2.1, y: 1.38, z: 39.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1678354863
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,4 +1255,4 @@ SceneRoots:
   - {fileID: 566130464}
   - {fileID: 650943401}
   - {fileID: 1172232244}
-  - {fileID: 1037496989}
+  - {fileID: 1650826975}
