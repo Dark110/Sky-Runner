@@ -495,7 +495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  distanciaZMin: 15
+  distanciaZMin: 19
   distanciaZMax: 25
   offsetX: 5
   offsetY: 3
@@ -1200,11 +1200,11 @@ PrefabInstance:
       objectReference: {fileID: 1992936761}
     - target: {fileID: 425173305636268195, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: offset.y
-      value: 1.5
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 425173305636268195, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: offset.z
-      value: -4.53
+      value: -6.09
       objectReference: {fileID: 0}
     - target: {fileID: 425173305636268195, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: jugadorCam
