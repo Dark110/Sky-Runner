@@ -1,69 +1,76 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class ObstaculoSpawner : MonoBehaviour
+public class ObstaculoSpawnerCaotico : MonoBehaviour
 {
-    [Header("Prefab del obstáculo")]
-    public GameObject PrefabObstaculo;
+    [Header("Referencias")]
+    public Transform jugador;
+    public GameObject prefabObstaculo;
 
-    [Header("Configuración de aparición")]
-    public float AparicionObstaculos = 1f;
-    public float[] PosicionesX = { -2f, 0f, 2f }; // Posiciones relativas en X
-    public float DistanciaZ = 15f;                // Qué tan lejos enfrente del jugador aparecen
-    public int MaximoObs = 10;
+    [Header("Spawn")]
+    public float distanciaZ = 15f;       // distancia adelante del jugador
+    public float offsetX = 5f;           // rango lateral de spawn
+    public float offsetY = 3f;           // rango vertical de spawn
+    public float altura = 1f;            // base de altura
 
-    [Header("Configuración de limpieza")]
-    public float DistanciaDetrasJugador = 10f; // Si el obstáculo queda detrás de esta distancia → destruir
-
+    [Header("Frecuencia")]
+    public float tiempoEntreSpawn = 1f;
     private float temporizador = 0f;
+
+    [Header("Límite de obstáculos")]
+    public int maxObstaculos = 15;
+    public float distanciaDetras = 10f;
+
     private List<GameObject> obstaculosActivos = new List<GameObject>();
 
     void Update()
     {
+        if (jugador == null || prefabObstaculo == null) return;
+
         temporizador -= Time.deltaTime;
 
-        // Limpiar obstáculos destruidos o demasiado lejos
+        if (temporizador <= 0f && obstaculosActivos.Count < maxObstaculos)
+        {
+            GenerarObstaculo();
+            temporizador = tiempoEntreSpawn;
+        }
+
+        LimpiarObstaculos();
+    }
+
+    void GenerarObstaculo()
+    {
+        // Generar posición aleatoria en X/Y delante del jugador
+        float x = jugador.position.x + Random.Range(-offsetX, offsetX);
+        float y = jugador.position.y + altura + Random.Range(-offsetY, offsetY);
+        float z = jugador.position.z - distanciaZ;
+
+        Vector3 spawnPos = new Vector3(x, y, z);
+
+        // Instanciar el obstáculo con tu MovObstaculo intacto
+        GameObject nuevo = Instantiate(prefabObstaculo, spawnPos, Quaternion.identity);
+        obstaculosActivos.Add(nuevo);
+
+        // Visual debug
+        Debug.DrawLine(jugador.position, spawnPos, Color.red, 1f);
+    }
+
+    void LimpiarObstaculos()
+    {
         for (int i = obstaculosActivos.Count - 1; i >= 0; i--)
         {
             if (obstaculosActivos[i] == null)
             {
                 obstaculosActivos.RemoveAt(i);
+                continue;
             }
-            else
+
+            // Destruir si queda demasiado atrás del jugador
+            if (obstaculosActivos[i].transform.position.z > jugador.position.z + distanciaDetras)
             {
-                // Si el obstáculo quedó muy detrás del jugador → destruirlo
-                if (obstaculosActivos[i].transform.position.z < transform.position.z - DistanciaDetrasJugador)
-                {
-                    Destroy(obstaculosActivos[i]);
-                    obstaculosActivos.RemoveAt(i);
-                }
+                Destroy(obstaculosActivos[i]);
+                obstaculosActivos.RemoveAt(i);
             }
-        }
-
-        // Generar nuevo obstáculo
-        if (temporizador <= 0f && obstaculosActivos.Count < MaximoObs)
-        {
-            GenerarObstaculo();
-            temporizador = AparicionObstaculos;
-        }
-    }
-
-    void GenerarObstaculo()
-    {
-        if (PrefabObstaculo != null && PosicionesX.Length > 0)
-        {
-            // Posición relativa al jugador
-            float x = PosicionesX[Random.Range(0, PosicionesX.Length)];
-            Vector3 spawnPos = transform.position + new Vector3(x, 0f, DistanciaZ);
-
-            GameObject nuevoObs = Instantiate(PrefabObstaculo, spawnPos, Quaternion.identity);
-            nuevoObs.tag = "Obstaculo";
-
-            obstaculosActivos.Add(nuevoObs);
-        }
-        else
-        {
-            Debug.LogWarning("PrefabObstaculo no está asignado");
         }
     }
 }
