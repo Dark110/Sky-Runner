@@ -42,9 +42,9 @@ public class MenuManager : MonoBehaviour
         Debug.Log("Salir del juego");
      }
 
-    // Metod para ir a la escena de puntaje despues de perder o ganar la partida
     public void PuntajeRecordEscena()
     {
         SceneManager.LoadScene("RecordPuntaje");
     }
+
 }

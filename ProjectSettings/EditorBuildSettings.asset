@@ -26,5 +26,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/Niveles/GameplayLvL2.unity
     guid: eced2ba3fd3dca54f952f21c4b5cd88c
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/RecordPuntaje.unity
+    guid: 32b42f67b12bd734c88cf2dd50e8ea6c
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
