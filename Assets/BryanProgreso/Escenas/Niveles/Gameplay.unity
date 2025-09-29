@@ -468,7 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 161221248}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  distanciaZ: 25.3
+  distanciaZ: 30.5
   offsetX: 5
   offsetY: 3
   altura: 1
@@ -521,7 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 161221248}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  distanciaZ: 21.5
+  distanciaZ: 25.5
   offsetX: 7.1
   offsetY: 3
   altura: 1

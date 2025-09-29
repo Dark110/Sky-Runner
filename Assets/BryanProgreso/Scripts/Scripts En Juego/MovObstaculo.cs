@@ -16,6 +16,8 @@ public class MovObstaculo : MonoBehaviour
     [Header("Puntaje")]
     public int puntosAlEsquivar = 10;
 
+    private Transform jugador;
+
     void Start()
     {
         VelObstaculo = Random.Range(VelMin, VelMax);
@@ -30,6 +32,8 @@ public class MovObstaculo : MonoBehaviour
         {
             velocidadRotacion = Vector3.up * Random.Range(RotMin, RotMax);
         }
+
+        jugador = GameObject.FindWithTag("Player")?.transform;
     }
 
     void Update()
@@ -39,15 +43,26 @@ public class MovObstaculo : MonoBehaviour
 
         transform.Rotate(velocidadRotacion * Time.deltaTime, Space.Self);
 
-        if (transform.position.z > 60f || transform.position.z < -60f)
+        if (JugadorFueraDeRango())
         {
-            // Antes de destruir, damos puntos
             if (ScoreManager.Instance != null)
-            {
                 ScoreManager.Instance.AddScore(puntosAlEsquivar);
-            }
 
             Destroy(gameObject);
         }
+    }
+
+    // Verifica si el obstáculo pasó al jugador
+    bool JugadorFueraDeRango()
+    {
+        if (jugador == null) return false;
+
+        // Ajusta la distancia según necesites
+        float margen = 5f;
+
+        if (moverAdelante)
+            return transform.position.z > jugador.position.z + margen;
+        else
+            return transform.position.z < jugador.position.z - margen;
     }
 }
