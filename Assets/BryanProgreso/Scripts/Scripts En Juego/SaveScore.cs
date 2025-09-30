@@ -31,6 +31,6 @@ public class SaveData : MonoBehaviour
        if (Input.GetKeyDown(KeyCode.H))
        {
         SaveHighScore(scoreinGame);
-        }
+       }
     }
 }
