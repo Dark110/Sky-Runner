@@ -1,16 +1,34 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class FXManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+public FX_Pool
+   public void setFx()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+[Serializable]
+
+
+
+
+}
+
+
+void createFx(int _indexofpool)
+{
+    for (int i = 0; i < fxPools[_indexofpool].pool.Count; i++) //checar si hay fx disponible
+
     {
-        
+       if (!fxPools[_indexofpool].pool[i].activeInHierarchy)
+        {
+            fxPools[_indexofpool].pool[i].SetActive(true);
+            return;
+        }
+    
+    
     }
 }
