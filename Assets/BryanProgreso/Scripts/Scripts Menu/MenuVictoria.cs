@@ -5,18 +5,16 @@ public class MenuVictoria : MonoBehaviour
 {
     public GameObject UI_Victoria; // Panel del menú de victoria
 
+    void Start()
+    {
+        UI_Victoria.SetActive(false); //Se oculta el inicio
+    }
+
     //Esta funcion se llama cuando el jugador gana
     public void menuvictoria()
     {
-        if (UI_Victoria != null)
-        {
-            UI_Victoria.SetActive(true);
-            Time.timeScale = 0f; // Pausa el juego
-        }
-        else
-        {
-            Debug.LogWarning("UI_Victoria no está asignado en el inspector.");
-        }
+        UI_Victoria.SetActive(true);
+        Time.timeScale = 0f; // Pausa
     }
 
     // Botón: Reiniciar partida
@@ -40,11 +38,23 @@ public class MenuVictoria : MonoBehaviour
         SceneManager.LoadScene("MenuNiveles");
     }
 
-    // Botón: Ir al siguiente nivel
     public void SiguienteNivel()
     {
         Time.timeScale = 1f;
         int nivelActual = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(nivelActual + 1);
+        int totalEscenas = SceneManager.sceneCountInBuildSettings;
+        int siguiente = nivelActual + 1;
+
+        if (siguiente < totalEscenas)
+        {
+            // Cargar siguiente nivel
+            SceneManager.LoadScene(siguiente);
+        }
+        else
+        {
+            // Si ya no hay más niveles, volver al menú (índice 0)
+            Debug.Log("No hay más niveles, regresando al menú principal.");
+            SceneManager.LoadScene(0);
+        }
     }
 }

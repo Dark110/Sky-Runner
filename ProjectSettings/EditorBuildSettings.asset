@@ -29,5 +29,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/RecordPuntaje.unity
     guid: 32b42f67b12bd734c88cf2dd50e8ea6c
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/MenuVictoria.unity
+    guid: 12dc35a2d7b8fb9459415b9c2da02296
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

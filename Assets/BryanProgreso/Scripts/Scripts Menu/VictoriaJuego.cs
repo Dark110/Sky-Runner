@@ -1,14 +1,14 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class VictoriaJuego : MonoBehaviour
 {
-    public MenuVictoria menuVictoria; // Hacemos la referencia de menu de victoria
-    public Temporizador contador;     // Hacemos la referencia al script del Temporizador
+    public Temporizador contador;
+    private bool victoriaMostrada = false;
 
     void Update()
     {
-        // Si el tiempo llegó a 0 y el jugador sigue vivo
-        if (contador.tiempoActual <= 0 && contador.jugadorVivo)
+        if (!victoriaMostrada && contador.tiempoActual <= 0 && contador.jugadorVivo)
         {
             VictoriaPartida();
         }
@@ -16,7 +16,8 @@ public class VictoriaJuego : MonoBehaviour
 
     void VictoriaPartida()
     {
-        menuVictoria.menuvictoria(); // Función para llamar la victoria
-        this.enabled = false;
+        victoriaMostrada = true;
+        Time.timeScale = 1f; // Asegúrate de que el tiempo está normal antes de cambiar de escena
+        SceneManager.LoadScene("MenuVictoria");
     }
 }
