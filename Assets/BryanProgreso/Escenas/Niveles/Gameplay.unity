@@ -495,23 +495,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  prefabObstaculoCastigo: {fileID: 8139227855800435202, guid: 1470b50d425b7d14b8e45bc48a4a190a, type: 3}
-  distanciaZMin: 40
-  distanciaZMax: 50
+  distanciaZMin: 55
+  distanciaZMax: 60
   offsetX: 5
   offsetY: 3
   alturaBase: 1
-  tiempoEntreSpawn: 2
-  maxObstaculos: 15
+  tiempoEntreSpawn: 1.8
+  maxObstaculos: 12
   distanciaDetras: 10
   homingMin: 1.8
-  homingMax: 2.5
-  velZMin: 4
+  homingMax: 2.8
+  velZMin: 5
   velZMax: 6
-  umbralQuieto: 2.5
-  rangoMovimiento: 0.5
-  homingCastigo: 8
-  distanciaCastigo: 6
 --- !u!4 &1172232244
 Transform:
   m_ObjectHideFlags: 0
@@ -895,23 +890,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  prefabObstaculoCastigo: {fileID: 8139227855800435202, guid: 1470b50d425b7d14b8e45bc48a4a190a, type: 3}
-  distanciaZMin: 40
-  distanciaZMax: 45
+  distanciaZMin: 55
+  distanciaZMax: 60
   offsetX: 6
   offsetY: 3
   alturaBase: 1
-  tiempoEntreSpawn: 1.8
-  maxObstaculos: 20
+  tiempoEntreSpawn: 2.3
+  maxObstaculos: 12
   distanciaDetras: 10
-  homingMin: 2
-  homingMax: 3.8
-  velZMin: 4.5
+  homingMin: 2.2
+  homingMax: 3.5
+  velZMin: 4.7
   velZMax: 6
-  umbralQuieto: 2.5
-  rangoMovimiento: 0.5
-  homingCastigo: 8
-  distanciaCastigo: 6
 --- !u!4 &1650826975
 Transform:
   m_ObjectHideFlags: 0

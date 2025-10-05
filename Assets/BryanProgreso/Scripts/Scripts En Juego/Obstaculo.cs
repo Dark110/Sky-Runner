@@ -5,8 +5,7 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
 {
     [Header("Prefabs")]
     public Transform jugador;
-    public GameObject prefabObstaculo;          // obstáculo normal
-    public GameObject prefabObstaculoCastigo;   // obstáculo castigador (ej: caja roja)
+    public GameObject prefabObstaculo; // obstáculo normal
 
     [Header("Spawn Normal")]
     public float distanciaZMin = 8f;
@@ -31,42 +30,11 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
     public float velZMin = 3f;
     public float velZMax = 6f;
 
-    [Header("Castigo Anti-Campeo")]
-    public float umbralQuieto = 3f;      // segundos quieto para activar castigo
-    public float rangoMovimiento = 0.5f; // cuánto puede moverse y aún contar como "quieto"
-    public float homingCastigo = 8f;     // homing muy alto
-    public float distanciaCastigo = 6f;  // spawnea más cerca
-
     private List<GameObject> obstaculosActivos = new List<GameObject>();
-    private Vector3 ultimaPosJugador;
-    private float tiempoQuieto = 0f;
-
-    void Start()
-    {
-        ultimaPosJugador = jugador.position;
-    }
 
     void Update()
     {
-        if (jugador == null || prefabObstaculo == null) return;
-
-        // --- Verificar si el jugador está quieto ---
-        if (Vector3.Distance(jugador.position, ultimaPosJugador) < rangoMovimiento)
-        {
-            tiempoQuieto += Time.deltaTime;
-        }
-        else
-        {
-            tiempoQuieto = 0f;
-            ultimaPosJugador = jugador.position;
-        }
-
-        // --- Castigo si está quieto demasiado ---
-        if (tiempoQuieto >= umbralQuieto)
-        {
-            GenerarObstaculoCastigo();
-            tiempoQuieto = 0f;
-        }
+        if (jugador == null) return;
 
         // --- Spawn normal ---
         temporizador -= Time.deltaTime;
@@ -89,23 +57,6 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
         CrearObstaculo(prefabObstaculo, new Vector3(x, y, z), Random.Range(homingMin, homingMax));
     }
 
-    void GenerarObstaculoCastigo()
-    {
-        if (prefabObstaculoCastigo == null)
-        {
-            Debug.Log("Prefab de castigo no asignado");
-            return;
-        }
-
-        float x = jugador.position.x + Random.Range(-1.5f, 1.5f);
-        float y = jugador.position.y + Random.Range(-1f, 1f);
-        float z = jugador.position.z - distanciaCastigo;
-
-        Debug.Log("Spawn de obstáculo castigador en " + new Vector3(x, y, z));
-
-        CrearObstaculo(prefabObstaculoCastigo, new Vector3(x, y, z), homingCastigo);
-    }
-
     void CrearObstaculo(GameObject prefab, Vector3 spawnPos, float homing)
     {
         GameObject nuevo = Instantiate(prefab, spawnPos, Quaternion.identity);
@@ -114,6 +65,29 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
         MovObstaculoAux aux = nuevo.AddComponent<MovObstaculoAux>();
         aux.velZ = Random.Range(velZMin, velZMax);
         aux.homing = homing;
+
+        // Escala inicial pequeña
+        Vector3 escalaFinal = nuevo.transform.localScale;
+        nuevo.transform.localScale = escalaFinal * 0.2f;
+
+        // Coroutine para escalar suavemente
+        StartCoroutine(EscalarSuavemente(nuevo, escalaFinal, 1f)); // duración 1 segundo
+    }
+
+    private System.Collections.IEnumerator EscalarSuavemente(GameObject obj, Vector3 escalaFinal, float duracion)
+    {
+        float tiempo = 0f;
+        Vector3 escalaInicial = obj.transform.localScale;
+
+        while (tiempo < duracion)
+        {
+            tiempo += Time.deltaTime;
+            float t = Mathf.Clamp01(tiempo / duracion);
+            obj.transform.localScale = Vector3.Lerp(escalaInicial, escalaFinal, t);
+            yield return null;
+        }
+
+        obj.transform.localScale = escalaFinal; // asegurar valor final exacto
     }
 
     void LimpiarObstaculos()
@@ -143,10 +117,15 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
             MovObstaculoAux aux = obs.GetComponent<MovObstaculoAux>();
             if (aux == null) continue;
 
-            // Movimiento en Z hacia adelante
-            obs.transform.Translate(Vector3.forward * -aux.velZ * Time.deltaTime, Space.World);
+            // --- Movimiento en Z hacia el jugador ---
+            float step = aux.velZ * Time.deltaTime;
+            obs.transform.position = Vector3.MoveTowards(
+                obs.transform.position,
+                new Vector3(obs.transform.position.x, obs.transform.position.y, jugador.position.z),
+                step
+            );
 
-            // Homing hacia jugador
+            // --- Homing lateral/vertical hacia jugador ---
             Vector3 targetPos = new Vector3(
                 jugador.position.x,
                 jugador.position.y,

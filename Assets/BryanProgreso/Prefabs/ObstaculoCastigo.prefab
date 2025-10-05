@@ -70,7 +70,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: c762ef6f463c5e74ea722c509d89c23f, type: 2}
     - target: {fileID: 919132149155446097, guid: 4785285cfbf2cd94cbc725a4bc24d991, type: 3}
       propertyPath: m_Name
-      value: Box
+      value: ObstaculoCastigo
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4785285cfbf2cd94cbc725a4bc24d991, type: 3}
+      propertyPath: m_TagString
+      value: Obstaculo
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
