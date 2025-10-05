@@ -103,6 +103,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Velocidad: 10
   NivelSuavidad: 1.5
+  AnguloMaxX: 15
+  AnguloMaxZ: 15
 --- !u!114 &4019641470368181859
 MonoBehaviour:
   m_ObjectHideFlags: 0
