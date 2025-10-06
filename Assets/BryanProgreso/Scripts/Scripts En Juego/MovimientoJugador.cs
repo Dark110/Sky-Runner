@@ -11,6 +11,12 @@ public class MovimientoParacaidista : MonoBehaviour
     public float AnguloMaxX = 15f;      // Máximo tilt adelante/atrás
     public float AnguloMaxZ = 15f;      // Máximo tilt izquierda/derecha
 
+    [Header("Sensibilidad en Android")]
+    public float Sensibilidad = 2f;     // Multiplicador de sensibilidad
+    public bool CalibrarAlInicio = true; // ¿Se calibra automáticamente al inicio?
+    public Vector3 offsetFijo = Vector3.zero; // Offset manual para pruebas
+
+    private Vector3 offset;             // Offset actual (calibrado o fijo)
     private CharacterController controller;
     private Vector3 movimiento;
     private Quaternion rotacionInicial; // Guardar rotación base del jugador
@@ -21,14 +27,25 @@ public class MovimientoParacaidista : MonoBehaviour
         rotacionInicial = transform.rotation; // guardamos la rotación original del prefab
     }
 
+    private void Start()
+    {
+#if !UNITY_STANDALONE && !UNITY_EDITOR
+        if (CalibrarAlInicio)
+            offset = Input.acceleration;   // Calibra con la posición actual
+        else
+            offset = offsetFijo;           // Usa el valor fijo definido en el Inspector
+#endif
+    }
+
     private void Update()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR
-        float inputX = Input.GetAxis("Horizontal"); // Movimiento lateral
-        float inputY = Input.GetAxis("Vertical");   // Movimiento vertical
+        float inputX = Input.GetAxis("Horizontal"); // Movimiento lateral con teclado
+        float inputY = Input.GetAxis("Vertical");   // Movimiento vertical con teclado
 #else
-        float inputX = Input.acceleration.x;
-        float inputY = Input.acceleration.y;
+        // Movimiento con acelerómetro (aplicando offset y sensibilidad)
+        float inputX = (Input.acceleration.x - offset.x) * Sensibilidad;
+        float inputY = (Input.acceleration.y - offset.y) * Sensibilidad;
 #endif
 
         // Vector de movimiento
@@ -37,12 +54,12 @@ public class MovimientoParacaidista : MonoBehaviour
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
-        // Calcular inclinación adicional
+        // Calcular inclinación adicional para el efecto visual
         float tiltX = -inputY * AnguloMaxX;
         float tiltZ = -inputX * AnguloMaxZ;
         Quaternion rotacionTilt = Quaternion.Euler(tiltX, 0f, tiltZ);
 
-        // Combinar rotación inicial + tilt (sin perder orientación)
+        // Combinar rotación inicial + tilt (sin perder orientación original)
         Quaternion rotacionObjetivo = rotacionInicial * rotacionTilt;
 
         // Suavizar hacia la rotación objetivo
@@ -52,5 +69,13 @@ public class MovimientoParacaidista : MonoBehaviour
     private void FixedUpdate()
     {
         controller.Move(movimiento * Velocidad * Time.fixedDeltaTime);
+    }
+
+    // Método opcional para recalibrar durante la partida
+    public void Recalibrar()
+    {
+#if !UNITY_STANDALONE && !UNITY_EDITOR
+        offset = Input.acceleration;
+#endif
     }
 }

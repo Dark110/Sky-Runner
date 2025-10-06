@@ -119,6 +119,64 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &41865504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 41865505}
+  - component: {fileID: 41865506}
+  m_Layer: 0
+  m_Name: Spawner OBS 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &41865505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41865504}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
+  m_LocalPosition: {x: 1.967936, y: -7.8258276, z: 19.856388}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 892139617}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+--- !u!114 &41865506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 41865504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8bd75bfeedfe34daa8a15ae599473d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 1992936761}
+  prefabObstaculo: {fileID: 7014848391307294649, guid: cea7f8450a5e3df4e926b726e69aee6a, type: 3}
+  distanciaZMin: 55
+  distanciaZMax: 60
+  offsetX: 6
+  offsetY: 3
+  alturaBase: 1
+  tiempoEntreSpawn: 7
+  maxObstaculos: 12
+  distanciaDetras: 10
+  homingMin: 3
+  homingMax: 3.2
+  velZMin: 5
+  velZMax: 6
 --- !u!1 &178776268
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +373,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -572.6, y: 7.4000244}
+  m_AnchoredPosition: {x: -587.7, y: 3.2000122}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &524265856
@@ -431,6 +489,64 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &601726306
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 601726308}
+  - component: {fileID: 601726307}
+  m_Layer: 0
+  m_Name: Spawner OBS Maleta
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &601726307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601726306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d8bd75bfeedfe34daa8a15ae599473d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 1992936761}
+  prefabObstaculo: {fileID: 8399555538034048709, guid: f26b0cf3424cde94b86026afdea92b04, type: 3}
+  distanciaZMin: 60
+  distanciaZMax: 70
+  offsetX: 5
+  offsetY: 3
+  alturaBase: 1
+  tiempoEntreSpawn: 5
+  maxObstaculos: 12
+  distanciaDetras: 10
+  homingMin: 2
+  homingMax: 2.5
+  velZMin: 6
+  velZMax: 7
+--- !u!4 &601726308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601726306}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
+  m_LocalPosition: {x: 1.967936, y: -7.8258276, z: 19.856388}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 892139617}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &650943400
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,6 +579,73 @@ Transform:
   - {fileID: 1678354865}
   - {fileID: 524265857}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &892139616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 892139617}
+  m_Layer: 0
+  m_Name: Spawners
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &892139617
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892139616}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.067936, y: 9.205828, z: 19.543613}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1172232244}
+  - {fileID: 601726308}
+  - {fileID: 1650826975}
+  - {fileID: 41865505}
+  - {fileID: 918218325}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &918218324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 918218325}
+  m_Layer: 0
+  m_Name: Nube Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &918218325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918218324}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.013064384, y: 0.13997746, z: -0.025932312}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 892139617}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1172232242
 GameObject:
@@ -503,9 +686,9 @@ MonoBehaviour:
   tiempoEntreSpawn: 1.8
   maxObstaculos: 12
   distanciaDetras: 10
-  homingMin: 1.8
-  homingMax: 2.8
-  velZMin: 5
+  homingMin: 1.5
+  homingMax: 2.5
+  velZMin: 4
   velZMax: 6
 --- !u!4 &1172232244
 Transform:
@@ -516,11 +699,11 @@ Transform:
   m_GameObject: {fileID: 1172232242}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
-  m_LocalPosition: {x: -2.1, y: 1.38, z: 39.4}
+  m_LocalPosition: {x: 1.967936, y: -7.8258276, z: 19.856388}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 892139617}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1350664097
 GameObject:
@@ -655,7 +838,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 104, y: -197}
+  m_AnchoredPosition: {x: 113.5, y: -193.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1512483630
@@ -870,7 +1053,7 @@ GameObject:
   - component: {fileID: 1650826975}
   - component: {fileID: 1650826974}
   m_Layer: 0
-  m_Name: Spawner OBS (1)
+  m_Name: Spawner OBS 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -898,9 +1081,9 @@ MonoBehaviour:
   tiempoEntreSpawn: 2.3
   maxObstaculos: 12
   distanciaDetras: 10
-  homingMin: 2.2
-  homingMax: 3.5
-  velZMin: 4.7
+  homingMin: 2
+  homingMax: 3
+  velZMin: 4
   velZMax: 6
 --- !u!4 &1650826975
 Transform:
@@ -911,11 +1094,11 @@ Transform:
   m_GameObject: {fileID: 1650826973}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000035762784}
-  m_LocalPosition: {x: -2.1, y: 1.38, z: 39.4}
+  m_LocalPosition: {x: 1.967936, y: -7.8258276, z: 19.856388}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 892139617}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!1 &1678354863
 GameObject:
@@ -1180,11 +1363,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5702201251560563831, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: m_Radius
-      value: 30.29
+      value: 27.87
       objectReference: {fileID: 0}
     - target: {fileID: 5702201251560563831, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: m_Center.y
-      value: -6.57
+      value: -6.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 5702201251560563831, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
+      propertyPath: m_Center.z
+      value: -12.4
       objectReference: {fileID: 0}
     - target: {fileID: 7386506312274417454, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: m_Name
@@ -1287,6 +1474,5 @@ SceneRoots:
   - {fileID: 178776269}
   - {fileID: 566130464}
   - {fileID: 650943401}
-  - {fileID: 1172232244}
-  - {fileID: 1650826975}
   - {fileID: 416034141}
+  - {fileID: 892139617}
