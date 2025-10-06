@@ -1,22 +1,20 @@
 using UnityEngine;
-using TMPro; // Para mostrar la cuenta regresiva
+using TMPro; 
 
 public class GameManager : MonoBehaviour
 {
     [Header("Cuenta regresiva")]
-    public TMP_Text textoCuenta;   // Texto en la UI para mostrar la cuenta
+    public TMP_Text textoCuenta;  
     public int tiempoInicial = 3;  // De 3 a 0
 
     [Header("Spawners")]
-    public ObstaculoSpawnerCaoticoFinal[] spawners; // Todos los spawners del nivel
+    public ObstaculoSpawnerCaoticoFinal[] spawners;
 
     void Start()
     {
         // Antes de empezar, desactivamos los spawners
         foreach (var spawner in spawners)
             spawner.spawnerActivo = false;
-
-        // Iniciamos la cuenta regresiva
         StartCoroutine(Countdown());
     }
 
@@ -33,15 +31,14 @@ public class GameManager : MonoBehaviour
             tiempo--;
         }
 
-        // Último "0"
         if (textoCuenta != null)
             textoCuenta.text = "¡0!";
 
-        // Activamos los spawners
+        // Activar spawners
         foreach (var spawner in spawners)
             spawner.spawnerActivo = true;
 
-        // Limpiamos el texto después de un segundo
+        // Limpiar texto
         yield return new WaitForSeconds(1f);
         if (textoCuenta != null)
             textoCuenta.text = "";
