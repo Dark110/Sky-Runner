@@ -1,0 +1,19 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PowerUpTrigger : MonoBehaviour
+{
+    public TipoPowerUp tipo;
+    public float duracion = 5f;
+    public float valorExtra = 5f; // solo para velocidad
+    public Image uiIndicador;
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && PowerUpManager.Instance != null)
+        {
+            PowerUpManager.Instance.ActivarPowerUp(tipo, duracion, valorExtra, uiIndicador);
+            Destroy(gameObject); // el power-up desaparece al ser recogido
+        }
+    }
+}

@@ -16,6 +16,9 @@ public class MovimientoParacaidista : MonoBehaviour
     public bool CalibrarAlInicio = true; // ¿Se calibra automáticamente al inicio?
     public Vector3 offsetFijo = Vector3.zero; // Offset manual para pruebas
 
+    [Header("PowerUps")]
+    public bool invulnerable = false; // <-- AÑADIDO
+
     private Vector3 offset;             // Offset actual (calibrado o fijo)
     private CharacterController controller;
     private Vector3 movimiento;
