@@ -122,10 +122,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5391601bd40de454699ae4e2d82cdb9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VelMin: 30
-  VelMax: 40
+  VelMin: 40
+  VelMax: 60
   moverAdelante: 1
-  RotMin: 30
+  RotMin: 60
   RotMax: 120
   puntosAlEsquivar: 10
 --- !u!54 &4936637169219083529

@@ -1,21 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
 {
-    [Header("Prefabs")]
+    [Header("Jugador")]
     public Transform jugador;
-    public GameObject prefabObstaculo; // obstáculo normal
+
+    [Header("Prefabs")]
+    public GameObject prefabObstaculo;
 
     [Header("Control")]
     public bool spawnerActivo = true;
 
-    [Header("Spawn Normal")]
+    [Header("Spawn Normal Z")]
     public float distanciaZMin = 8f;
     public float distanciaZMax = 15f;
-    public float offsetX = 5f;
-    public float offsetY = 3f;
-    public float alturaBase = 1f;
 
     [Header("Frecuencia")]
     public float tiempoEntreSpawn = 0.7f;
@@ -52,8 +52,9 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
 
     void GenerarObstaculoCaotico()
     {
-        float x = jugador.position.x + Random.Range(-offsetX, offsetX);
-        float y = jugador.position.y + alturaBase + Random.Range(-offsetY, offsetY);
+        // Spawn dinámico en X e Y relativo al jugador
+        float x = jugador.position.x + Random.Range(-2f, 2f);
+        float y = jugador.position.y + Random.Range(-1f, 1f);
         float z = jugador.position.z - Random.Range(distanciaZMin, distanciaZMax);
 
         CrearObstaculo(prefabObstaculo, new Vector3(x, y, z), Random.Range(homingMin, homingMax));
@@ -72,11 +73,11 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
         Vector3 escalaFinal = nuevo.transform.localScale;
         nuevo.transform.localScale = escalaFinal * 0.2f;
 
-        // Coroutine para escalar suavemente
-        StartCoroutine(EscalarSuavemente(nuevo, escalaFinal, 1f)); // duración 1 segundo
+        // Escalado suave
+        StartCoroutine(EscalarSuavemente(nuevo, escalaFinal, 1f));
     }
 
-    private System.Collections.IEnumerator EscalarSuavemente(GameObject obj, Vector3 escalaFinal, float duracion)
+    IEnumerator EscalarSuavemente(GameObject obj, Vector3 escalaFinal, float duracion)
     {
         float tiempo = 0f;
         Vector3 escalaInicial = obj.transform.localScale;
@@ -84,12 +85,11 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
         while (tiempo < duracion)
         {
             tiempo += Time.deltaTime;
-            float t = Mathf.Clamp01(tiempo / duracion);
-            obj.transform.localScale = Vector3.Lerp(escalaInicial, escalaFinal, t);
+            obj.transform.localScale = Vector3.Lerp(escalaInicial, escalaFinal, tiempo / duracion);
             yield return null;
         }
 
-        obj.transform.localScale = escalaFinal; // asegurar valor final exacto
+        obj.transform.localScale = escalaFinal;
     }
 
     void LimpiarObstaculos()
@@ -119,30 +119,26 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
             MovObstaculoAux aux = obs.GetComponent<MovObstaculoAux>();
             if (aux == null) continue;
 
-            // --- Movimiento en Z hacia el jugador ---
-            float step = aux.velZ * Time.deltaTime;
+            // Movimiento Z hacia jugador
             obs.transform.position = Vector3.MoveTowards(
                 obs.transform.position,
                 new Vector3(obs.transform.position.x, obs.transform.position.y, jugador.position.z),
-                step
+                aux.velZ * Time.deltaTime
             );
 
-            // --- Homing lateral/vertical hacia jugador ---
+            // Homing lateral/vertical semi-aleatorio
             Vector3 targetPos = new Vector3(
                 jugador.position.x,
                 jugador.position.y,
                 obs.transform.position.z
             );
 
-            obs.transform.position = Vector3.Lerp(
-                obs.transform.position,
-                targetPos,
-                aux.homing * Time.deltaTime
-            );
+            obs.transform.position = Vector3.Lerp(obs.transform.position, targetPos, aux.homing * Time.deltaTime);
         }
     }
 }
 
+[System.Serializable]
 public class MovObstaculoAux : MonoBehaviour
 {
     [HideInInspector] public float velZ;
