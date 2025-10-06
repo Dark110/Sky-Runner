@@ -1,41 +1,33 @@
-using UnityEngine;
-using TMPro; // Necesario si usas TextMeshPro
+ï»¿using UnityEngine;
+using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager Instance; // Singleton para acceso fácil
-    private int score = 0;
+    public static ScoreManager Instance;
 
     [Header("UI")]
     public TextMeshProUGUI scoreText;
 
+    private int currentScore = 0;
+
     void Awake()
     {
-        // Configurar Singleton
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
-        {
             Destroy(gameObject);
-        }
     }
 
-    void Start()
+    public void AddScore(int value)
     {
-        UpdateUI();
-    }
+        currentScore += value;
 
-    public void AddScore(int amount)
-    {
-        score += amount;
-        UpdateUI();
-    }
-
-    void UpdateUI()
-    {
         if (scoreText != null)
-            scoreText.text = "Puntos: " + score;
+            scoreText.text = "Puntos: " + currentScore;
+    }
+
+    public int GetScore()
+    {
+        return currentScore;
     }
 }

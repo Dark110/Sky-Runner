@@ -1,36 +1,45 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class SaveData : MonoBehaviour
-
+public class SaveDataManager : MonoBehaviour
 {
-   public int highScore;    
-   public int scoreinGame;
+    public static SaveDataManager Instance;
 
+    public int highScore;
+    public int scoreInGame;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Persiste entre escenas
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
-        highScore = PlayerPrefs.GetInt("hScore", 0);
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
     }
 
-
-    public void SaveHighScore(int score)
+    public void EndGame()
     {
-        if (score > highScore)
+        if (ScoreManager.Instance != null)
+            scoreInGame = ScoreManager.Instance.GetScore();
+        else
+            scoreInGame = 0;
+
+        // Actualiza highscore si corresponde
+        if (scoreInGame > highScore)
         {
-        highScore = score;
-        PlayerPrefs.SetInt("hScore", highScore);
-        Debug.Log ("New High Score: " + highScore);
-        return;
-    }
-        Debug.Log ("score not higher than high score" +score); 
-}   
-// Update is called once per frame
-    void Update()
-    {
-       if (Input.GetKeyDown(KeyCode.H))
-       {
-        SaveHighScore(scoreinGame);
-       }
+            highScore = scoreInGame;
+            PlayerPrefs.SetInt("HighScore", highScore);
+        }
+
+        PlayerPrefs.Save(); // Asegura que se guarde
+        Debug.Log($"[SaveDataManager] Score guardado: {scoreInGame}, HighScore: {highScore}");
     }
 }
