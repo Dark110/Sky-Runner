@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
+      propertyPath: RotMin
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
+      propertyPath: puntosAlEsquivar
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1449986173742180447, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

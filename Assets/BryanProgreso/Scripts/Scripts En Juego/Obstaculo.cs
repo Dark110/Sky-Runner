@@ -7,6 +7,9 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
     public Transform jugador;
     public GameObject prefabObstaculo; // obstáculo normal
 
+    [Header("Control")]
+    public bool spawnerActivo = true;
+
     [Header("Spawn Normal")]
     public float distanciaZMin = 8f;
     public float distanciaZMax = 15f;
@@ -34,9 +37,8 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
 
     void Update()
     {
-        if (jugador == null) return;
+        if (jugador == null || !spawnerActivo) return;
 
-        // --- Spawn normal ---
         temporizador -= Time.deltaTime;
         if (temporizador <= 0f && obstaculosActivos.Count < maxObstaculos)
         {
