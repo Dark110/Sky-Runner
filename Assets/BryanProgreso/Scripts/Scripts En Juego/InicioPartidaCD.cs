@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 
         // Último "0"
         if (textoCuenta != null)
-            textoCuenta.text = "¡YA!";
+            textoCuenta.text = "¡0!";
 
         // Activamos los spawners
         foreach (var spawner in spawners)
