@@ -946,8 +946,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a99e05ea0a63304bab24b377bb313b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MinutoTiempo: 45
+  modoPrueba: 0
+  velocidadTest: 5
   UI_Tiempo: {fileID: 454101459}
-  MinutoTiempo: 60
 --- !u!4 &1678354865
 Transform:
   m_ObjectHideFlags: 0

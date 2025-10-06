@@ -26,5 +26,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/Niveles/GameplayLvL2.unity
     guid: eced2ba3fd3dca54f952f21c4b5cd88c
+  - enabled: 1
+    path: Assets/BryanProgreso/Escenas/Victoria.unity
+    guid: 675fd7934723a0241abae9f9493848c9
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
