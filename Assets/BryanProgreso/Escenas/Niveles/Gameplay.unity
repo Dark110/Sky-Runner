@@ -171,10 +171,11 @@ MonoBehaviour:
   tiempoEntreSpawn: 6
   maxObstaculos: 12
   distanciaDetras: 10
-  homingMin: 1
-  homingMax: 3
-  velZMin: 3
-  velZMax: 6
+  habilitarSpawnMultiple: 1
+  probabilidadMultiple: 0.1
+  minObstaculosMultiples: 2
+  maxObstaculosMultiples: 4
+  separacionMultiple: 2
 --- !u!1 &178776268
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,10 +525,11 @@ MonoBehaviour:
   tiempoEntreSpawn: 5
   maxObstaculos: 12
   distanciaDetras: 10
-  homingMin: 1
-  homingMax: 3
-  velZMin: 3
-  velZMax: 6
+  habilitarSpawnMultiple: 1
+  probabilidadMultiple: 0.2
+  minObstaculosMultiples: 2
+  maxObstaculosMultiples: 3
+  separacionMultiple: 4
 --- !u!4 &601726308
 Transform:
   m_ObjectHideFlags: 0
@@ -831,10 +833,11 @@ MonoBehaviour:
   tiempoEntreSpawn: 1.8
   maxObstaculos: 12
   distanciaDetras: 10
-  homingMin: 1
-  homingMax: 3
-  velZMin: 3
-  velZMax: 6
+  habilitarSpawnMultiple: 1
+  probabilidadMultiple: 0.3
+  minObstaculosMultiples: 2
+  maxObstaculosMultiples: 3
+  separacionMultiple: 4
 --- !u!4 &1172232244
 Transform:
   m_ObjectHideFlags: 0

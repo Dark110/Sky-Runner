@@ -127,6 +127,10 @@ MonoBehaviour:
   moverAdelante: 1
   RotMin: 60
   RotMax: 120
+  usarHoming: 1
+  fuerzaHoming: 4
+  usarPrediccion: 1
+  tiempoPrediccion: 1.5
   puntosAlEsquivar: 10
 --- !u!54 &4936637169219083529
 Rigidbody:

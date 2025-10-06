@@ -17,8 +17,16 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
+      propertyPath: fuerzaHoming
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
       propertyPath: puntosAlEsquivar
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
+      propertyPath: tiempoPrediccion
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1449986173742180447, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
       propertyPath: m_LocalPosition.x

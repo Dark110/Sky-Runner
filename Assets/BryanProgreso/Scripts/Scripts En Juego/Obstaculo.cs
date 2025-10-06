@@ -25,13 +25,12 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
     public int maxObstaculos = 12;
     public float distanciaDetras = 10f;
 
-    [Header("Homing Normal")]
-    public float homingMin = 1f;
-    public float homingMax = 3f;
-
-    [Header("Velocidad de Z")]
-    public float velZMin = 3f;
-    public float velZMax = 6f;
+    [Header("Spawn múltiple")]
+    public bool habilitarSpawnMultiple = true;
+    [Range(0f, 1f)] public float probabilidadMultiple = 0.3f;
+    public int minObstaculosMultiples = 2;
+    public int maxObstaculosMultiples = 5;
+    public float separacionMultiple = 2f;
 
     private List<GameObject> obstaculosActivos = new List<GameObject>();
 
@@ -47,27 +46,54 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
         }
 
         LimpiarObstaculos();
-        AplicarHoming();
     }
 
     void GenerarObstaculoCaotico()
     {
-        // Spawn dinámico en X e Y relativo al jugador
-        float x = jugador.position.x + Random.Range(-2f, 2f);
-        float y = jugador.position.y + Random.Range(-1f, 1f);
-        float z = jugador.position.z - Random.Range(distanciaZMin, distanciaZMax);
+        if (habilitarSpawnMultiple && Random.value <= probabilidadMultiple)
+        {
+            int cantidadMultiple = Random.Range(minObstaculosMultiples, maxObstaculosMultiples + 1);
 
-        CrearObstaculo(prefabObstaculo, new Vector3(x, y, z), Random.Range(homingMin, homingMax));
+            bool vertical = Random.value > 0.5f;
+            float z = jugador.position.z - Random.Range(distanciaZMin, distanciaZMax);
+
+            if (vertical)
+            {
+                float x = jugador.position.x + Random.Range(-2f, 2f);
+                float yBase = jugador.position.y - ((cantidadMultiple - 1) * separacionMultiple) / 2f;
+
+                for (int i = 0; i < cantidadMultiple; i++)
+                {
+                    float y = yBase + i * separacionMultiple;
+                    CrearObstaculo(new Vector3(x, y, z));
+                }
+            }
+            else
+            {
+                float y = jugador.position.y + Random.Range(-1f, 1f);
+                float xBase = jugador.position.x - ((cantidadMultiple - 1) * separacionMultiple) / 2f;
+
+                for (int i = 0; i < cantidadMultiple; i++)
+                {
+                    float x = xBase + i * separacionMultiple;
+                    CrearObstaculo(new Vector3(x, y, z));
+                }
+            }
+        }
+        else
+        {
+            float x = jugador.position.x + Random.Range(-2f, 2f);
+            float y = jugador.position.y + Random.Range(-1f, 1f);
+            float z = jugador.position.z - Random.Range(distanciaZMin, distanciaZMax);
+
+            CrearObstaculo(new Vector3(x, y, z));
+        }
     }
 
-    void CrearObstaculo(GameObject prefab, Vector3 spawnPos, float homing)
+    void CrearObstaculo(Vector3 spawnPos)
     {
-        GameObject nuevo = Instantiate(prefab, spawnPos, Quaternion.identity);
+        GameObject nuevo = Instantiate(prefabObstaculo, spawnPos, Quaternion.identity);
         obstaculosActivos.Add(nuevo);
-
-        MovObstaculoAux aux = nuevo.AddComponent<MovObstaculoAux>();
-        aux.velZ = Random.Range(velZMin, velZMax);
-        aux.homing = homing;
 
         // Escala inicial pequeña
         Vector3 escalaFinal = nuevo.transform.localScale;
@@ -82,14 +108,15 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
         float tiempo = 0f;
         Vector3 escalaInicial = obj.transform.localScale;
 
-        while (tiempo < duracion)
+        while (tiempo < duracion && obj != null)
         {
             tiempo += Time.deltaTime;
             obj.transform.localScale = Vector3.Lerp(escalaInicial, escalaFinal, tiempo / duracion);
             yield return null;
         }
 
-        obj.transform.localScale = escalaFinal;
+        if (obj != null)
+            obj.transform.localScale = escalaFinal;
     }
 
     void LimpiarObstaculos()
@@ -109,38 +136,4 @@ public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
             }
         }
     }
-
-    void AplicarHoming()
-    {
-        foreach (var obs in obstaculosActivos)
-        {
-            if (obs == null) continue;
-
-            MovObstaculoAux aux = obs.GetComponent<MovObstaculoAux>();
-            if (aux == null) continue;
-
-            // Movimiento Z hacia jugador
-            obs.transform.position = Vector3.MoveTowards(
-                obs.transform.position,
-                new Vector3(obs.transform.position.x, obs.transform.position.y, jugador.position.z),
-                aux.velZ * Time.deltaTime
-            );
-
-            // Homing lateral/vertical semi-aleatorio
-            Vector3 targetPos = new Vector3(
-                jugador.position.x,
-                jugador.position.y,
-                obs.transform.position.z
-            );
-
-            obs.transform.position = Vector3.Lerp(obs.transform.position, targetPos, aux.homing * Time.deltaTime);
-        }
-    }
-}
-
-[System.Serializable]
-public class MovObstaculoAux : MonoBehaviour
-{
-    [HideInInspector] public float velZ;
-    [HideInInspector] public float homing;
 }

@@ -2,21 +2,30 @@ using UnityEngine;
 
 public class MovObstaculo : MonoBehaviour
 {
-    [Header("Rango de Velocidad (Movimiento)")]
+    [Header("Movimiento hacia adelante")]
     public float VelMin = 3f;
     public float VelMax = 8f;
     private float VelObstaculo;
     public bool moverAdelante = true;
 
-    [Header("Rango de Velocidad de Rotación")]
+    [Header("Rotación aleatoria")]
     public float RotMin = 30f;
     public float RotMax = 120f;
     private Vector3 velocidadRotacion;
+
+    [Header("Homing (seguir al jugador)")]
+    public bool usarHoming = false;
+    [Range(0f, 5f)] public float fuerzaHoming = 1f;
+
+    [Header("Predicción de movimiento del jugador")]
+    public bool usarPrediccion = false;
+    public float tiempoPrediccion = 0.5f; // segundos hacia adelante para "predecir"
 
     [Header("Puntaje")]
     public int puntosAlEsquivar = 10;
 
     private Transform jugador;
+    private Rigidbody rb;
 
     void Start()
     {
@@ -29,20 +38,49 @@ public class MovObstaculo : MonoBehaviour
         );
 
         if (velocidadRotacion == Vector3.zero)
-        {
             velocidadRotacion = Vector3.up * Random.Range(RotMin, RotMax);
-        }
 
         jugador = GameObject.FindWithTag("Player")?.transform;
+
+        rb = GetComponent<Rigidbody>();
     }
 
+    [System.Obsolete]
     void Update()
     {
+        // Movimiento básico hacia adelante
         float direccion = moverAdelante ? 1f : -1f;
-        transform.Translate(Vector3.forward * direccion * VelObstaculo * Time.deltaTime, Space.World);
+        Vector3 avance = Vector3.forward * direccion * VelObstaculo * Time.deltaTime;
+        transform.Translate(avance, Space.World);
 
+        // Rotación aleatoria
         transform.Rotate(velocidadRotacion * Time.deltaTime, Space.Self);
 
+        // Aplicar homing o predicción si está activado
+        if (jugador != null)
+        {
+            Vector3 targetPos = jugador.position;
+
+            if (usarPrediccion && rb != null)
+            {
+                // Intenta predecir la futura posición del jugador según su velocidad
+                Vector3 velJugador = rb.velocity;
+                targetPos += velJugador * tiempoPrediccion;
+            }
+
+            if (usarHoming)
+            {
+                Vector3 direccionHoming = (targetPos - transform.position).normalized;
+                // Suaviza el movimiento con Lerp
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    transform.position + direccionHoming,
+                    fuerzaHoming * Time.deltaTime
+                );
+            }
+        }
+
+        // Verifica si ya pasó al jugador
         if (JugadorFueraDeRango())
         {
             if (ScoreManager.Instance != null)
@@ -52,12 +90,10 @@ public class MovObstaculo : MonoBehaviour
         }
     }
 
-    // Verifica si el obstáculo pasó al jugador
     bool JugadorFueraDeRango()
     {
         if (jugador == null) return false;
 
-        // Ajusta la distancia según necesites
         float margen = 5f;
 
         if (moverAdelante)
