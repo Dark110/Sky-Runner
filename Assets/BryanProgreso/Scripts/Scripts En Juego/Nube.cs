@@ -4,59 +4,31 @@ public class Cloud : MonoBehaviour
 {
     [Header("Movimiento")]
     public float velocidad = 2f;
-    public bool moverHaciaJugador = false;
+    public float variacionLateral = 0.4f;
+    public float variacionVertical = 0.2f;
 
-    [Header("Variación")]
-    public float variacionVelocidad = 0.5f;
-    public float variacionMovimientoLateral = 0.3f;
-
-    [HideInInspector] public Transform jugador;
-    private float movimientoLateral;
-    private float tiempoCambioDireccion = 0f;
-    private float intervaloCambioDireccion = 2f;
+    [HideInInspector] public float objetivoZ; // hacia dónde deben avanzar (pasan al jugador)
+    private Vector3 direccion;
 
     void Start()
     {
-        // Añadir variación a la velocidad
-        velocidad += Random.Range(-variacionVelocidad, variacionVelocidad);
-
-        // Inicializar movimiento lateral aleatorio
-        CambiarDireccionLateral();
+        // Pequeña variación de dirección inicial
+        direccion = new Vector3(
+            Random.Range(-variacionLateral, variacionLateral),
+            Random.Range(-variacionVertical, variacionVertical),
+            1f // siempre avanzan hacia adelante en +Z (pasan al jugador)
+        ).normalized;
     }
 
     void Update()
     {
-        if (moverHaciaJugador)
+        // Movimiento constante
+        transform.Translate(direccion * velocidad * Time.deltaTime, Space.World);
+
+        // Si ya pasó mucho el objetivoZ, la nube dejará de renderizarse
+        if (transform.position.z > objetivoZ)
         {
-            // Movimiento hacia el jugador en X/Y (ya que Z no cambia)
-            Vector3 direccion = (jugador.position - transform.position).normalized;
-            direccion.z = 0; // Ignorar Z
-            transform.Translate(direccion * velocidad * Time.deltaTime, Space.World);
+            // No la destruimos aquí (el spawner lo hace), solo opcionalmente la volvemos invisible si quieres
         }
-        else
-        {
-            // Movimiento lateral suave con variación
-            tiempoCambioDireccion -= Time.deltaTime;
-            if (tiempoCambioDireccion <= 0f)
-            {
-                CambiarDireccionLateral();
-                tiempoCambioDireccion = intervaloCambioDireccion;
-            }
-
-            // Movimiento aleatorio en X/Y
-            Vector3 direccion = new Vector3(
-                movimientoLateral * variacionMovimientoLateral,
-                Random.Range(-0.1f, 0.1f),
-                0
-            );
-
-            transform.Translate(direccion * velocidad * Time.deltaTime, Space.World);
-        }
-    }
-
-    void CambiarDireccionLateral()
-    {
-        movimientoLateral = Random.Range(-1f, 1f);
-        intervaloCambioDireccion = Random.Range(1f, 3f);
     }
 }

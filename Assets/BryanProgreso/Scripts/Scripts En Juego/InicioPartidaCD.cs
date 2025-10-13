@@ -1,20 +1,25 @@
 using UnityEngine;
-using TMPro; 
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Cuenta regresiva")]
-    public TMP_Text textoCuenta;  
-    public int tiempoInicial = 3;  // De 3 a 0
+    public TMP_Text textoCuenta;
+    public int tiempoInicial = 3; // de 3 a 0
 
     [Header("Spawners")]
-    public ObstaculoSpawnerCaoticoFinal[] spawners;
+    public ObstaculoSpawnerCaoticoFinal[] spawnersObstaculos;
+    public NubeSpawner[] spawnersNubes;
 
     void Start()
     {
-        // Antes de empezar, desactivamos los spawners
-        foreach (var spawner in spawners)
+        // Desactivar todos los spawners antes de comenzar
+        foreach (var spawner in spawnersObstaculos)
             spawner.spawnerActivo = false;
+
+        foreach (var spawner in spawnersNubes)
+            spawner.enabled = false; // los NubeSpawner no usan variable de activo, así que se desactivan por script
+
         StartCoroutine(Countdown());
     }
 
@@ -35,10 +40,13 @@ public class GameManager : MonoBehaviour
             textoCuenta.text = "¡0!";
 
         // Activar spawners
-        foreach (var spawner in spawners)
+        foreach (var spawner in spawnersObstaculos)
             spawner.spawnerActivo = true;
 
-        // Limpiar texto
+        foreach (var spawner in spawnersNubes)
+            spawner.enabled = true;
+
+        // Limpiar texto después de un segundo
         yield return new WaitForSeconds(1f);
         if (textoCuenta != null)
             textoCuenta.text = "";

@@ -843,16 +843,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabNube: {fileID: 4853495501251435760, guid: 530ce4cabe7beb64ba6666b87b9626b2, type: 3}
-  offsetX: 10
-  offsetY: 5
-  distanciaFrontal: 78
+  rangoX: 20
+  rangoY: 10
+  distanciaZ: -60
+  tiempoEntreSpawn: 7
   maxNubes: 10
-  tiempoEntreSpawn: 2
   escalaInicial: 0.1
-  duracionTransicion: 3
-  velocidadMin: 2
-  velocidadMax: 3
-  moverHaciaJugador: 0
+  duracionTransicion: 8
+  velocidadMin: 4
+  velocidadMax: 6
 --- !u!1 &1172232242
 GameObject:
   m_ObjectHideFlags: 0
@@ -1529,11 +1528,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textoCuenta: {fileID: 796246760}
   tiempoInicial: 3
-  spawners:
+  spawnersObstaculos:
   - {fileID: 1172232243}
   - {fileID: 601726307}
   - {fileID: 41865506}
-  - {fileID: 41865506}
+  spawnersNubes:
+  - {fileID: 1136312566}
 --- !u!1001 &1992936760
 PrefabInstance:
   m_ObjectHideFlags: 0

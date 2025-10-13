@@ -4,26 +4,27 @@ using System.Collections.Generic;
 public class NubeSpawner : MonoBehaviour
 {
     [Header("Referencias")]
-    public Transform jugador;               // Jugador para spawn relativo
-    public GameObject prefabNube;           // Prefab de la nube
+    public Transform jugador;
+    public GameObject prefabNube;
+
+    [Header("Área de spawn alrededor del jugador")]
+    public float rangoX = 20f;
+    public float rangoY = 10f;
+    public float distanciaZ = -25f;
 
     [Header("Spawn")]
-    public float offsetX = 10f;             // Rango lateral
-    public float offsetY = 5f;              // Rango vertical
-    public float distanciaFrontal = 15f;    // Distancia delante del jugador para spawn (usará -Z)
-    public int maxNubes = 10;               // Número máximo de nubes activas
-    public float tiempoEntreSpawn = 0.7f;   // Tiempo entre spawns
+    public float tiempoEntreSpawn = 1f;
+    public int maxNubes = 15;
 
     [Header("Escala y transición")]
-    public float escalaInicial = 0.2f;      // Escala inicial al spawn
-    public float duracionTransicion = 2f;   // Duración de la transición a escala normal
+    public float escalaInicial = 0.2f;
+    public float duracionTransicion = 2f;
 
     [Header("Movimiento")]
-    public float velocidadMin = 1f;         // Velocidad mínima de movimiento
-    public float velocidadMax = 3f;         // Velocidad máxima de movimiento
-    public bool moverHaciaJugador = false;  // Si las nubes deben moverse hacia el jugador
+    public float velocidadMin = 1f;
+    public float velocidadMax = 3f;
 
-    private float temporizador = 0f;
+    private float temporizador;
     private List<GameObject> nubesActivas = new List<GameObject>();
 
     void Update()
@@ -42,55 +43,42 @@ public class NubeSpawner : MonoBehaviour
 
     void GenerarNube()
     {
-        float x = jugador.position.x + Random.Range(-offsetX, offsetX);
-        float y = jugador.position.y + Random.Range(-offsetY, offsetY);
-        float z = jugador.position.z - distanciaFrontal;
+        // Posición inicial alrededor del jugador, delante en -Z
+        float x = jugador.position.x + Random.Range(-rangoX, rangoX);
+        float y = jugador.position.y + Random.Range(-rangoY, rangoY);
+        float z = jugador.position.z + distanciaZ;
 
         GameObject nuevaNube = Instantiate(prefabNube, new Vector3(x, y, z), Quaternion.identity);
         nubesActivas.Add(nuevaNube);
 
-        Cloud cloudScript = nuevaNube.GetComponent<Cloud>();
-        if (cloudScript != null)
+        Cloud nubeScript = nuevaNube.GetComponent<Cloud>();
+        if (nubeScript != null)
         {
-            cloudScript.velocidad = Random.Range(velocidadMin, velocidadMax);
-            cloudScript.moverHaciaJugador = moverHaciaJugador;
-            cloudScript.jugador = jugador;
+            nubeScript.velocidad = Random.Range(velocidadMin, velocidadMax);
+            nubeScript.objetivoZ = jugador.position.z + 10f; // hasta pasar al jugador
         }
 
+        // Escalado progresivo
         Vector3 escalaFinal = nuevaNube.transform.localScale;
         nuevaNube.transform.localScale = escalaFinal * escalaInicial;
-
         StartCoroutine(EscalarSuavemente(nuevaNube, escalaFinal, duracionTransicion));
     }
 
     private System.Collections.IEnumerator EscalarSuavemente(GameObject obj, Vector3 escalaFinal, float duracion)
     {
         float tiempo = 0f;
-        Vector3 escalaInicial = obj.transform.localScale;
+        Vector3 escalaInicialLocal = obj.transform.localScale;
 
-        while (tiempo < duracion && obj != null) // Verificar si el objeto existe en cada iteración
+        while (tiempo < duracion && obj != null)
         {
             tiempo += Time.deltaTime;
             float t = Mathf.Clamp01(tiempo / duracion);
-
-            // Verificar nuevamente antes de acceder al transform
-            if (obj != null)
-            {
-                obj.transform.localScale = Vector3.Lerp(escalaInicial, escalaFinal, t);
-            }
-            else
-            {
-                yield break; // Salir de la corrutina si el objeto fue destruido
-            }
-
+            obj.transform.localScale = Vector3.Lerp(escalaInicialLocal, escalaFinal, t);
             yield return null;
         }
 
-        // Verificar una última vez antes de establecer la escala final
         if (obj != null)
-        {
             obj.transform.localScale = escalaFinal;
-        }
     }
 
     void LimpiarNubes()
@@ -103,13 +91,8 @@ public class NubeSpawner : MonoBehaviour
                 continue;
             }
 
-            float distanciaX = Mathf.Abs(nubesActivas[i].transform.position.x - jugador.position.x);
-            float distanciaY = Mathf.Abs(nubesActivas[i].transform.position.y - jugador.position.y);
-            float distanciaZ = Mathf.Abs(nubesActivas[i].transform.position.z - jugador.position.z);
-            float margenXY = 20f;
-            float margenZ = 30f;
-
-            if (distanciaX > margenXY || distanciaY > margenXY || distanciaZ > margenZ)
+            // Si la nube ya pasó más allá del jugador (en Z), destruirla
+            if (nubesActivas[i].transform.position.z > jugador.position.z + 5f)
             {
                 Destroy(nubesActivas[i]);
                 nubesActivas.RemoveAt(i);
