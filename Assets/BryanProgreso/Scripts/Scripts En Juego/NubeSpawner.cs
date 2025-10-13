@@ -19,6 +19,7 @@ public class NubeSpawner : MonoBehaviour
     [Header("Escala y transición")]
     public float escalaInicial = 0.2f;
     public float duracionTransicion = 2f;
+    public float variacionEscala = 0.25f; // +-25% de variación de tamaño
 
     [Header("Movimiento")]
     public float velocidadMin = 1f;
@@ -48,20 +49,31 @@ public class NubeSpawner : MonoBehaviour
         float y = jugador.position.y + Random.Range(-rangoY, rangoY);
         float z = jugador.position.z + distanciaZ;
 
-        GameObject nuevaNube = Instantiate(prefabNube, new Vector3(x, y, z), Quaternion.identity);
+        // Rotación aleatoria (solo en Z si son sprites planos)
+        Quaternion rotacionAleatoria = Quaternion.Euler(
+            Random.Range(-10f, 10f),  // leve inclinación X
+            Random.Range(0f, 360f),   // rotación completa Y
+            Random.Range(-10f, 10f)   // leve inclinación Z
+        );
+
+        GameObject nuevaNube = Instantiate(prefabNube, new Vector3(x, y, z), rotacionAleatoria);
         nubesActivas.Add(nuevaNube);
 
+        // Variación de escala individual (entre 0.75x y 1.25x)
+        float factorEscala = 1f + Random.Range(-variacionEscala, variacionEscala);
+        Vector3 escalaFinal = prefabNube.transform.localScale * factorEscala;
+
+        // Escala inicial más pequeña (para efecto de aparición)
+        nuevaNube.transform.localScale = escalaFinal * escalaInicial;
+        StartCoroutine(EscalarSuavemente(nuevaNube, escalaFinal, duracionTransicion));
+
+        // Configurar el movimiento
         Cloud nubeScript = nuevaNube.GetComponent<Cloud>();
         if (nubeScript != null)
         {
             nubeScript.velocidad = Random.Range(velocidadMin, velocidadMax);
-            nubeScript.objetivoZ = jugador.position.z + 10f; // hasta pasar al jugador
+            nubeScript.objetivoZ = jugador.position.z + 10f; // que pase al jugador
         }
-
-        // Escalado progresivo
-        Vector3 escalaFinal = nuevaNube.transform.localScale;
-        nuevaNube.transform.localScale = escalaFinal * escalaInicial;
-        StartCoroutine(EscalarSuavemente(nuevaNube, escalaFinal, duracionTransicion));
     }
 
     private System.Collections.IEnumerator EscalarSuavemente(GameObject obj, Vector3 escalaFinal, float duracion)

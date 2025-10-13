@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 public class MovimientoParacaidista : MonoBehaviour
@@ -6,7 +6,7 @@ public class MovimientoParacaidista : MonoBehaviour
     [Header("Velocidades")]
     public float Velocidad = 10f;
 
-    [Header("Inclinación visual")]
+    [Header("InclinaciÃ³n visual")]
     public float AnguloMaxX = 15f;
     public float AnguloMaxZ = 15f;
 
@@ -18,14 +18,19 @@ public class MovimientoParacaidista : MonoBehaviour
     [Header("PowerUps")]
     public bool invulnerable = false;
 
-    [Header("Suavizado de rotación")]
-    public float NivelSuavidad = 10f; // Ajusta en Inspector
-    public float DeltaMultiplicador = 1.5f; // Para Android, frames irregulares
+    [Header("Suavizado de rotaciÃ³n")]
+    public float NivelSuavidad = 10f;
+    public float DeltaMultiplicador = 1.5f;
+
+    [Header("Efecto Skybox")]
+    public float intensidadSkybox = 10f; // cuanto se mueve la skybox
 
     private Vector3 offset;
     private CharacterController controller;
     private Vector3 movimiento;
     private Quaternion rotacionInicial;
+
+    private float rotacionSkybox = 0f; // rotaciÃ³n acumulada
 
     private void Awake()
     {
@@ -46,42 +51,36 @@ public class MovimientoParacaidista : MonoBehaviour
     private void Update()
     {
 #if UNITY_STANDALONE || UNITY_EDITOR
-        // Entrada normal de teclado
         float inputX = Input.GetAxis("Horizontal");
         float inputY = Input.GetAxis("Vertical");
 #else
-    // Entrada por acelerómetro para Android
-    float deadZone = 0.05f; // evita movimientos por vibraciones leves
-    float rawX = Input.acceleration.x - offset.x;
-    float rawY = Input.acceleration.y - offset.y;
-
-    // Aplica zona muerta
-    float inputX = Mathf.Abs(rawX) < deadZone ? 0f : rawX;
-    float inputY = Mathf.Abs(rawY) < deadZone ? 0f : rawY;
-
-    // Escala no lineal para mayor sensibilidad en pequeños movimientos
-    inputX = Mathf.Sign(inputX) * Mathf.Pow(Mathf.Abs(inputX), 0.7f) * Sensibilidad;
-    inputY = Mathf.Sign(inputY) * Mathf.Pow(Mathf.Abs(inputY), 0.7f) * Sensibilidad;
-
-    // Limita valores para evitar movimientos excesivos
-    inputX = Mathf.Clamp(inputX, -1f, 1f);
-    inputY = Mathf.Clamp(inputY, -1f, 1f);
+        float deadZone = 0.05f;
+        float rawX = Input.acceleration.x - offset.x;
+        float rawY = Input.acceleration.y - offset.y;
+        float inputX = Mathf.Abs(rawX) < deadZone ? 0f : rawX;
+        float inputY = Mathf.Abs(rawY) < deadZone ? 0f : rawY;
+        inputX = Mathf.Sign(inputX) * Mathf.Pow(Mathf.Abs(inputX), 0.7f) * Sensibilidad;
+        inputY = Mathf.Sign(inputY) * Mathf.Pow(Mathf.Abs(inputY), 0.7f) * Sensibilidad;
+        inputX = Mathf.Clamp(inputX, -1f, 1f);
+        inputY = Mathf.Clamp(inputY, -1f, 1f);
 #endif
 
         movimiento = new Vector3(inputX, inputY, 0);
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
-        // Rotación objetivo para inclinación visual
         float tiltX = -inputY * AnguloMaxX;
         float tiltZ = -inputX * AnguloMaxZ;
         Quaternion rotacionTilt = Quaternion.Euler(tiltX, 0f, tiltZ);
         Quaternion rotacionObjetivo = rotacionInicial * rotacionTilt;
 
-        // Suavizado de rotación
         float factorInput = Mathf.Clamp01(movimiento.magnitude);
         float velocidadSlerp = NivelSuavidad * factorInput * DeltaMultiplicador * Time.deltaTime;
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
+
+        // ðŸŒ… Movimiento de Skybox
+        rotacionSkybox = Mathf.Lerp(rotacionSkybox, inputX * intensidadSkybox, Time.deltaTime * 2f);
+        RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
     private void FixedUpdate()
