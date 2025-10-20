@@ -100,10 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c2acb58f885294d8cd5801cc9c0214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidadZMin: 8
-  velocidadZMax: 12
-  variacionLateral: 1
-  variacionVertical: 0.8
+  velocidadZMin: 9
+  velocidadZMax: 11
+  variacionLateral: 0.7
+  variacionVertical: 0.7
   puntos: 20
   margenDespawn: 10
   velocidadZ: 0
