@@ -23,14 +23,15 @@ public class MovimientoParacaidista : MonoBehaviour
     public float DeltaMultiplicador = 1.5f;
 
     [Header("Efecto Skybox")]
-    public float intensidadSkybox = 10f; // cuanto se mueve la skybox
+    public float intensidadSkybox = 10f; // cuánto se mueve la Skybox
+    public float rotacionInicialSkybox = 120f; // ⚡ rotación inicial editable desde Inspector
 
     private Vector3 offset;
     private CharacterController controller;
     private Vector3 movimiento;
     private Quaternion rotacionInicial;
 
-    private float rotacionSkybox = 0f; // rotación acumulada
+    private float rotacionSkybox; // rotación acumulada
 
     private void Awake()
     {
@@ -46,6 +47,9 @@ public class MovimientoParacaidista : MonoBehaviour
         else
             offset = offsetFijo;
 #endif
+        // ⚡ Setear rotación inicial de la Skybox desde Inspector
+        rotacionSkybox = rotacionInicialSkybox;
+        RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
     private void Update()
@@ -65,21 +69,23 @@ public class MovimientoParacaidista : MonoBehaviour
         inputY = Mathf.Clamp(inputY, -1f, 1f);
 #endif
 
+        // Movimiento del jugador
         movimiento = new Vector3(inputX, inputY, 0);
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
+        // Rotación visual del jugador
         float tiltX = -inputY * AnguloMaxX;
         float tiltZ = -inputX * AnguloMaxZ;
         Quaternion rotacionTilt = Quaternion.Euler(tiltX, 0f, tiltZ);
         Quaternion rotacionObjetivo = rotacionInicial * rotacionTilt;
-
         float factorInput = Mathf.Clamp01(movimiento.magnitude);
         float velocidadSlerp = NivelSuavidad * factorInput * DeltaMultiplicador * Time.deltaTime;
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
 
-        // 🌅 Movimiento de Skybox
-        rotacionSkybox = Mathf.Lerp(rotacionSkybox, inputX * intensidadSkybox, Time.deltaTime * 2f);
+        // 🌅 Skybox: suavizar movimiento, partiendo de la rotación inicial editable
+        float objetivoSkybox = rotacionInicialSkybox + inputX * intensidadSkybox;
+        rotacionSkybox = Mathf.Lerp(rotacionSkybox, objetivoSkybox, Time.deltaTime * 2f);
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 

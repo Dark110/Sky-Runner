@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [Header("Spawners")]
     public ObstaculoSpawnerCaoticoFinal[] spawnersObstaculos;
     public NubeSpawner[] spawnersNubes;
+    public DianaSpawner[] spawnersDianas; // ‚Üê Nuevo spawner de anillos (Dianas)
 
     void Start()
     {
@@ -18,7 +19,10 @@ public class GameManager : MonoBehaviour
             spawner.spawnerActivo = false;
 
         foreach (var spawner in spawnersNubes)
-            spawner.enabled = false; // los NubeSpawner no usan variable de activo, asÌ que se desactivan por script
+            spawner.enabled = false;
+
+        foreach (var spawner in spawnersDianas)
+            spawner.enabled = false; // el DianaSpawner no tiene variable de activo, se desactiva con enabled
 
         StartCoroutine(Countdown());
     }
@@ -37,7 +41,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (textoCuenta != null)
-            textoCuenta.text = "°0!";
+            textoCuenta.text = "¬°0!";
 
         // Activar spawners
         foreach (var spawner in spawnersObstaculos)
@@ -46,7 +50,10 @@ public class GameManager : MonoBehaviour
         foreach (var spawner in spawnersNubes)
             spawner.enabled = true;
 
-        // Limpiar texto despuÈs de un segundo
+        foreach (var spawner in spawnersDianas)
+            spawner.enabled = true;
+
+        // Limpiar texto despu√©s de un segundo
         yield return new WaitForSeconds(1f);
         if (textoCuenta != null)
             textoCuenta.text = "";
