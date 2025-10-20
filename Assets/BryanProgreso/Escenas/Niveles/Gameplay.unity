@@ -661,8 +661,8 @@ MonoBehaviour:
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 8399555538034048709, guid: f26b0cf3424cde94b86026afdea92b04, type: 3}
   spawnerActivo: 1
-  distanciaZMin: 40
-  distanciaZMax: 60
+  distanciaZMin: 60
+  distanciaZMax: 80
   tiempoEntreSpawn: 5
   maxObstaculos: 12
   distanciaDetras: 10
@@ -765,6 +765,7 @@ Transform:
   - {fileID: 524265857}
   - {fileID: 1762320831}
   - {fileID: 645249320}
+  - {fileID: 2143995276}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &796246759
@@ -936,8 +937,61 @@ Transform:
   - {fileID: 601726308}
   - {fileID: 41865505}
   - {fileID: 1136312565}
+  - {fileID: 998845554}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &998845553
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 998845554}
+  - component: {fileID: 998845555}
+  m_Layer: 0
+  m_Name: Anillos Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &998845554
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998845553}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.4, y: -0.5, z: -33}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 892139617}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &998845555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998845553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34a0cee7ac160b4a95252b67e3c0401, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 1992936761}
+  prefabDiana: {fileID: 2014950668398645328, guid: 43f7e6c1918ccad4abb502f963a89b41, type: 3}
+  rangoX: 20
+  rangoY: 10
+  distanciaZ: -100
+  tiempoEntreSpawn: 7
+  maxDianas: 5
+  duracionFade: 0.8
 --- !u!1 &1136312564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1813,8 +1867,11 @@ MonoBehaviour:
   - {fileID: 1172232243}
   - {fileID: 601726307}
   - {fileID: 41865506}
+  - {fileID: 41865506}
   spawnersNubes:
   - {fileID: 1136312566}
+  spawnersDianas:
+  - {fileID: 998845555}
 --- !u!1001 &1992936760
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1940,6 +1997,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5749eb4abb57e8e48993c3887021a656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2143995275
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2143995276}
+  - component: {fileID: 2143995277}
+  m_Layer: 0
+  m_Name: SkyboxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2143995276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143995275}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -472.69348, y: -229.27109, z: -526.1941}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 650943401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2143995277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143995275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc33b5b7d7c0434ea36a4b9ba34c022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotacionInicial: 130
+  rotarDuranteJuego: 1
+  velocidadRotacion: 1
 --- !u!1001 &6556936523380360787
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -28,7 +28,7 @@ public class Cloud : MonoBehaviour
         // Si ya pasó mucho el objetivoZ, la nube dejará de renderizarse
         if (transform.position.z > objetivoZ)
         {
-            // No la destruimos aquí (el spawner lo hace), solo opcionalmente la volvemos invisible si quieres
+          
         }
     }
 }
