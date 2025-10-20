@@ -14,7 +14,7 @@ public class FinalManager : MonoBehaviour
 
             resultadoText.text =
                 "Tu puntaje: " + finalScore + "\n" +
-                "High Score: " + highScore;
+                "Mejor puntaje: " + highScore;
 
             Debug.Log($"[FinalManager] Mostrando Score: {finalScore}, HighScore: {highScore}");
         }

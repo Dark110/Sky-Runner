@@ -36,7 +36,12 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("MenuInicio");
     }
 
-     public void Salir()
+    public void Tutorial()
+    {
+        SceneManager.LoadScene("SkyTutorial");
+    }
+
+    public void Salir()
     {
         Application.Quit();
         Debug.Log("Salir del juego");
