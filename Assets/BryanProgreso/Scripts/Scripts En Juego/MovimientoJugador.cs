@@ -23,8 +23,8 @@ public class MovimientoParacaidista : MonoBehaviour
     public float DeltaMultiplicador = 1.5f;
 
     [Header("Efecto Skybox")]
-    public float intensidadSkybox = 10f; // cuánto se mueve la Skybox
-    public float rotacionInicialSkybox = 120f; // ⚡ rotación inicial editable desde Inspector
+    public float intensidadSkybox = 10f; // Cuánto se mueve la Skybox
+    public float rotacionInicialSkybox = 120f; //Rotación inicial Inspector
 
     private Vector3 offset;
     private CharacterController controller;
@@ -47,7 +47,7 @@ public class MovimientoParacaidista : MonoBehaviour
         else
             offset = offsetFijo;
 #endif
-        // ⚡ Setear rotación inicial de la Skybox desde Inspector
+        //  Skybox desde Inspector
         rotacionSkybox = rotacionInicialSkybox;
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
@@ -83,7 +83,7 @@ public class MovimientoParacaidista : MonoBehaviour
         float velocidadSlerp = NivelSuavidad * factorInput * DeltaMultiplicador * Time.deltaTime;
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
 
-        // 🌅 Skybox: suavizar movimiento, partiendo de la rotación inicial editable
+        // Skybox: suavizar movimiento
         float objetivoSkybox = rotacionInicialSkybox + inputX * intensidadSkybox;
         rotacionSkybox = Mathf.Lerp(rotacionSkybox, objetivoSkybox, Time.deltaTime * 2f);
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
