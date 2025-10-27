@@ -24,7 +24,7 @@ public class MovimientoParacaidista : MonoBehaviour
 
     [Header("Efecto Skybox")]
     public float intensidadSkybox = 10f; // Cuánto se mueve la Skybox
-    public float rotacionInicialSkybox = 120f; //Rotación inicial Inspector
+    public float rotacionInicialSkybox = 120f; // Rotación inicial Inspector
 
     private Vector3 offset;
     private CharacterController controller;
@@ -47,22 +47,32 @@ public class MovimientoParacaidista : MonoBehaviour
         else
             offset = offsetFijo;
 #endif
-        //  Skybox desde Inspector
+        // Skybox desde Inspector
         rotacionSkybox = rotacionInicialSkybox;
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
     private void Update()
     {
+        // —— Pausa: si el juego está pausado, no procesar inputs/rotaciones
+        if (MenuGameManager.GetInstance() != null &&
+            MenuGameManager.GetInstance().CurrentState == GameState.PAUSE)
+        {
+            return;
+        }
+
+        float inputX;
+        float inputY;
+
 #if UNITY_STANDALONE || UNITY_EDITOR
-        float inputX = Input.GetAxis("Horizontal");
-        float inputY = Input.GetAxis("Vertical");
+        inputX = Input.GetAxis("Horizontal");
+        inputY = Input.GetAxis("Vertical");
 #else
         float deadZone = 0.05f;
         float rawX = Input.acceleration.x - offset.x;
         float rawY = Input.acceleration.y - offset.y;
-        float inputX = Mathf.Abs(rawX) < deadZone ? 0f : rawX;
-        float inputY = Mathf.Abs(rawY) < deadZone ? 0f : rawY;
+        inputX = Mathf.Abs(rawX) < deadZone ? 0f : rawX;
+        inputY = Mathf.Abs(rawY) < deadZone ? 0f : rawY;
         inputX = Mathf.Sign(inputX) * Mathf.Pow(Mathf.Abs(inputX), 0.7f) * Sensibilidad;
         inputY = Mathf.Sign(inputY) * Mathf.Pow(Mathf.Abs(inputY), 0.7f) * Sensibilidad;
         inputX = Mathf.Clamp(inputX, -1f, 1f);
@@ -70,7 +80,7 @@ public class MovimientoParacaidista : MonoBehaviour
 #endif
 
         // Movimiento del jugador
-        movimiento = new Vector3(inputX, inputY, 0);
+        movimiento = new Vector3(inputX, inputY, 0f);
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
@@ -91,6 +101,13 @@ public class MovimientoParacaidista : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // —— Pausa: si el juego está pausado, no mover al personaje
+        if (MenuGameManager.GetInstance() != null &&
+            MenuGameManager.GetInstance().CurrentState == GameState.PAUSE)
+        {
+            return;
+        }
+
         controller.Move(movimiento * Velocidad * Time.fixedDeltaTime);
     }
 
