@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -36,7 +35,7 @@ public class MenuGameManager : MonoBehaviour
     [Header("Estado inicial")]
     public GameState initialState = GameState.PLAY;
 
-    [Header("Objetos a pausar")]
+    [Header("Referencias a pausar")]
     public MovimientoParacaidista jugador;
     public Animator[] animators;
     public MonoBehaviour[] scriptsExtras;
@@ -49,6 +48,7 @@ public class MenuGameManager : MonoBehaviour
 
     private void Awake()
     {
+        // Evita duplicados, pero NO persiste entre escenas
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
@@ -56,6 +56,7 @@ public class MenuGameManager : MonoBehaviour
         }
 
         _instance = this;
+
         currentState = initialState;
         RefreshReferences();
         ApplyGameState(currentState);
@@ -70,21 +71,14 @@ public class MenuGameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        // SOLO actualizar referencias si estamos en escena de gameplay
-        string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
+        // Refresca referencias si es necesario
+        if (SceneManager.GetActiveScene().name == "Gameplay" && (needsRefresh || jugador == null))
         {
             RefreshReferences();
             needsRefresh = false;
         }
 
-        // Solo para pruebas en PC
+        // Pausa manual (solo para pruebas)
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (currentState == GameState.PLAY)
@@ -96,121 +90,63 @@ public class MenuGameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"Escena cargada: {scene.name}");
-
-        // SOLO buscar referencias en la escena de gameplay
         if (scene.name == "Gameplay")
         {
             needsRefresh = true;
-            Debug.Log("Forzando estado PLAY en escena Gameplay");
-            currentState = GameState.PLAY; // Primero cambiar el estado
-            ApplyGameState(currentState);  // Luego aplicarlo
+            currentState = GameState.PLAY;
+            ApplyGameState(currentState);
         }
         else
         {
-            // En otras escenas (menús, game over), resetear referencia al jugador
             jugador = null;
-            Debug.Log($"Escena no-Gameplay detectada: {scene.name}. Jugador resetado.");
         }
     }
 
     private void RefreshReferences()
     {
-        // Solo buscar en escena de gameplay
-        string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene != "Gameplay")
-        {
-            Debug.Log($"No buscar referencias en escena: {currentScene}");
+        if (SceneManager.GetActiveScene().name != "Gameplay")
             return;
-        }
 
-        // Buscar jugador
-        if (jugador == null)
-        {
-            jugador = FindFirstObjectByType<MovimientoParacaidista>();
-            if (jugador != null)
-                Debug.Log("Jugador encontrado: " + jugador.gameObject.name);
-            else
-                Debug.LogWarning("No se encontró el jugador en la escena Gameplay");
-        }
+        // Jugador
+        jugador = FindFirstObjectByType<MovimientoParacaidista>();
 
-        // Buscar animators
+        // Animators
         animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-        // Buscar spawners
+        // Spawners
         spawners.Clear();
-        MonoBehaviour[] allSpawners = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var mb in allSpawners)
+        MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var mb in allObjects)
         {
-            if (mb != null && mb.gameObject.CompareTag("Spawner") && !spawners.Contains(mb))
+            if (mb != null && mb.gameObject.CompareTag("Spawner"))
                 spawners.Add(mb);
         }
-
-        Debug.Log($"Referencias actualizadas - Jugador: {jugador != null}, Animators: {animators.Length}, Spawners: {spawners.Count}");
     }
 
     private void ApplyGameState(GameState state)
     {
-        // Solo aplicar si estamos en escena de gameplay o es GAMEOVER
-        string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene != "Gameplay" && state != GameState.GAMEOVER)
-        {
-            Debug.Log($"No aplicar estado {state} en escena: {currentScene}");
+        string scene = SceneManager.GetActiveScene().name;
+        if (scene != "Gameplay" && state != GameState.GAMEOVER)
             return;
-        }
 
-        // Asegurarse de que las referencias estén actualizadas solo en gameplay
-        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
+        if (scene == "Gameplay" && (needsRefresh || jugador == null))
         {
             RefreshReferences();
             needsRefresh = false;
         }
 
-        // NUEVO: Debug del estado anterior vs nuevo
-        Debug.Log($"Aplicando estado: {state} (anterior: {currentState})");
-
         currentState = state;
 
-        switch (state)
-        {
-            case GameState.PLAY:
-                Time.timeScale = 1f;
-                AudioListener.pause = false;
-                if (jugador)
-                {
-                    jugador.enabled = true;
-                    Debug.Log("Jugador habilitado");
-                }
-                SetEnabledForAnimators(animators, true);
-                SetEnabledForScripts(scriptsExtras, true);
-                SetEnabledForScripts(spawners.ToArray(), true);
-                break;
+        bool enable = state == GameState.PLAY;
+        Time.timeScale = (state == GameState.PLAY) ? 1f : 0f;
+        AudioListener.pause = !enable;
 
-            case GameState.PAUSE:
-                Time.timeScale = 0f;
-                AudioListener.pause = true;
-                if (jugador)
-                {
-                    jugador.enabled = false;
-                    Debug.Log("Jugador deshabilitado");
-                }
-                SetEnabledForAnimators(animators, false);
-                SetEnabledForScripts(scriptsExtras, false);
-                SetEnabledForScripts(spawners.ToArray(), false);
-                break;
-
-            case GameState.GAMEOVER:
-                Time.timeScale = 0f;
-                AudioListener.pause = true;
-                if (jugador) jugador.enabled = false;
-                SetEnabledForAnimators(animators, false);
-                SetEnabledForScripts(scriptsExtras, false);
-                SetEnabledForScripts(spawners.ToArray(), false);
-                break;
-        }
+        if (jugador) jugador.enabled = enable;
+        SetEnabledForAnimators(animators, enable);
+        SetEnabledForScripts(scriptsExtras, enable);
+        SetEnabledForScripts(spawners.ToArray(), enable);
 
         OnGameStateChanged?.Invoke(state);
-        Debug.Log($"Estado del juego cambiado a: {state}");
     }
 
     private void SetEnabledForScripts(MonoBehaviour[] scripts, bool enabled)
@@ -227,30 +163,14 @@ public class MenuGameManager : MonoBehaviour
             if (a) a.enabled = enabled;
     }
 
-    // Funciones Botones (UI)
-    public void OnPausePressed()
-    {
-        Debug.Log("Botón Pausa presionado");
-        ApplyGameState(GameState.PAUSE);
-    }
-
-    public void OnResumePressed()
-    {
-        Debug.Log("Botón Reanudar presionado");
-        ApplyGameState(GameState.PLAY);
-    }
-
-    public void OnGameOver()
-    {
-        Debug.Log("Game Over llamado");
-        ApplyGameState(GameState.GAMEOVER);
-    }
+    // 
+    public void OnPausePressed() => ApplyGameState(GameState.PAUSE);
+    public void OnResumePressed() => ApplyGameState(GameState.PLAY);
+    public void OnGameOver() => ApplyGameState(GameState.GAMEOVER);
 
     public void OnResetPressed()
     {
         Time.timeScale = 1f;
-        currentState = GameState.PLAY;
-        needsRefresh = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -260,8 +180,5 @@ public class MenuGameManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void ForceRefreshReferences()
-    {
-        needsRefresh = true;
-    }
+    public void ForceRefreshReferences() => needsRefresh = true;
 }
