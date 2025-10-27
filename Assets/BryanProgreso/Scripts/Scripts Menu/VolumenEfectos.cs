@@ -1,41 +1,43 @@
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 public class VolumenEfectos : MonoBehaviour
 {
-    [Header("Mixer y Slider")]
-    public AudioMixer AudioMix;
-    public Slider Volumen;
-    public Slider Efectos;
+    [Header("Sliders de Volumen")]
+    public Slider sliderMaster;
+    public Slider sliderMusic;
+    public Slider sliderSFX;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //cargar los volumens de Guardadado
-        float MusicVol = PlayerPrefs.GetFloat("VolumenMusica", 0.75f);
-        float EfectoVol = PlayerPrefs.GetFloat("SFXVolumen", 0.75f);
+        float masterVol = PlayerPrefs.GetFloat("MasterVol", 1f);
+        float musicVol = PlayerPrefs.GetFloat("MusicVol", 1f);
+        float sfxVol = PlayerPrefs.GetFloat("SFXVol", 1f);
 
-        Volumen.value = MusicVol;
-        Efectos.value = EfectoVol;
+        sliderMaster.value = masterVol;
+        sliderMusic.value = musicVol;
+        sliderSFX.value = sfxVol;
 
-        SetMusicVolumen(MusicVol);
-        SetSFXVolumen(EfectoVol);
-
-        //Se escuchan los cambios de volumen
-        Volumen.onValueChanged.AddListener(SetMusicVolumen);
-        Efectos.onValueChanged.AddListener(SetSFXVolumen);
+        CambiarVolumenMaster(masterVol);
+        CambiarVolumenMusica(musicVol);
+        CambiarVolumenSFX(sfxVol);
     }
 
-    public void SetMusicVolumen(float value)
+    public void CambiarVolumenMaster(float valor)
     {
-        AudioMix.SetFloat("MusicVolumen", Mathf.Log10(value) * 20);
-        PlayerPrefs.SetFloat("MusicVolumen", value);
+        AudioManager.Instance.SetMasterVolume(valor);
+        PlayerPrefs.SetFloat("MasterVol", valor);
     }
 
-    public void SetSFXVolumen(float value)
+    public void CambiarVolumenMusica(float valor)
     {
-        AudioMix.SetFloat("SFXVolumen", Mathf.Log10(value) * 20);
-        PlayerPrefs.SetFloat("SFXVolumen", value);
+        AudioManager.Instance.SetMusicVolume(valor);
+        PlayerPrefs.SetFloat("MusicVol", valor);
+    }
+
+    public void CambiarVolumenSFX(float valor)
+    {
+        AudioManager.Instance.SetSFXVolume(valor);
+        PlayerPrefs.SetFloat("SFXVol", valor);
     }
 }
