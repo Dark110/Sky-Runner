@@ -9,6 +9,7 @@ public enum GameState
     PAUSE,
     GAMEOVER
 }
+
 public class MenuGameManager : MonoBehaviour
 {
     private static MenuGameManager _instance;
@@ -34,7 +35,7 @@ public class MenuGameManager : MonoBehaviour
     [Header("Estado inicial")]
     public GameState initialState = GameState.PLAY;
 
-    [Header("Referencias a pausar")]
+    [Header("Objetos a pausar")]
     public MovimientoParacaidista jugador;
     public Animator[] animators;
     public MonoBehaviour[] scriptsExtras;
@@ -42,12 +43,13 @@ public class MenuGameManager : MonoBehaviour
     private GameState currentState;
     public GameState CurrentState => currentState;
 
+    public static MenuGameManager GetInstance() => Instance;
+
     private List<MonoBehaviour> spawners = new List<MonoBehaviour>();
     private bool needsRefresh = true;
 
     private void Awake()
     {
-        // Evita duplicar instancias
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
@@ -70,11 +72,20 @@ public class MenuGameManager : MonoBehaviour
 
     private void Update()
     {
-        // Refresca referencias si es necesario
-        if (SceneManager.GetActiveScene().name == "Gameplay" && (needsRefresh || jugador == null))
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
         {
             RefreshReferences();
             needsRefresh = false;
+        }
+
+        // Pausa manual de prueba
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentState == GameState.PLAY)
+                OnPausePressed();
+            else if (currentState == GameState.PAUSE)
+                OnResumePressed();
         }
     }
 
@@ -94,16 +105,13 @@ public class MenuGameManager : MonoBehaviour
 
     private void RefreshReferences()
     {
-        if (SceneManager.GetActiveScene().name != "Gameplay")
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene != "Gameplay")
             return;
 
-        // Jugador
         jugador = FindFirstObjectByType<MovimientoParacaidista>();
-
-        // Animators
         animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-        // Spawners
         spawners.Clear();
         MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var mb in allObjects)
@@ -115,20 +123,20 @@ public class MenuGameManager : MonoBehaviour
 
     private void ApplyGameState(GameState state)
     {
-        string scene = SceneManager.GetActiveScene().name;
-        if (scene != "Gameplay" && state != GameState.GAMEOVER)
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene != "Gameplay" && state != GameState.GAMEOVER)
             return;
 
-        if (scene == "Gameplay" && (needsRefresh || jugador == null))
+        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
         {
             RefreshReferences();
             needsRefresh = false;
         }
 
         currentState = state;
-
         bool enable = state == GameState.PLAY;
-        Time.timeScale = (state == GameState.PLAY) ? 1f : 0f;
+
+        Time.timeScale = enable ? 1f : 0f;
         AudioListener.pause = !enable;
 
         if (jugador) jugador.enabled = enable;
@@ -153,7 +161,7 @@ public class MenuGameManager : MonoBehaviour
             if (a) a.enabled = enabled;
     }
 
-    // 
+    // --- Funciones UI ---
     public void OnPausePressed() => ApplyGameState(GameState.PAUSE);
     public void OnResumePressed() => ApplyGameState(GameState.PLAY);
     public void OnGameOver() => ApplyGameState(GameState.GAMEOVER);
@@ -161,6 +169,8 @@ public class MenuGameManager : MonoBehaviour
     public void OnResetPressed()
     {
         Time.timeScale = 1f;
+        currentState = GameState.PLAY;
+        needsRefresh = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
