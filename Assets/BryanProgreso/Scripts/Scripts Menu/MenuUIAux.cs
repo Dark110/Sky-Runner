@@ -13,6 +13,9 @@ public class MenuUIHandler : MonoBehaviour
 
         // Se suscribe al evento de cambio de estado del GameManager
         MenuGameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+
+        // NUEVO: Actualizar UI con el estado actual inmediatamente
+        UpdateUIWithCurrentState();
     }
 
     private void OnDestroy()
@@ -23,18 +26,35 @@ public class MenuUIHandler : MonoBehaviour
 
     private void OnGameStateChanged(GameState newState)
     {
+        UpdateUIState(newState);
+    }
+
+    // NUEVO: Método para actualizar UI
+    private void UpdateUIState(GameState state)
+    {
         if (panelMenu == null) return;
 
-        switch (newState)
+        switch (state)
         {
             case GameState.PAUSE:
                 panelMenu.SetActive(true); //Mostrar menú
+                Debug.Log("UI: Mostrando panel de pausa");
                 break;
 
             case GameState.PLAY:
             case GameState.GAMEOVER:
                 panelMenu.SetActive(false); //Ocultar menú
+                Debug.Log("UI: Ocultando panel de pausa");
                 break;
+        }
+    }
+
+    // NUEVO: Obtener el estado actual y actualizar UI
+    private void UpdateUIWithCurrentState()
+    {
+        if (MenuGameManager.Instance != null)
+        {
+            UpdateUIState(MenuGameManager.Instance.CurrentState);
         }
     }
 }

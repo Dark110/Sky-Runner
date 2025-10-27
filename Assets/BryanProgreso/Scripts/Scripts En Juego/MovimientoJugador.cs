@@ -23,15 +23,14 @@ public class MovimientoParacaidista : MonoBehaviour
     public float DeltaMultiplicador = 1.5f;
 
     [Header("Efecto Skybox")]
-    public float intensidadSkybox = 10f; // Cuánto se mueve la Skybox
-    public float rotacionInicialSkybox = 120f; // Rotación inicial Inspector
+    public float intensidadSkybox = 10f;
+    public float rotacionInicialSkybox = 120f;
 
     private Vector3 offset;
     private CharacterController controller;
     private Vector3 movimiento;
     private Quaternion rotacionInicial;
-
-    private float rotacionSkybox; // rotación acumulada
+    private float rotacionSkybox;
 
     private void Awake()
     {
@@ -47,16 +46,15 @@ public class MovimientoParacaidista : MonoBehaviour
         else
             offset = offsetFijo;
 #endif
-        // Skybox desde Inspector
         rotacionSkybox = rotacionInicialSkybox;
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
     private void Update()
     {
-        // —— Pausa: si el juego está pausado, no procesar inputs/rotaciones
-        if (MenuGameManager.GetInstance() != null &&
-            MenuGameManager.GetInstance().CurrentState == GameState.PAUSE)
+        // Pausa: si el juego está pausado, no procesar inputs/rotaciones
+        if (MenuGameManager.Instance != null &&
+            MenuGameManager.Instance.CurrentState == GameState.PAUSE)
         {
             return;
         }
@@ -101,9 +99,9 @@ public class MovimientoParacaidista : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // —— Pausa: si el juego está pausado, no mover al personaje
-        if (MenuGameManager.GetInstance() != null &&
-            MenuGameManager.GetInstance().CurrentState == GameState.PAUSE)
+        // Pausa: si el juego está pausado, no mover al personaje
+        if (MenuGameManager.Instance != null &&
+            MenuGameManager.Instance.CurrentState == GameState.PAUSE)
         {
             return;
         }

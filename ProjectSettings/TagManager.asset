@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Obstaculo
   - Nube
+  - Spawner
   layers:
   - Default
   - TransparentFX

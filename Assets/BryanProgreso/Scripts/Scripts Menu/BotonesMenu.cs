@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
     public void Nivel2()
     {
 
-        SceneManager.LoadScene("GameplayLvL2");
+        SceneManager.LoadScene("Gameplay Lvl 2");
     }
 
 
