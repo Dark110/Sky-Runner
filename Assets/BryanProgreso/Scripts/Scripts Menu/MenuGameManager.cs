@@ -9,7 +9,6 @@ public enum GameState
     PAUSE,
     GAMEOVER
 }
-
 public class MenuGameManager : MonoBehaviour
 {
     private static MenuGameManager _instance;
@@ -48,7 +47,7 @@ public class MenuGameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Evita duplicados, pero NO persiste entre escenas
+        // Evita duplicar instancias
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
@@ -76,15 +75,6 @@ public class MenuGameManager : MonoBehaviour
         {
             RefreshReferences();
             needsRefresh = false;
-        }
-
-        // Pausa manual (solo para pruebas)
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (currentState == GameState.PLAY)
-                OnPausePressed();
-            else if (currentState == GameState.PAUSE)
-                OnResumePressed();
         }
     }
 
