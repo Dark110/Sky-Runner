@@ -176,8 +176,7 @@ public class MenuGameManager : MonoBehaviour
 
     public void OnExitPressed()
     {
-        Time.timeScale = 1f;
-        Application.Quit();
+        SceneManager.LoadScene("MenuInicio");
     }
 
     public void ForceRefreshReferences() => needsRefresh = true;
