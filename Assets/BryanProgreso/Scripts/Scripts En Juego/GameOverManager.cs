@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
     public string nombreEscena = "Derrota"; // Escena que se carga al perder
+    public float retrasoGameOver = 2f;
     private bool gameOver = false;
 
     // Trigger
@@ -18,7 +20,7 @@ public class GameOverManager : MonoBehaviour
             if (SaveDataManager.Instance != null)
                 SaveDataManager.Instance.EndGame();
 
-            SceneManager.LoadScene(nombreEscena);
+            StartCoroutine(CargarEscenaRetraso());
         }
     }
 
@@ -33,7 +35,13 @@ public class GameOverManager : MonoBehaviour
             if (SaveDataManager.Instance != null)
                 SaveDataManager.Instance.EndGame();
 
-            SceneManager.LoadScene(nombreEscena);
+            StartCoroutine(CargarEscenaRetraso());
         }
+    }
+
+    private IEnumerator CargarEscenaRetraso()
+    {
+        yield return new WaitForSeconds(retrasoGameOver);
+        SceneManager.LoadScene(nombreEscena);
     }
 }
