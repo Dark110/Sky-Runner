@@ -41,7 +41,11 @@ public class GameOverManager : MonoBehaviour
 
     private IEnumerator CargarEscenaRetraso()
     {
-        yield return new WaitForSeconds(retrasoGameOver);
+        Time.timeScale = 0f;
+
+        yield return new WaitForSecondsRealtime(retrasoGameOver);
+        Time.timeScale = 1f;
+
         SceneManager.LoadScene(nombreEscena);
     }
 }
