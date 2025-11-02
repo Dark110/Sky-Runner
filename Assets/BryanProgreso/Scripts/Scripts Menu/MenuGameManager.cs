@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -11,21 +13,21 @@ public enum GameState
 public class MenuGameManager : MonoBehaviour
 {
     private static MenuGameManager _instance;
-
-    public static MenuGameManager GetInstance()
+    public static MenuGameManager Instance
     {
-        if (_instance == null)
+        get
         {
-            _instance = FindFirstObjectByType<MenuGameManager>();
-
             if (_instance == null)
             {
-                GameObject go = new GameObject("MenuGameManager");
-                _instance = go.AddComponent<MenuGameManager>();
+                _instance = FindFirstObjectByType<MenuGameManager>();
+                if (_instance == null)
+                {
+                    GameObject go = new GameObject("MenuGameManager");
+                    _instance = go.AddComponent<MenuGameManager>();
+                }
             }
+            return _instance;
         }
-
-        return _instance;
     }
 
     public event Action<GameState> OnGameStateChanged;
@@ -33,7 +35,18 @@ public class MenuGameManager : MonoBehaviour
     [Header("Estado inicial")]
     public GameState initialState = GameState.PLAY;
 
+    [Header("Objetos a pausar")]
+    public MovimientoParacaidista jugador;
+    public Animator[] animators;
+    public MonoBehaviour[] scriptsExtras;
+
     private GameState currentState;
+    public GameState CurrentState => currentState;
+
+    public static MenuGameManager GetInstance() => Instance;
+
+    private List<MonoBehaviour> spawners = new List<MonoBehaviour>();
+    private bool needsRefresh = true;
 
     private void Awake()
     {
@@ -44,44 +57,127 @@ public class MenuGameManager : MonoBehaviour
         }
 
         _instance = this;
-        DontDestroyOnLoad(gameObject);
 
         currentState = initialState;
+        RefreshReferences();
         ApplyGameState(currentState);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public GameState GetCurrentState()
+    private void OnDestroy()
     {
-        return currentState;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void GameStateChange(GameState newState)
+    private void Update()
     {
-        if (currentState == newState) return;
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
+        {
+            RefreshReferences();
+            needsRefresh = false;
+        }
 
-        currentState = newState;
-        ApplyGameState(currentState);
-        OnGameStateChanged?.Invoke(currentState);
+        // Pausa manual de prueba
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentState == GameState.PLAY)
+                OnPausePressed();
+            else if (currentState == GameState.PAUSE)
+                OnResumePressed();
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Gameplay")
+        {
+            needsRefresh = true;
+            currentState = GameState.PLAY;
+            ApplyGameState(currentState);
+        }
+        else
+        {
+            jugador = null;
+        }
+    }
+
+    private void RefreshReferences()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene != "Gameplay")
+            return;
+
+        jugador = FindFirstObjectByType<MovimientoParacaidista>();
+        animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        spawners.Clear();
+        MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var mb in allObjects)
+        {
+            if (mb != null && mb.gameObject.CompareTag("Spawner"))
+                spawners.Add(mb);
+        }
     }
 
     private void ApplyGameState(GameState state)
     {
-        switch (state)
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (currentScene != "Gameplay" && state != GameState.GAMEOVER)
+            return;
+
+        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
         {
-            case GameState.PLAY:
-                Time.timeScale = 1f;
-                AudioListener.pause = false;
-                break;
-
-            case GameState.PAUSE:
-                Time.timeScale = 0f;
-                AudioListener.pause = true;
-                break;
-
-            case GameState.GAMEOVER:
-                Time.timeScale = 0f;
-                AudioListener.pause = true;
-                break;
+            RefreshReferences();
+            needsRefresh = false;
         }
+
+        currentState = state;
+        bool enable = state == GameState.PLAY;
+
+        Time.timeScale = enable ? 1f : 0f;
+        AudioListener.pause = !enable;
+
+        if (jugador) jugador.enabled = enable;
+        SetEnabledForAnimators(animators, enable);
+        SetEnabledForScripts(scriptsExtras, enable);
+        SetEnabledForScripts(spawners.ToArray(), enable);
+
+        OnGameStateChanged?.Invoke(state);
     }
+
+    private void SetEnabledForScripts(MonoBehaviour[] scripts, bool enabled)
+    {
+        if (scripts == null) return;
+        foreach (var s in scripts)
+            if (s) s.enabled = enabled;
+    }
+
+    private void SetEnabledForAnimators(Animator[] anims, bool enabled)
+    {
+        if (anims == null) return;
+        foreach (var a in anims)
+            if (a) a.enabled = enabled;
+    }
+
+    // --- Funciones UI ---
+    public void OnPausePressed() => ApplyGameState(GameState.PAUSE);
+    public void OnResumePressed() => ApplyGameState(GameState.PLAY);
+    public void OnGameOver() => ApplyGameState(GameState.GAMEOVER);
+
+    public void OnResetPressed()
+    {
+        Time.timeScale = 1f;
+        currentState = GameState.PLAY;
+        needsRefresh = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void OnExitPressed()
+    {
+        SceneManager.LoadScene("MenuInicio");
+    }
+
+    public void ForceRefreshReferences() => needsRefresh = true;
 }

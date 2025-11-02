@@ -23,15 +23,14 @@ public class MovimientoParacaidista : MonoBehaviour
     public float DeltaMultiplicador = 1.5f;
 
     [Header("Efecto Skybox")]
-    public float intensidadSkybox = 10f; // cuánto se mueve la Skybox
-    public float rotacionInicialSkybox = 120f; // ⚡ rotación inicial editable desde Inspector
+    public float intensidadSkybox = 10f;
+    public float rotacionInicialSkybox = 120f;
 
     private Vector3 offset;
     private CharacterController controller;
     private Vector3 movimiento;
     private Quaternion rotacionInicial;
-
-    private float rotacionSkybox; // rotación acumulada
+    private float rotacionSkybox;
 
     private void Awake()
     {
@@ -47,22 +46,31 @@ public class MovimientoParacaidista : MonoBehaviour
         else
             offset = offsetFijo;
 #endif
-        // ⚡ Setear rotación inicial de la Skybox desde Inspector
         rotacionSkybox = rotacionInicialSkybox;
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
     private void Update()
     {
+        // Pausa: si el juego está pausado, no procesar inputs/rotaciones
+        if (MenuGameManager.Instance != null &&
+            MenuGameManager.Instance.CurrentState == GameState.PAUSE)
+        {
+            return;
+        }
+
+        float inputX;
+        float inputY;
+
 #if UNITY_STANDALONE || UNITY_EDITOR
-        float inputX = Input.GetAxis("Horizontal");
-        float inputY = Input.GetAxis("Vertical");
+        inputX = Input.GetAxis("Horizontal");
+        inputY = Input.GetAxis("Vertical");
 #else
         float deadZone = 0.05f;
         float rawX = Input.acceleration.x - offset.x;
         float rawY = Input.acceleration.y - offset.y;
-        float inputX = Mathf.Abs(rawX) < deadZone ? 0f : rawX;
-        float inputY = Mathf.Abs(rawY) < deadZone ? 0f : rawY;
+        inputX = Mathf.Abs(rawX) < deadZone ? 0f : rawX;
+        inputY = Mathf.Abs(rawY) < deadZone ? 0f : rawY;
         inputX = Mathf.Sign(inputX) * Mathf.Pow(Mathf.Abs(inputX), 0.7f) * Sensibilidad;
         inputY = Mathf.Sign(inputY) * Mathf.Pow(Mathf.Abs(inputY), 0.7f) * Sensibilidad;
         inputX = Mathf.Clamp(inputX, -1f, 1f);
@@ -70,7 +78,7 @@ public class MovimientoParacaidista : MonoBehaviour
 #endif
 
         // Movimiento del jugador
-        movimiento = new Vector3(inputX, inputY, 0);
+        movimiento = new Vector3(inputX, inputY, 0f);
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
@@ -83,7 +91,7 @@ public class MovimientoParacaidista : MonoBehaviour
         float velocidadSlerp = NivelSuavidad * factorInput * DeltaMultiplicador * Time.deltaTime;
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
 
-        // 🌅 Skybox: suavizar movimiento, partiendo de la rotación inicial editable
+        // Skybox: suavizar movimiento
         float objetivoSkybox = rotacionInicialSkybox + inputX * intensidadSkybox;
         rotacionSkybox = Mathf.Lerp(rotacionSkybox, objetivoSkybox, Time.deltaTime * 2f);
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
@@ -91,6 +99,13 @@ public class MovimientoParacaidista : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Pausa: si el juego está pausado, no mover al personaje
+        if (MenuGameManager.Instance != null &&
+            MenuGameManager.Instance.CurrentState == GameState.PAUSE)
+        {
+            return;
+        }
+
         controller.Move(movimiento * Velocidad * Time.fixedDeltaTime);
     }
 

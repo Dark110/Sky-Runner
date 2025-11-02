@@ -21,11 +21,11 @@ EditorBuildSettings:
     path: Assets/BryanProgreso/Escenas/Niveles/Gameplay.unity
     guid: c242e6ac91f426548813e32f3ea96a83
   - enabled: 1
+    path: Assets/BryanProgreso/Escenas/Niveles/Gameplay Lvl 2.unity
+    guid: 466acee45b96fcc41b70d82a4b6094aa
+  - enabled: 1
     path: Assets/BryanProgreso/Escenas/Gameover.unity
     guid: 921bce0862f4e614a9d6b7e5a7fc30f9
-  - enabled: 1
-    path: Assets/BryanProgreso/Escenas/Niveles/GameplayLvL2.unity
-    guid: eced2ba3fd3dca54f952f21c4b5cd88c
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/Victoria.unity
     guid: 675fd7934723a0241abae9f9493848c9
