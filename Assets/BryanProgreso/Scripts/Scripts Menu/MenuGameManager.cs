@@ -44,7 +44,6 @@ public class MenuGameManager : MonoBehaviour
     public GameState CurrentState => currentState;
 
     private List<MonoBehaviour> spawners = new List<MonoBehaviour>();
-    private bool needsRefresh = true;
 
     private void Awake()
     {
@@ -58,8 +57,7 @@ public class MenuGameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         currentState = initialState;
-        RefreshReferences();
-        ApplyGameState(currentState);
+
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -67,13 +65,6 @@ public class MenuGameManager : MonoBehaviour
 
     private void Update()
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
-        {
-            RefreshReferences();
-            needsRefresh = false;
-        }
-
         // Control manual de pausa
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -84,30 +75,37 @@ public class MenuGameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Siempre reactivar tiempo y audio al cambiar escena
+        // Reactivar tiempo y audio siempre al cambiar escena
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        if (scene.name == "Gameplay")
+        // Solo refrescar referencias si es un nivel que contenga GUI / gameplay
+        if (scene.name.Contains("Gameplay") || scene.name.Contains("Lvl"))
         {
-            needsRefresh = true;
+            RefreshReferences();
             currentState = GameState.PLAY;
             ApplyGameState(currentState);
         }
         else
         {
             jugador = null;
+            animators = null;
+            spawners.Clear();
         }
     }
 
+    // -----------------------------
+    // Refrescar referencias automáticamente
+    // -----------------------------
     private void RefreshReferences()
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene != "Gameplay") return;
-
+        // Buscamos jugador automáticamente
         jugador = FindFirstObjectByType<MovimientoParacaidista>();
+
+        // Animadores activos o inactivos
         animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
+        // Limpiar y detectar spawners
         spawners.Clear();
         MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var mb in allObjects)
@@ -117,23 +115,11 @@ public class MenuGameManager : MonoBehaviour
         }
     }
 
+    // -----------------------------
+    // Aplicar estado de juego
+    // -----------------------------
     private void ApplyGameStateInternal(GameState state, bool notify)
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-
-        // Si no estamos en Gameplay y no es GameOver, no aplicar lógicas de pausa/jugador
-        if (currentScene != "Gameplay" && state != GameState.GAMEOVER)
-        {
-            if (notify) OnGameStateChanged?.Invoke(state);
-            return;
-        }
-
-        if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
-        {
-            RefreshReferences();
-            needsRefresh = false;
-        }
-
         currentState = state;
         bool enableGameplay = (state == GameState.PLAY);
 
@@ -150,14 +136,13 @@ public class MenuGameManager : MonoBehaviour
                 break;
 
             case GameState.GAMEOVER:
-                // 🔸 Muy importante: NO pausar el tiempo ni audio
-                Time.timeScale = 1f;
+                Time.timeScale = 1f; // no pausamos
                 AudioListener.pause = false;
-                enableGameplay = false; // Desactiva control del jugador
+                enableGameplay = false;
                 break;
         }
 
-        // Habilitar/deshabilitar jugabilidad
+        // Aplicar a jugador, animadores y scripts
         if (jugador) jugador.enabled = enableGameplay;
         SetEnabledForAnimators(animators, enableGameplay);
         SetEnabledForScripts(scriptsExtras, enableGameplay);
@@ -183,18 +168,16 @@ public class MenuGameManager : MonoBehaviour
             if (a) a.enabled = enabled;
     }
 
-    // ==============================
-    // FUNCIONES DE ESTADO Y UI
-    // ==============================
-
+    // -----------------------------
+    // Funciones de estado y UI
+    // -----------------------------
     public void OnPausePressed() => ApplyGameState(GameState.PAUSE);
     public void OnResumePressed() => ApplyGameState(GameState.PLAY);
     public void OnGameOver() => ApplyGameState(GameState.GAMEOVER);
 
-    // 🔸 Pausa SIN afectar UI (antes usada por GameOverManager)
+    // Pausa sin afectar UI (usado en GameOverManager)
     public void PauseWithoutMenu()
     {
-        // En lugar de pausar el tiempo, solo desactiva control del jugador
         currentState = GameState.PAUSE;
 
         if (jugador) jugador.enabled = false;
@@ -207,11 +190,10 @@ public class MenuGameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         currentState = GameState.PLAY;
-        needsRefresh = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnExitPressed() => SceneManager.LoadScene("MenuInicio");
 
-    public void ForceRefreshReferences() => needsRefresh = true;
+    public void ForceRefreshReferences() => RefreshReferences();
 }

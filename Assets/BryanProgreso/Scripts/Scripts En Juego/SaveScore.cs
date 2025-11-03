@@ -4,10 +4,11 @@ public class SaveDataManager : MonoBehaviour
 {
     public static SaveDataManager Instance;
 
-    public int highScore;
+    [Header("Datos de juego")]
     public int scoreInGame;
+    public int highScore;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -20,11 +21,15 @@ public class SaveDataManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
+        // Cargar HighScore global al iniciar
         highScore = PlayerPrefs.GetInt("HighScore", 0);
     }
 
+    // ------------------------
+    // Fin de partida: actualizar HighScore global
+    // ------------------------
     public void EndGame()
     {
         if (ScoreManager.Instance != null)
@@ -32,14 +37,26 @@ public class SaveDataManager : MonoBehaviour
         else
             scoreInGame = 0;
 
-        // Actualiza highscore si corresponde
+        // Actualiza HighScore global si corresponde
         if (scoreInGame > highScore)
         {
             highScore = scoreInGame;
             PlayerPrefs.SetInt("HighScore", highScore);
         }
 
-        PlayerPrefs.Save(); // Asegura que se guarde
-        Debug.Log($"[SaveDataManager] Score guardado: {scoreInGame}, HighScore: {highScore}");
+        PlayerPrefs.Save();
+        Debug.Log($"[SaveDataManager] Score: {scoreInGame}, HighScore: {highScore}");
+    }
+
+    // ------------------------
+    // Resetear HighScore global
+    // ------------------------
+    public void ResetHighScore()
+    {
+        scoreInGame = 0;
+        highScore = 0;
+        PlayerPrefs.DeleteKey("HighScore");
+        PlayerPrefs.Save();
+        Debug.Log("[SaveDataManager] HighScore reiniciado a 0");
     }
 }
