@@ -4,48 +4,57 @@ using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
+    [Header("Configuración de Game Over")]
     public string nombreEscena = "Derrota"; // Escena que se carga al perder
-    public float retrasoGameOver = 2f;
+    public float retrasoGameOver = 2f;      // Tiempo antes de cambiar de escena
+
     private bool gameOver = false;
 
-    // Trigger
     private void OnTriggerEnter(Collider other)
     {
-        if (gameOver) return;
         if (other.CompareTag("Obstaculo"))
-        {
-            gameOver = true;
-
-            // Guardar score antes de cambiar de escena
-            if (SaveDataManager.Instance != null)
-                SaveDataManager.Instance.EndGame();
-
-            StartCoroutine(CargarEscenaRetraso());
-        }
+            TriggerGameOver();
     }
 
-    // Colisión directa
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (gameOver) return;
         if (hit.gameObject.CompareTag("Obstaculo"))
-        {
-            gameOver = true;
-
-            if (SaveDataManager.Instance != null)
-                SaveDataManager.Instance.EndGame();
-
-            StartCoroutine(CargarEscenaRetraso());
-        }
+            TriggerGameOver();
     }
 
-    private IEnumerator CargarEscenaRetraso()
+    private void TriggerGameOver()
     {
-        Time.timeScale = 0f;
+        if (gameOver) return; // Evita triggers dobles
+        gameOver = true;
 
+        // Guardar score
+        if (SaveDataManager.Instance != null)
+            SaveDataManager.Instance.EndGame();
+
+        // Pausar jugabilidad sin tocar Time.timeScale
+        if (MenuGameManager.Instance != null)
+            MenuGameManager.Instance.PauseWithoutMenu();
+        else
+        {
+            // Si no hay manager, desactiva jugador manualmente
+            MovimientoParacaidista jugador = FindFirstObjectByType<MovimientoParacaidista>();
+            if (jugador != null) jugador.enabled = false;
+        }
+
+        // Inicia el retraso antes de cambiar de escena
+        StartCoroutine(CambiarEscenaConRetraso());
+    }
+
+    private IEnumerator CambiarEscenaConRetraso()
+    {
+        // Espera en tiempo real sin afectar Time.timeScale
         yield return new WaitForSecondsRealtime(retrasoGameOver);
-        Time.timeScale = 1f;
 
+        // Notificar al MenuGameManager del GameOver
+        if (MenuGameManager.Instance != null)
+            MenuGameManager.Instance.OnGameOver();
+
+        // Cargar escena de GameOver
         SceneManager.LoadScene(nombreEscena);
     }
 }
