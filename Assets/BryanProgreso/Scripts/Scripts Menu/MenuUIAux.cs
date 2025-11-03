@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuUIHandler : MonoBehaviour
 {
@@ -11,11 +12,12 @@ public class MenuUIHandler : MonoBehaviour
         if (panelMenu != null)
             panelMenu.SetActive(false);
 
-        // Se suscribe al evento de cambio de estado del GameManager
-        MenuGameManager.Instance.OnGameStateChanged += OnGameStateChanged;
-
-        // NUEVO: Actualizar UI con el estado actual inmediatamente
-        UpdateUIWithCurrentState();
+        // Solo suscribirse si estamos en Gameplay
+        if (SceneManager.GetActiveScene().name == "Gameplay" && MenuGameManager.Instance != null)
+        {
+            MenuGameManager.Instance.OnGameStateChanged += OnGameStateChanged;
+            UpdateUIWithCurrentState();
+        }
     }
 
     private void OnDestroy()
@@ -29,7 +31,6 @@ public class MenuUIHandler : MonoBehaviour
         UpdateUIState(newState);
     }
 
-    // NUEVO: Método para actualizar UI
     private void UpdateUIState(GameState state)
     {
         if (panelMenu == null) return;
@@ -37,24 +38,25 @@ public class MenuUIHandler : MonoBehaviour
         switch (state)
         {
             case GameState.PAUSE:
-                panelMenu.SetActive(true); //Mostrar menú
-                Debug.Log("UI: Mostrando panel de pausa");
+                // Mostrar menú de pausa solo en Gameplay
+                if (SceneManager.GetActiveScene().name == "Gameplay")
+                    panelMenu.SetActive(true);
                 break;
 
             case GameState.PLAY:
+                panelMenu.SetActive(false);
+                break;
+
             case GameState.GAMEOVER:
-                panelMenu.SetActive(false); //Ocultar menú
-                Debug.Log("UI: Ocultando panel de pausa");
+                // No tocar UI en GameOver
+                panelMenu.SetActive(false);
                 break;
         }
     }
 
-    // NUEVO: Obtener el estado actual y actualizar UI
     private void UpdateUIWithCurrentState()
     {
         if (MenuGameManager.Instance != null)
-        {
             UpdateUIState(MenuGameManager.Instance.CurrentState);
-        }
     }
 }

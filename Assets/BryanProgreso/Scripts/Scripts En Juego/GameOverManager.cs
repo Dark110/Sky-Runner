@@ -24,24 +24,27 @@ public class GameOverManager : MonoBehaviour
 
     private void TriggerGameOver()
     {
-        if (gameOver) return; // Evita triggers dobles
+        if (gameOver) return;
         gameOver = true;
 
-        // Guardar score
+        // Guardar score si hay SaveDataManager
         if (SaveDataManager.Instance != null)
             SaveDataManager.Instance.EndGame();
 
-        // Pausar jugabilidad sin tocar Time.timeScale
+        // ⚡ Pausa global total
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
+
+        // Desactivar control del jugador
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.PauseWithoutMenu();
         else
         {
-            // Si no hay manager, desactiva jugador manualmente
             MovimientoParacaidista jugador = FindFirstObjectByType<MovimientoParacaidista>();
             if (jugador != null) jugador.enabled = false;
         }
 
-        // Inicia el retraso antes de cambiar de escena
+        // Iniciar cambio con retraso
         StartCoroutine(CambiarEscenaConRetraso());
     }
 
@@ -50,11 +53,21 @@ public class GameOverManager : MonoBehaviour
         // Espera en tiempo real sin afectar Time.timeScale
         yield return new WaitForSecondsRealtime(retrasoGameOver);
 
-        // Notificar al MenuGameManager del GameOver
+        // Restaurar tiempo y audio antes de cambiar de escena
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        // Notificar GameOver al MenuGameManager
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.OnGameOver();
 
-        // Cargar escena de GameOver
+        // Cargar escena de Game Over
         SceneManager.LoadScene(nombreEscena);
+
+        // Esperar un frame para asegurar EventSystem funcional
+        yield return null;
+        var eventSystem = FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
+        if (eventSystem != null)
+            eventSystem.enabled = true;
     }
 }
