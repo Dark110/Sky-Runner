@@ -1,87 +1,60 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
-    public string nombreEscena = "Derrota";
-    public float retrasoGameOver = 2f;
-    public float duracionFade = 1f;
-    public Image fadeOverlay;
+    [Header("Configuración de Game Over")]
+    public string nombreEscena = "Derrota"; // Escena que se carga al perder
+    public float retrasoGameOver = 2f;      // Tiempo antes de cambiar de escena
+
     private bool gameOver = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (gameOver) return;
         if (other.CompareTag("Obstaculo"))
             TriggerGameOver();
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (gameOver) return;
         if (hit.gameObject.CompareTag("Obstaculo"))
             TriggerGameOver();
     }
 
     private void TriggerGameOver()
     {
+        if (gameOver) return; // Evita triggers dobles
         gameOver = true;
 
-        // Guardar el score antes de cambiar de escena
+        // Guardar score
         if (SaveDataManager.Instance != null)
             SaveDataManager.Instance.EndGame();
 
-        // Pausar el tiempo del juego
-        Time.timeScale = 0f;
+        // Pausar jugabilidad sin tocar Time.timeScale
+        if (MenuGameManager.Instance != null)
+            MenuGameManager.Instance.PauseWithoutMenu();
+        else
+        {
+            // Si no hay manager, desactiva jugador manualmente
+            MovimientoParacaidista jugador = FindFirstObjectByType<MovimientoParacaidista>();
+            if (jugador != null) jugador.enabled = false;
+        }
 
-        // Iniciar el fade (paralelo)
-        if (fadeOverlay != null)
-            StartCoroutine(FadeOut());
-
-        // Iniciar el temporizador de escena
-        StartCoroutine(CargarEscenaRetraso());
+        // Inicia el retraso antes de cambiar de escena
+        StartCoroutine(CambiarEscenaConRetraso());
     }
 
-    private IEnumerator CargarEscenaRetraso()
+    private IEnumerator CambiarEscenaConRetraso()
     {
-        // Pausa el tiempo del juego
-        Time.timeScale = 0f;
-
-        // Fade en paralelo
-        if (fadeOverlay != null)
-            StartCoroutine(FadeOut());
-
-        // Espera el retraso del Game Over (en tiempo real)
+        // Espera en tiempo real sin afectar Time.timeScale
         yield return new WaitForSecondsRealtime(retrasoGameOver);
 
-        // Restaura antes del cambio de escena
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
-
-        // Informa al MenuGameManager (si existe)
+        // Notificar al MenuGameManager del GameOver
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.OnGameOver();
 
-        // Carga la escena
+        // Cargar escena de GameOver
         SceneManager.LoadScene(nombreEscena);
-    }
-
-    private IEnumerator FadeOut()
-    {
-        if (fadeOverlay == null)
-            yield break;
-
-        Color color = fadeOverlay.color;
-        float t = 0f;
-
-        while (t < duracionFade)
-        {
-            t += Time.unscaledDeltaTime / duracionFade;
-            color.a = Mathf.Lerp(0f, 0.6f, t);
-            fadeOverlay.color = color;
-            yield return null;
-        }
     }
 }
