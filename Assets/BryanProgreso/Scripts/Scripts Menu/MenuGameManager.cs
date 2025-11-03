@@ -34,7 +34,6 @@ public class MenuGameManager : MonoBehaviour
 
     [Header("Estado inicial")]
     public GameState initialState = GameState.PLAY;
-
     [Header("Objetos a pausar")]
     public MovimientoParacaidista jugador;
     public Animator[] animators;
@@ -42,8 +41,6 @@ public class MenuGameManager : MonoBehaviour
 
     private GameState currentState;
     public GameState CurrentState => currentState;
-
-    public static MenuGameManager GetInstance() => Instance;
 
     private List<MonoBehaviour> spawners = new List<MonoBehaviour>();
     private bool needsRefresh = true;
@@ -57,18 +54,13 @@ public class MenuGameManager : MonoBehaviour
         }
 
         _instance = this;
-
         currentState = initialState;
         RefreshReferences();
-        ApplyGameState(currentState);
-
+        ApplyGameState(currentState); // notify por defecto
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
+    private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
 
     private void Update()
     {
@@ -79,35 +71,32 @@ public class MenuGameManager : MonoBehaviour
             needsRefresh = false;
         }
 
-        // Pausa manual de prueba
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (currentState == GameState.PLAY)
-                OnPausePressed();
-            else if (currentState == GameState.PAUSE)
-                OnResumePressed();
+            if (currentState == GameState.PLAY) OnPausePressed();
+            else if (currentState == GameState.PAUSE) OnResumePressed();
         }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Restaurar tiempo y audio
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
         if (scene.name == "Gameplay")
         {
             needsRefresh = true;
             currentState = GameState.PLAY;
             ApplyGameState(currentState);
         }
-        else
-        {
-            jugador = null;
-        }
+        else jugador = null;
     }
 
     private void RefreshReferences()
     {
         string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene != "Gameplay")
-            return;
+        if (currentScene != "Gameplay") return;
 
         jugador = FindFirstObjectByType<MovimientoParacaidista>();
         animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -115,17 +104,14 @@ public class MenuGameManager : MonoBehaviour
         spawners.Clear();
         MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var mb in allObjects)
-        {
             if (mb != null && mb.gameObject.CompareTag("Spawner"))
                 spawners.Add(mb);
-        }
     }
 
-    private void ApplyGameState(GameState state)
+    private void ApplyGameStateInternal(GameState state, bool notify)
     {
         string currentScene = SceneManager.GetActiveScene().name;
-        if (currentScene != "Gameplay" && state != GameState.GAMEOVER)
-            return;
+        if (currentScene != "Gameplay" && state != GameState.GAMEOVER && notify) return;
 
         if (currentScene == "Gameplay" && (needsRefresh || jugador == null))
         {
@@ -144,27 +130,30 @@ public class MenuGameManager : MonoBehaviour
         SetEnabledForScripts(scriptsExtras, enable);
         SetEnabledForScripts(spawners.ToArray(), enable);
 
-        OnGameStateChanged?.Invoke(state);
+        if (notify) OnGameStateChanged?.Invoke(state);
     }
+
+    private void ApplyGameState(GameState state) => ApplyGameStateInternal(state, true);
 
     private void SetEnabledForScripts(MonoBehaviour[] scripts, bool enabled)
     {
         if (scripts == null) return;
-        foreach (var s in scripts)
-            if (s) s.enabled = enabled;
+        foreach (var s in scripts) if (s) s.enabled = enabled;
     }
 
     private void SetEnabledForAnimators(Animator[] anims, bool enabled)
     {
         if (anims == null) return;
-        foreach (var a in anims)
-            if (a) a.enabled = enabled;
+        foreach (var a in anims) if (a) a.enabled = enabled;
     }
 
-    // --- Funciones UI ---
+    // Funciones UI
     public void OnPausePressed() => ApplyGameState(GameState.PAUSE);
     public void OnResumePressed() => ApplyGameState(GameState.PLAY);
     public void OnGameOver() => ApplyGameState(GameState.GAMEOVER);
+
+    // Pausa SIN notificar a UI
+    public void PauseWithoutMenu() => ApplyGameStateInternal(GameState.PAUSE, false);
 
     public void OnResetPressed()
     {
@@ -174,10 +163,7 @@ public class MenuGameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void OnExitPressed()
-    {
-        SceneManager.LoadScene("MenuInicio");
-    }
+    public void OnExitPressed() => SceneManager.LoadScene("MenuInicio");
 
     public void ForceRefreshReferences() => needsRefresh = true;
 }
