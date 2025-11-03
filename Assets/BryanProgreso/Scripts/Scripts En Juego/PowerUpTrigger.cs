@@ -8,12 +8,12 @@ public class PowerUpTrigger : MonoBehaviour
     public float valorExtra = 5f; // solo para velocidad
     public Image uiIndicador;
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && PowerUpManager.Instance != null)
         {
             PowerUpManager.Instance.ActivarPowerUp(tipo, duracion, valorExtra, uiIndicador);
-            Destroy(gameObject); // el power-up desaparece al ser recogido
+            Destroy(gameObject); // desaparece al recogerlo
         }
     }
 }
