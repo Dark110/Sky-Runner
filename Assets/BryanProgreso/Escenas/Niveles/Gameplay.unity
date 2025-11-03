@@ -1768,15 +1768,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
-  prefabDiana: {fileID: 2014950668398645328, guid: 43f7e6c1918ccad4abb502f963a89b41, type: 3}
+  prefabDiana: {fileID: 156604355067651260, guid: 63f69c61bde4f694695ad59adf4f98cd, type: 3}
   rangoX: 20
   rangoY: 10
   distanciaZ: -100
   tiempoEntreSpawn: 7
   maxDianas: 5
   duracionFade: 0.8
-  velocidadZMin: 12
-  velocidadZMax: 14
+  velocidadZMin: 15
+  velocidadZMax: 18
 --- !u!1 &1035239086
 GameObject:
   m_ObjectHideFlags: 0

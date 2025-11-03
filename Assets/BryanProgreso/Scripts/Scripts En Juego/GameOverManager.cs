@@ -31,7 +31,7 @@ public class GameOverManager : MonoBehaviour
         if (SaveDataManager.Instance != null)
             SaveDataManager.Instance.EndGame();
 
-        // ⚡ Pausa global total
+        // Pausar tiempo y audio
         Time.timeScale = 0f;
         AudioListener.pause = true;
 

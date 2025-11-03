@@ -1,10 +1,10 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 public class DianaPuntos : MonoBehaviour
 {
     [Header("Movimiento")]
-    public float velocidadZMin = 12f;    // mÌnimo hacia adelante
-    public float velocidadZMax = 18f;    // m·ximo hacia adelante
+    public float velocidadZMin = 12f;    // m√≠nimo hacia adelante
+    public float velocidadZMax = 18f;    // m√°ximo hacia adelante
     public float variacionLateral = 0.5f;
     public float variacionVertical = 0.3f;
 
@@ -15,36 +15,33 @@ public class DianaPuntos : MonoBehaviour
     public float margenDespawn = 5f;
 
     private Transform jugador;
-    private Vector3 direccion; // desviaciÛn X/Y
+    private Vector3 direccion; // desviaci√≥n X/Y
     public float velocidadZ;  // velocidad Z aleatoria por instancia
     private float objetivoZ;
 
     void Start()
     {
+        transform.rotation = Quaternion.Euler(0f, 90f, 0f);
         jugador = GameObject.FindWithTag("Player")?.transform;
-
-        // PequeÒa variaciÛn lateral y vertical para diagonales
+        // Variaci√≥n aleatoria en X e Y
         direccion = new Vector3(
             Random.Range(-variacionLateral, variacionLateral),
             Random.Range(-variacionVertical, variacionVertical),
             0f // Z se controla aparte
         );
-
         // Asignar velocidad Z aleatoria dentro del rango
         velocidadZ = Random.Range(velocidadZMin, velocidadZMax);
-
-        // El objetivo ser· pasar un poco al jugador
         if (jugador != null)
             objetivoZ = jugador.position.z + 10f;
     }
 
     void Update()
     {
-        // Movimiento combinado: Z r·pido + desviaciones X/Y
+        // Movimiento combinado: Z r√°pido + desviaciones X/Y
         Vector3 movimiento = new Vector3(direccion.x, direccion.y, 1f) * velocidadZ * Time.deltaTime;
         transform.Translate(movimiento, Space.World);
 
-        // Destruir si ya pasÛ del jugador
+        // Destruir si ya pas√≥ del jugador
         if (jugador != null && transform.position.z > objetivoZ + margenDespawn)
             Destroy(gameObject);
     }
@@ -56,7 +53,7 @@ public class DianaPuntos : MonoBehaviour
             if (ScoreManager.Instance != null)
                 ScoreManager.Instance.AddScore(puntos);
 
-            // Puedes aÒadir efectos visuales o sonido
+            // Efectos visuales o sonido se pueden a√±adir aqu√≠
             Destroy(gameObject);
         }
     }
