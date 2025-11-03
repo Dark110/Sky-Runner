@@ -1115,8 +1115,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 290121160}
-        m_TargetAssemblyTypeName: ResetAllData, Assembly-CSharp
-        m_MethodName: ResetAllScores
+        m_TargetAssemblyTypeName: ResetScoresData, Assembly-CSharp
+        m_MethodName: ResetScores
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

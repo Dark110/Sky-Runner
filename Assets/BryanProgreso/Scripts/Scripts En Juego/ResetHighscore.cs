@@ -1,36 +1,32 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ResetScoresData : MonoBehaviour
 {
-    /// <summary>
-    /// Borra solo los scores y high scores guardados, sin afectar otros PlayerPrefs.
-    /// </summary>
     public void ResetScores()
     {
-        // Resetea los highscores global y por escena
-        PlayerPrefs.DeleteKey("HighScore_Global");
-
-        // Resetea todas las keys de highscore por escena
-        foreach (var scene in UnityEngine.SceneManagement.SceneManager.GetAllScenes())
+        // 🔹 Borra el highscore global (usado por SaveDataManager)
+        PlayerPrefs.DeleteKey("HighScore");
+        int sceneCount = SceneManager.sceneCountInBuildSettings;
+        for (int i = 0; i < sceneCount; i++)
         {
-            string key = "HighScore_" + scene.name;
-            PlayerPrefs.DeleteKey(key);
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+            PlayerPrefs.DeleteKey("HighScore_" + sceneName);
         }
-
-        // Reinicia score actual en SaveDataManager
         if (SaveDataManager.Instance != null)
         {
             SaveDataManager.Instance.scoreInGame = 0;
+            SaveDataManager.Instance.highScore = 0;
+            SaveDataManager.Instance.ResetHighScore(); 
         }
-
-        // Reinicia UI del ScoreManager
         if (ScoreManager.Instance != null)
         {
             int current = ScoreManager.Instance.GetScore();
             ScoreManager.Instance.AddScore(-current);
         }
-
         PlayerPrefs.Save();
-        Debug.Log("Scores y HighScore reiniciados correctamente.");
+        Debug.Log("Scores y HighScores reiniciados correctamente.");
+
     }
 }
