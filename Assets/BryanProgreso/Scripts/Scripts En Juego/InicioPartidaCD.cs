@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,9 +11,12 @@ public class GameManager : MonoBehaviour
     [Header("Spawners")]
     public ObstaculoSpawnerCaoticoFinal[] spawnersObstaculos;
     public NubeSpawner[] spawnersNubes;
-    public DianaSpawner[] spawnersDianas; // ← Nuevo spawner de anillos (Dianas)
+    public DianaSpawner[] spawnersDianas; // spawner de dianas o anillos
 
-    void Start()
+    [Header("Spawners de PowerUps")]
+    public PowerUpSpawner[] spawnersPowerUps; // ← Nuevo
+
+    private void Start()
     {
         // Desactivar todos los spawners antes de comenzar
         foreach (var spawner in spawnersObstaculos)
@@ -22,12 +26,15 @@ public class GameManager : MonoBehaviour
             spawner.enabled = false;
 
         foreach (var spawner in spawnersDianas)
-            spawner.enabled = false; // el DianaSpawner no tiene variable de activo, se desactiva con enabled
+            spawner.enabled = false;
+
+        foreach (var spawner in spawnersPowerUps)
+            spawner.enabled = false; // desactivar powerups al inicio
 
         StartCoroutine(Countdown());
     }
 
-    private System.Collections.IEnumerator Countdown()
+    private IEnumerator Countdown()
     {
         int tiempo = tiempoInicial;
 
@@ -43,7 +50,7 @@ public class GameManager : MonoBehaviour
         if (textoCuenta != null)
             textoCuenta.text = "¡0!";
 
-        // Activar spawners
+        // Activar todos los spawners
         foreach (var spawner in spawnersObstaculos)
             spawner.spawnerActivo = true;
 
@@ -52,6 +59,9 @@ public class GameManager : MonoBehaviour
 
         foreach (var spawner in spawnersDianas)
             spawner.enabled = true;
+
+        foreach (var spawner in spawnersPowerUps)
+            spawner.enabled = true; // ← activar powerups
 
         // Limpiar texto después de un segundo
         yield return new WaitForSeconds(1f);

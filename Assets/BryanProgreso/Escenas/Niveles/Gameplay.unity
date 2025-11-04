@@ -951,7 +951,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 657742046}
+        m_TargetAssemblyTypeName: VolumenMaestro, Assembly-CSharp
+        m_MethodName: CambiarVolumen
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &416034140
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,6 +1567,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a107c527bc63d34b871b3fe38676960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &657742044
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 657742045}
+  - component: {fileID: 657742046}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &657742045
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657742044}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 536.36694, y: 351.6684, z: -570.8694}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &657742046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657742044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 603d2b175163def4eb30917e527256d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &796246759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1725,6 +1781,7 @@ Transform:
   - {fileID: 41865505}
   - {fileID: 1136312565}
   - {fileID: 998845554}
+  - {fileID: 1891021725}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &928221131
@@ -2602,8 +2659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac35a9a562033d408a4e9cc9702fb63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highScore: 0
   scoreInGame: 0
+  highScore: 0
 --- !u!1 &1468950605
 GameObject:
   m_ObjectHideFlags: 0
@@ -3396,6 +3453,8 @@ MonoBehaviour:
   - {fileID: 1136312566}
   spawnersDianas:
   - {fileID: 998845555}
+  spawnersPowerUps:
+  - {fileID: 1891021726}
 --- !u!1 &1782052167
 GameObject:
   m_ObjectHideFlags: 0
@@ -3609,6 +3668,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1814935333}
   m_CullTransparentMesh: 1
+--- !u!1 &1891021724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1891021725}
+  - component: {fileID: 1891021726}
+  m_Layer: 0
+  m_Name: PowerUps
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1891021725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891021724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.6, y: -11.52, z: -49.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 892139617}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1891021726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891021724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45959289628caab47be025f7dbf63252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jugador: {fileID: 1992936761}
+  prefabPowerUp: {fileID: 2238549392526863599, guid: 3b70ab0af8c6e604c8d95df3de171e12, type: 3}
+  spawnerActivo: 1
+  rangoX: 15
+  rangoY: 10
+  distanciaZMin: 4
+  distanciaZMax: 8
+  tiempoEntreSpawn: 10
+  maxPowerUps: 2
+  distanciaDetras: 8
+  velocidadZ: 2
 --- !u!1 &1977672581
 GameObject:
   m_ObjectHideFlags: 0
@@ -4005,3 +4119,4 @@ SceneRoots:
   - {fileID: 892139617}
   - {fileID: 248208108}
   - {fileID: 1334137218}
+  - {fileID: 657742045}
