@@ -1,78 +1,84 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 
 /// <summary>
-/// Este script controla un sistema de partÌculas para simular la caÌda de agua.
-/// Se puede ajustar la emisiÛn, la velocidad, la forma del emisor, entre otros par·metros.
+/// Este script controla un sistema de part√≠culas que simula viento alrededor del jugador.
+/// Ahora sigue al jugador mientras este se mueve, manteniendo un offset configurable.
 /// </summary>
 [RequireComponent(typeof(ParticleSystem))]
 public class VientoParticulas : MonoBehaviour
 {
-    // Referencia al sistema de partÌculas
+    // Referencia al sistema de part√≠culas
     private ParticleSystem waterParticleSystem;
 
-    // Variables p˙blicas para ajustar en el editor de Unity
-    [Header("Ajustes de EmisiÛn")]
-    [Tooltip("Tasa de emisiÛn de partÌculas por segundo")]
+    [Header("Referencia del Jugador")]
+    [Tooltip("Objeto del jugador que el sistema de part√≠culas debe seguir.")]
+    public Transform jugador; // üîπ Asigna aqu√≠ el transform del jugador en el inspector.
+
+    [Tooltip("Offset de posici√≥n respecto al jugador.")]
+    public Vector3 offset = new Vector3(0, 0, 0); // üîπ Puedes ajustar este valor en el inspector.
+
+    [Header("Ajustes de Emisi√≥n")]
     public float emissionRate = 100f;
 
     [Header("Ajustes de Velocidad")]
-    [Tooltip("Velocidad inicial de las partÌculas")]
     public float startSpeed = 5f;
-    [Tooltip("Gravedad aplicada a las partÌculas")]
     public float gravityModifier = 0.5f;
 
     [Header("Ajustes de Forma")]
-    [Tooltip("¡ngulo del cono de emisiÛn")]
     public float shapeAngle = 0f;
-    [Tooltip("Radio de la forma de emisiÛn")]
     public float shapeRadius = 0.1f;
 
-    [Header("Ajustes de TamaÒo")]
-    [Tooltip("TamaÒo inicial de las partÌculas")]
+    [Header("Ajustes de Tama√±o")]
     public float startSize = 0.1f;
 
     private void Start()
     {
-        // Obtener el componente ParticleSystem adjunto al mismo GameObject
         waterParticleSystem = GetComponent<ParticleSystem>();
-
-        // Configurar el sistema de partÌculas con los valores iniciales
         ConfigureParticleSystem();
+
+        // Si no se asign√≥ el jugador en el inspector, intentar buscarlo autom√°ticamente
+        if (jugador == null)
+        {
+            GameObject jugadorGO = GameObject.FindGameObjectWithTag("Player"); // üîπ Aseg√∫rate de que el jugador tenga el tag "Player"
+            if (jugadorGO != null)
+                jugador = jugadorGO.transform;
+            else
+                Debug.LogWarning("‚ö†Ô∏è No se encontr√≥ el objeto del jugador. Asigna el Transform del jugador en el inspector o usa el tag 'Player'.");
+        }
+    }
+
+    private void Update()
+    {
+        // üîπ Si el jugador existe, seguirlo con un offset
+        if (jugador != null)
+        {
+            transform.position = jugador.position + offset;
+        }
     }
 
     /// <summary>
-    /// Configura el sistema de partÌculas con los valores establecidos en las variables p˙blicas.
+    /// Configura el sistema de part√≠culas con los valores establecidos en las variables p√∫blicas.
     /// </summary>
     private void ConfigureParticleSystem()
     {
         var mainModule = waterParticleSystem.main;
         var emissionModule = waterParticleSystem.emission;
         var shapeModule = waterParticleSystem.shape;
-        var velocityOverLifetimeModule = waterParticleSystem.velocityOverLifetime;
 
-        // Configurar mÛdulo principal
         mainModule.startSpeed = startSpeed;
         mainModule.startSize = startSize;
         mainModule.gravityModifier = gravityModifier;
 
-        // Configurar emisiÛn
         emissionModule.rateOverTime = emissionRate;
 
-        // Configurar la forma (por defecto es cono, pero podemos cambiarla si se quiere)
         shapeModule.enabled = true;
-        shapeModule.shapeType = ParticleSystemShapeType.Cone; // Forma de cono para la emisiÛn
+        shapeModule.shapeType = ParticleSystemShapeType.Cone;
         shapeModule.angle = shapeAngle;
         shapeModule.radius = shapeRadius;
-
-        // Si queremos que las partÌculas tengan una ligera variaciÛn en su velocidad a lo largo de la vida, podemos usar velocityOverLifetime.
-        // En este caso, no lo usamos, pero lo dejamos como ejemplo de cÛmo podrÌamos acceder a otros mÛdulos.
-        // velocityOverLifetimeModule.enabled = false; // Por defecto desactivado
     }
 
-    // Si se cambian los valores en el inspector durante el juego, actualizamos el sistema
     private void OnValidate()
     {
-        // Si el sistema de partÌculas ya est· asignado (en el editor, durante el juego no se ejecuta OnValidate)
         if (waterParticleSystem != null)
         {
             ConfigureParticleSystem();
