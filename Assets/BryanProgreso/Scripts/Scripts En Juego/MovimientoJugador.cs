@@ -26,6 +26,10 @@ public class MovimientoParacaidista : MonoBehaviour
     public float intensidadSkybox = 10f;
     public float rotacionInicialSkybox = 120f;
 
+    [Header("Dirección de movimiento")]
+    [Tooltip("Activa esto si el jugador se mueve en dirección contraria al input horizontal.")]
+    public bool invertirHorizontal = true; // 🔹 NUEVA VARIABLE
+
     private Vector3 offset;
     private CharacterController controller;
     private Vector3 movimiento;
@@ -77,14 +81,18 @@ public class MovimientoParacaidista : MonoBehaviour
         inputY = Mathf.Clamp(inputY, -1f, 1f);
 #endif
 
-        // Movimiento del jugador
-        movimiento = new Vector3(inputX, inputY, 0f);
+        // ✅ CAMBIO HECHO AQUÍ:
+        // Antes: movimiento = new Vector3(inputX, inputY, 0f);
+        // Ahora: permite invertir el eje horizontal según la variable pública.
+        float x = invertirHorizontal ? -inputX : inputX;
+        movimiento = new Vector3(x, inputY, 0f);
+
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
         // Rotación visual del jugador
         float tiltX = -inputY * AnguloMaxX;
-        float tiltZ = -inputX * AnguloMaxZ;
+        float tiltZ = -x * AnguloMaxZ;
         Quaternion rotacionTilt = Quaternion.Euler(tiltX, 0f, tiltZ);
         Quaternion rotacionObjetivo = rotacionInicial * rotacionTilt;
         float factorInput = Mathf.Clamp01(movimiento.magnitude);
@@ -92,7 +100,7 @@ public class MovimientoParacaidista : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
 
         // Skybox: suavizar movimiento
-        float objetivoSkybox = rotacionInicialSkybox + inputX * intensidadSkybox;
+        float objetivoSkybox = rotacionInicialSkybox + x * intensidadSkybox;
         rotacionSkybox = Mathf.Lerp(rotacionSkybox, objetivoSkybox, Time.deltaTime * 2f);
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
