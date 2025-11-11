@@ -16,10 +16,10 @@ public class NubeSpawner : MonoBehaviour
     public float tiempoEntreSpawn = 1f;
     public int maxNubes = 15;
 
-    [Header("Escala y transición")]
-    public float escalaInicial = 0.2f;
-    public float duracionTransicion = 2f;
-    public float variacionEscala = 0.25f; // +-25% de variación de tamaño
+    [Header("Transición de aparición (fade)")]
+    public float duracionFade = 2f;
+    [Range(0f, 1f)] public float alphaInicial = 0f;
+    [Range(0f, 1f)] public float alphaFinal = 1f;
 
     [Header("Movimiento")]
     public float velocidadMin = 1f;
@@ -44,69 +44,77 @@ public class NubeSpawner : MonoBehaviour
 
     void GenerarNube()
     {
-        // Posición inicial alrededor del jugador, delante en -Z
+        // Posición inicial: delante del jugador en -Z
         float x = jugador.position.x + Random.Range(-rangoX, rangoX);
         float y = jugador.position.y + Random.Range(-rangoY, rangoY);
         float z = jugador.position.z + distanciaZ;
 
-        // Rotación aleatoria (solo en Z si son sprites planos)
         Quaternion rotacionAleatoria = Quaternion.Euler(
-            Random.Range(-10f, 10f),  // leve inclinación X
-            Random.Range(0f, 360f),   // rotación completa Y
-            Random.Range(-10f, 10f)   // leve inclinación Z
+            Random.Range(-10f, 10f),
+            Random.Range(0f, 360f),
+            Random.Range(-10f, 10f)
         );
 
         GameObject nuevaNube = Instantiate(prefabNube, new Vector3(x, y, z), rotacionAleatoria);
         nubesActivas.Add(nuevaNube);
 
-        // Variación de escala individual (entre 0.75x y 1.25x)
-        float factorEscala = 1f + Random.Range(-variacionEscala, variacionEscala);
-        Vector3 escalaFinal = prefabNube.transform.localScale * factorEscala;
+        // Aparecer con fade en lugar de escala
+        StartCoroutine(FadeInNube(nuevaNube, duracionFade, alphaInicial, alphaFinal));
 
-        // Escala inicial más pequeña (para efecto de aparición)
-        nuevaNube.transform.localScale = escalaFinal * escalaInicial;
-        StartCoroutine(EscalarSuavemente(nuevaNube, escalaFinal, duracionTransicion));
-
-        // Configurar el movimiento
+        // Configurar movimiento
         Cloud nubeScript = nuevaNube.GetComponent<Cloud>();
         if (nubeScript != null)
         {
             nubeScript.velocidad = Random.Range(velocidadMin, velocidadMax);
-            nubeScript.objetivoZ = jugador.position.z + 10f; // que pase al jugador
+            nubeScript.objetivoZ = jugador.position.z + 10f;
         }
     }
 
-    private System.Collections.IEnumerator EscalarSuavemente(GameObject obj, Vector3 escalaFinal, float duracion)
+    private System.Collections.IEnumerator FadeInNube(GameObject obj, float duracion, float alphaInicio, float alphaFin)
     {
-        float tiempo = 0f;
-        Vector3 escalaInicialLocal = obj.transform.localScale;
+        if (obj == null) yield break;
 
+        Renderer renderer = obj.GetComponent<Renderer>();
+        if (renderer == null || renderer.material == null) yield break;
+
+        // Clonar el material para no modificar el prefab original
+        Material mat = renderer.material;
+        Color color = mat.color;
+        color.a = alphaInicio;
+        mat.color = color;
+
+        float tiempo = 0f;
         while (tiempo < duracion && obj != null)
         {
             tiempo += Time.deltaTime;
             float t = Mathf.Clamp01(tiempo / duracion);
-            obj.transform.localScale = Vector3.Lerp(escalaInicialLocal, escalaFinal, t);
+            color.a = Mathf.Lerp(alphaInicio, alphaFin, t);
+            mat.color = color;
             yield return null;
         }
 
         if (obj != null)
-            obj.transform.localScale = escalaFinal;
+        {
+            color.a = alphaFin;
+            mat.color = color;
+        }
     }
 
     void LimpiarNubes()
     {
         for (int i = nubesActivas.Count - 1; i >= 0; i--)
         {
-            if (nubesActivas[i] == null)
+            GameObject nube = nubesActivas[i];
+            if (nube == null)
             {
                 nubesActivas.RemoveAt(i);
                 continue;
             }
 
-            // Si la nube ya pasó más allá del jugador (en Z), destruirla
-            if (nubesActivas[i].transform.position.z > jugador.position.z + 5f)
+            // Si ya pasó al jugador en el eje Z, destruirla
+            if (nube.transform.position.z > jugador.position.z + 5f)
             {
-                Destroy(nubesActivas[i]);
+                Destroy(nube);
                 nubesActivas.RemoveAt(i);
             }
         }

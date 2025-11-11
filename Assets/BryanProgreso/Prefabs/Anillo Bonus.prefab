@@ -102,11 +102,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocidadZMin: 8
   velocidadZMax: 15
-  variacionLateral: 0.4
-  variacionVertical: 0.7
+  variacionLateral: 0.2
+  variacionVertical: 0.3
   puntos: 20
   margenDespawn: 10
   particulasPrefab: {fileID: 8461169857442880525, guid: 54068cb2c720051478a7bec72e51d0bf, type: 3}
+  fadeDuration: 1
   velocidadZ: 10
 --- !u!135 &893034660634111673
 SphereCollider:
