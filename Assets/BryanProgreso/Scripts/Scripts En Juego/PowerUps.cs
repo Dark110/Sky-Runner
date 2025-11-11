@@ -36,7 +36,7 @@ public class PowerUp : MonoBehaviour
         // Si sobrepasa el límite frente al jugador, se destruye
         if (jugador != null && transform.position.z > jugador.position.z + limiteDespawnZ)
         {
-            Destroy(gameObject);
+           // Destroy(gameObject);
         }
     }
 

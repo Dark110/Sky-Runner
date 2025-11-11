@@ -27,6 +27,7 @@ public class PowerUpSpawner : MonoBehaviour
             );
 
             Instantiate(powerUpPrefab, posicion, Quaternion.identity);
+            Debug.Log("spam de poder");
         }
     }
 }
