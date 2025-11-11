@@ -12,15 +12,19 @@ public class FinalManager : MonoBehaviour
             int finalScore = SaveDataManager.Instance.scoreInGame;
             int highScore = SaveDataManager.Instance.highScore;
 
-            resultadoText.text =
-                "Tu puntaje: " + finalScore + "\n" +
-                "Mejor puntaje: " + highScore;
+            if (resultadoText != null)
+            {
+                resultadoText.text =
+                    "Tu puntaje: " + finalScore + "\n" +
+                    "Mejor puntaje: " + highScore;
+            }
 
             Debug.Log($"[FinalManager] Mostrando Score: {finalScore}, HighScore: {highScore}");
         }
         else
         {
-            resultadoText.text = "Score no disponible";
+            if (resultadoText != null)
+                resultadoText.text = "Score no disponible";
         }
     }
 }

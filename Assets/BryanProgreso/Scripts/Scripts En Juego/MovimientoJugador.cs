@@ -26,10 +26,6 @@ public class MovimientoParacaidista : MonoBehaviour
     public float intensidadSkybox = 10f;
     public float rotacionInicialSkybox = 120f;
 
-    [Header("Dirección de movimiento")]
-    [Tooltip("Activa esto si el jugador se mueve en dirección contraria al input horizontal.")]
-    public bool invertirHorizontal = true; // 🔹 NUEVA VARIABLE
-
     private Vector3 offset;
     private CharacterController controller;
     private Vector3 movimiento;
@@ -56,7 +52,6 @@ public class MovimientoParacaidista : MonoBehaviour
 
     private void Update()
     {
-        // Pausa: si el juego está pausado, no procesar inputs/rotaciones
         if (MenuGameManager.Instance != null &&
             MenuGameManager.Instance.CurrentState == GameState.PAUSE)
         {
@@ -67,8 +62,8 @@ public class MovimientoParacaidista : MonoBehaviour
         float inputY;
 
 #if UNITY_STANDALONE || UNITY_EDITOR
-        inputX = Input.GetAxis("Horizontal");
-        inputY = Input.GetAxis("Vertical");
+        inputX = Input.GetAxis("Horizontal"); // A/D
+        inputY = Input.GetAxis("Vertical");   // W/S
 #else
         float deadZone = 0.05f;
         float rawX = Input.acceleration.x - offset.x;
@@ -81,33 +76,29 @@ public class MovimientoParacaidista : MonoBehaviour
         inputY = Mathf.Clamp(inputY, -1f, 1f);
 #endif
 
-        // ✅ CAMBIO HECHO AQUÍ:
-        // Antes: movimiento = new Vector3(inputX, inputY, 0f);
-        // Ahora: permite invertir el eje horizontal según la variable pública.
-        float x = invertirHorizontal ? -inputX : inputX;
-        movimiento = new Vector3(x, inputY, 0f);
-
+        // ✅ Invertimos solo el eje X (izquierda/derecha)
+        movimiento = new Vector3(-inputX, inputY, 0f);
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
-        // Rotación visual del jugador
-        float tiltX = -inputY * AnguloMaxX;
-        float tiltZ = -x * AnguloMaxZ;
+        // ✅ Ajuste visual coherente con movimiento corregido
+        float tiltX = inputY * AnguloMaxX;
+        float tiltZ = inputX * AnguloMaxZ;
         Quaternion rotacionTilt = Quaternion.Euler(tiltX, 0f, tiltZ);
         Quaternion rotacionObjetivo = rotacionInicial * rotacionTilt;
+
         float factorInput = Mathf.Clamp01(movimiento.magnitude);
         float velocidadSlerp = NivelSuavidad * factorInput * DeltaMultiplicador * Time.deltaTime;
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
 
-        // Skybox: suavizar movimiento
-        float objetivoSkybox = rotacionInicialSkybox + x * intensidadSkybox;
+        // Skybox coherente
+        float objetivoSkybox = rotacionInicialSkybox - inputX * intensidadSkybox;
         rotacionSkybox = Mathf.Lerp(rotacionSkybox, objetivoSkybox, Time.deltaTime * 2f);
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
     private void FixedUpdate()
     {
-        // Pausa: si el juego está pausado, no mover al personaje
         if (MenuGameManager.Instance != null &&
             MenuGameManager.Instance.CurrentState == GameState.PAUSE)
         {
