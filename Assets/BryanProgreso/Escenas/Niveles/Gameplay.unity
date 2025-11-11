@@ -144,13 +144,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 259419}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 27.6, y: -9.5, z: 0.7}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: -0.0000058412543}
+  m_LocalPosition: {x: 29.269999, y: -9.499997, z: -1.5500069}
   m_LocalScale: {x: 25, y: 25, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1992936761}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -179.999, z: 0}
 --- !u!96 &259421
 TrailRenderer:
   serializedVersion: 3
@@ -314,8 +314,8 @@ MonoBehaviour:
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 7014848391307294649, guid: cea7f8450a5e3df4e926b726e69aee6a, type: 3}
   spawnerActivo: 1
-  distanciaZMin: 55
-  distanciaZMax: 60
+  distanciaZMin: 70
+  distanciaZMax: 80
   tiempoEntreSpawn: 6
   maxObstaculos: 12
   distanciaDetras: 10
@@ -336,6 +336,7 @@ GameObject:
   - component: {fileID: 158377772}
   - component: {fileID: 158377771}
   - component: {fileID: 158377770}
+  - component: {fileID: 158377773}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -430,7 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -456,6 +457,39 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 158377768}
   m_CullTransparentMesh: 1
+--- !u!114 &158377773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158377768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f19b7e2285c104f6ca47d583f3e5444f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 300
+  m_EffectMaterial: {fileID: 2100000, guid: 9dc7e810a87b444ab96919f3215c2fe5, type: 2}
+  m_EffectFactor: 0
+  m_Width: 0.25
+  m_Rotation: 0
+  m_Softness: 1
+  m_Brightness: 1
+  m_Gloss: 1
+  m_EffectArea: 0
+  m_Player:
+    play: 1
+    initialPlayDelay: 0
+    duration: 2
+    loop: 1
+    loopDelay: 0
+    updateMode: 0
+  m_Play: 0
+  m_Loop: 0
+  m_Duration: 1
+  m_LoopDelay: 1
+  m_UpdateMode: 0
 --- !u!1 &178776268
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,7 +1347,7 @@ MonoBehaviour:
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 8399555538034048709, guid: f26b0cf3424cde94b86026afdea92b04, type: 3}
   spawnerActivo: 1
-  distanciaZMin: 60
+  distanciaZMin: 70
   distanciaZMax: 80
   tiempoEntreSpawn: 5
   maxObstaculos: 12
@@ -2044,13 +2078,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095609122}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: -26.5, y: -9.5, z: 0.7}
+  m_LocalRotation: {x: -0, y: 0.99144566, z: -0, w: 0.13052055}
+  m_LocalPosition: {x: -28.560001, y: -9.499997, z: -1.6200066}
   m_LocalScale: {x: 25, y: 25, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1992936761}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -194.999, z: 0}
 --- !u!96 &1095609124
 TrailRenderer:
   serializedVersion: 3
@@ -2255,8 +2289,8 @@ MonoBehaviour:
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
   spawnerActivo: 1
-  distanciaZMin: 55
-  distanciaZMax: 60
+  distanciaZMin: 65
+  distanciaZMax: 75
   tiempoEntreSpawn: 1.8
   maxObstaculos: 12
   distanciaDetras: 10
