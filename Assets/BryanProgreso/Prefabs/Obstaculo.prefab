@@ -128,9 +128,7 @@ MonoBehaviour:
   RotMin: 60
   RotMax: 120
   usarHoming: 1
-  fuerzaHoming: 4.68
-  usarHomingAngular: 1
-  velocidadRotacionHoming: 20
+  fuerzaHoming: 5
   usarPrediccion: 1
   tiempoPrediccion: 1.5
   puntosAlEsquivar: 10
