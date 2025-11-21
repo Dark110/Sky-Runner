@@ -296,8 +296,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipo: 0
   duracion: 5
-  multiplicadorVelocidad: 2
-  velocidadMovimiento: 3
+  multiplicadorVelocidad: 1
+  velocidadMovimiento: 10
   limiteDespawnZ: -50
 --- !u!114 &8847334091252658297
 MonoBehaviour:

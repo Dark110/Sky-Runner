@@ -1657,7 +1657,7 @@ GameObject:
   - component: {fileID: 796246761}
   - component: {fileID: 796246760}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: CuentaRegresiva
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3237,6 +3237,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MinutoTiempo: 64
+  tiempoCuentaInicio: 3
+  UI_CuentaInicio: {fileID: 796246760}
   modoPrueba: 0
   velocidadTest: 5
   UI_Tiempo: {fileID: 454101459}
@@ -3743,20 +3745,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1891021724}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45959289628caab47be025f7dbf63252, type: 3}
+  m_Script: {fileID: 11500000, guid: d13bd08fc63894c478312cea1c0b5b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jugador: {fileID: 1992936761}
-  prefabPowerUp: {fileID: 2238549392526863599, guid: 3b70ab0af8c6e604c8d95df3de171e12, type: 3}
-  spawnerActivo: 1
-  rangoX: 15
-  rangoY: 10
-  distanciaZMin: 4
-  distanciaZMax: 8
-  tiempoEntreSpawn: 10
-  maxPowerUps: 2
-  distanciaDetras: 8
-  velocidadZ: 2
+  powerUpPrefab: {fileID: 2238549392526863599, guid: 3b70ab0af8c6e604c8d95df3de171e12, type: 3}
+  cantidadPowerUps: 2
+  rango: {x: 20, y: 0, z: 20}
 --- !u!1 &1977672581
 GameObject:
   m_ObjectHideFlags: 0
