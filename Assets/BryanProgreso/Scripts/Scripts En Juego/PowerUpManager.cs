@@ -1,8 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public enum TipoPowerUp { Velocidad, Invulnerable }
+// 🔹 Enum visible para todos los scripts
+public enum TipoPowerUp
+{
+    Velocidad,
+    Invulnerable
+}
 
 [System.Serializable]
 public class PowerUpData
@@ -24,13 +29,13 @@ public class PowerUpManager : MonoBehaviour
     [Header("PowerUps activos")]
     public List<PowerUpData> powerUpsActivos = new List<PowerUpData>();
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
     }
 
-    void Update()
+    private void Update()
     {
         for (int i = powerUpsActivos.Count - 1; i >= 0; i--)
         {
