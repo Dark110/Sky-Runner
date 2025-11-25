@@ -1,33 +1,55 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class PowerUpSpawner : MonoBehaviour
 {
-    [Header("Prefab del PowerUp")]
-    public GameObject powerUpPrefab; // Asigna aquí tu prefab "PowerUp"
+    [Header("Prefabs de PowerUps (2 tipos)")]
+    public GameObject[] powerUpPrefabs; // EXACTAMENTE 2 prefabs
 
-    [Header("Cantidad y rango de aparición")]
-    public int cantidadPowerUps = 2; // Cuántos power ups aparecerán
-    public Vector3 rango = new Vector3(20f, 0f, 20f); // Área de aparición
+    [Header("Rango de spawn")]
+    public Vector3 rango = new Vector3(20f, 0f, 20f);
 
     private void Start()
     {
-        if (powerUpPrefab == null)
-        {
-            Debug.LogError("⚠️ No has asignado el prefab de PowerUp en el inspector");
-            return;
-        }
+        StartCoroutine(SpawnLoop());
+    }
 
-        // Generar los power ups
-        for (int i = 0; i < cantidadPowerUps; i++)
+    IEnumerator SpawnLoop()
+    {
+        while (true)
         {
-            Vector3 posicion = transform.position + new Vector3(
-                Random.Range(-rango.x, rango.x),
-                Random.Range(-rango.y, rango.y),
-                Random.Range(-rango.z, rango.z)
-            );
+            // Esperar entre 5 y 10 segundos
+            float espera = Random.Range(5f, 10f);
+            yield return new WaitForSeconds(espera);
 
-            Instantiate(powerUpPrefab, posicion, Quaternion.identity);
-            Debug.Log("spam de poder");
+            if (powerUpPrefabs.Length != 2)
+            {
+                Debug.LogError("Debes asignar EXACTAMENTE 2 prefabs de PowerUps!");
+                yield break;
+            }
+
+            // Elegir aleatoriamente el orden
+            int indexA = Random.Range(0, 2);
+            int indexB = 1 - indexA; // El otro
+
+            // Spawn del primer power up
+            SpawnOne(powerUpPrefabs[indexA]);
+
+            // Spawn del segundo power up
+            SpawnOne(powerUpPrefabs[indexB]);
+
+            Debug.Log("Spawn de los 2 power ups (orden aleatorio)");
         }
+    }
+
+    void SpawnOne(GameObject prefab)
+    {
+        Vector3 posicion = transform.position + new Vector3(
+            Random.Range(-rango.x, rango.x),
+            Random.Range(-rango.y, rango.y),
+            Random.Range(-rango.z, rango.z)
+        );
+
+        Instantiate(prefab, posicion, Quaternion.identity);
     }
 }

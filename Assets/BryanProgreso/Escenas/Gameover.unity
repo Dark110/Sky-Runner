@@ -471,7 +471,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nombreEscena: Derrota
-  retrasoGameOver: 5
 --- !u!1 &310817801
 GameObject:
   m_ObjectHideFlags: 0

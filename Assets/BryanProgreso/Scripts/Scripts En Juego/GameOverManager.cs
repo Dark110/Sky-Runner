@@ -19,6 +19,9 @@ public class GameOverManager : MonoBehaviour
     // ⭐ Overlay para oscurecer la pantalla
     private Image fadeOverlay;
 
+    // ⭐ Referencia al GameObject FadeCanvas creado dinámicamente
+    private GameObject fadeCanvasObj;
+
     private void Start()
     {
         CrearOverlayNegro();
@@ -26,23 +29,20 @@ public class GameOverManager : MonoBehaviour
 
     private void CrearOverlayNegro()
     {
-        // Crear un Canvas si no existe
-        GameObject canvasObj = new GameObject("FadeCanvas");
-        Canvas canvas = canvasObj.AddComponent<Canvas>();
+        fadeCanvasObj = new GameObject("FadeCanvas");
+        Canvas canvas = fadeCanvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 1000;
 
-        canvasObj.AddComponent<CanvasGroup>();
-        DontDestroyOnLoad(canvasObj);
+        fadeCanvasObj.AddComponent<CanvasGroup>();
+        DontDestroyOnLoad(fadeCanvasObj);
 
-        // Crear la imagen negra
         GameObject imgObj = new GameObject("FadeImage");
-        imgObj.transform.SetParent(canvasObj.transform, false);
+        imgObj.transform.SetParent(fadeCanvasObj.transform, false);
 
         fadeOverlay = imgObj.AddComponent<Image>();
-        fadeOverlay.color = new Color(0f, 0f, 0f, 0f); // transparente al inicio
+        fadeOverlay.color = new Color(0f, 0f, 0f, 0f);
 
-        // Ajustar tamaño
         RectTransform rt = fadeOverlay.GetComponent<RectTransform>();
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
@@ -67,17 +67,14 @@ public class GameOverManager : MonoBehaviour
         if (gameOver) return;
         gameOver = true;
 
-        // Guarda puntaje
         if (SaveDataManager.Instance != null)
             SaveDataManager.Instance.EndGame();
 
         GameStateTracker.LastLevel = SceneManager.GetActiveScene().name;
 
-        // Pausar juego
-        Time.timeScale = 0f;
+        
         AudioListener.pause = true;
 
-        // Desactivar control
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.PauseWithoutMenu();
         else
@@ -86,13 +83,10 @@ public class GameOverManager : MonoBehaviour
             if (jugador != null) jugador.enabled = false;
         }
 
-        // ⭐ Iniciar oscurecimiento
         StartCoroutine(FadeToBlack());
-
         StartCoroutine(CambiarEscenaConRetraso());
     }
 
-    // ⭐ Transición visual a negro (modo noche)
     private IEnumerator FadeToBlack()
     {
         float t = 0f;
@@ -107,6 +101,20 @@ public class GameOverManager : MonoBehaviour
         }
     }
 
+    private IEnumerator DestroyBlack()
+    {
+        float t = 0f;
+
+        while (t < retrasoGameOver)
+        {
+            t += Time.unscaledDeltaTime;
+            float alpha = t / retrasoGameOver;
+
+            fadeOverlay.color = new Color(1f, 1f, 1f, -alpha);
+            yield return null;
+        }
+    }
+
     private IEnumerator CambiarEscenaConRetraso()
     {
         yield return new WaitForSecondsRealtime(retrasoGameOver);
@@ -117,9 +125,17 @@ public class GameOverManager : MonoBehaviour
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.OnGameOver();
 
+        // ↘️ Cambiar escena
         SceneManager.LoadScene(nombreEscena);
 
+        // ⭐ Esperar 4 segundos y luego destruir el FadeCanvas
+        yield return new WaitForSecondsRealtime(4f);
+
+        if (fadeCanvasObj != null)
+            Destroy(fadeCanvasObj);
+
         yield return null;
+
         var eventSystem = FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
         if (eventSystem != null)
             eventSystem.enabled = true;
