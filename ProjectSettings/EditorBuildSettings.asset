@@ -18,11 +18,11 @@ EditorBuildSettings:
     path: Assets/BryanProgreso/Escenas/Niveles/SkyTutorial.unity
     guid: c02cd4a25831c414d973512da138b89c
   - enabled: 1
-    path: Assets/BryanProgreso/Escenas/Niveles/Gameplay.unity
+    path: Assets/BryanProgreso/Escenas/Niveles/Lvl1.unity
     guid: c242e6ac91f426548813e32f3ea96a83
   - enabled: 1
-    path: Assets/BryanProgreso/Escenas/Niveles/Gameplay Lvl 2.unity
-    guid: 466acee45b96fcc41b70d82a4b6094aa
+    path: Assets/BryanProgreso/Escenas/Niveles/Lvl2.unity
+    guid: 5e377ad683ddbe94d94434fb7ecebf98
   - enabled: 1
     path: Assets/BryanProgreso/Escenas/Gameover.unity
     guid: 921bce0862f4e614a9d6b7e5a7fc30f9
