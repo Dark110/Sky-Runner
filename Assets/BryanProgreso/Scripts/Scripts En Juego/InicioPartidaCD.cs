@@ -1,26 +1,37 @@
 ﻿using UnityEngine;
 using TMPro;
 using System.Collections;
+using System;
 
 public class GameManager : MonoBehaviour
 {
+    public static event Action OnGameStarted;
+
     [Header("Cuenta regresiva")]
     public TMP_Text textoCuenta;
-    public int tiempoInicial = 3; // de 3 a 0
+    public int tiempoInicial = 3;
 
     [Header("Spawners")]
-    public ObstaculoSpawnerCaoticoFinal[] spawnersObstaculos;
+    public ObstaculoSpawnerFinal[] spawnersObstaculos;
     public NubeSpawner[] spawnersNubes;
-    public DianaSpawner[] spawnersDianas; // spawner de dianas o anillos
+    public DianaSpawner[] spawnersDianas;
 
     [Header("Spawners de PowerUps")]
-    public PowerUpSpawner[] spawnersPowerUps; // ← Nuevo
+    public PowerUpSpawner[] spawnersPowerUps;
 
     private void Start()
     {
-        // Desactivar todos los spawners antes de comenzar
+        
+        DesactivarSpawners();
+
+        StartCoroutine(Countdown());
+    }
+
+    private void DesactivarSpawners()
+    {
+        // Desactiva todos los Spawners.
         foreach (var spawner in spawnersObstaculos)
-            spawner.spawnerActivo = false;
+            spawner.enabled = false;
 
         foreach (var spawner in spawnersNubes)
             spawner.enabled = false;
@@ -29,9 +40,23 @@ public class GameManager : MonoBehaviour
             spawner.enabled = false;
 
         foreach (var spawner in spawnersPowerUps)
-            spawner.enabled = false; // desactivar powerups al inicio
+            spawner.enabled = false;
+    }
 
-        StartCoroutine(Countdown());
+    private void ActivarSpawners()
+    {
+        // Activa todos los Spawners cuando el juego comienza.
+        foreach (var spawner in spawnersObstaculos)
+            spawner.enabled = true;
+
+        foreach (var spawner in spawnersNubes)
+            spawner.enabled = true;
+
+        foreach (var spawner in spawnersDianas)
+            spawner.enabled = true;
+
+        foreach (var spawner in spawnersPowerUps)
+            spawner.enabled = true;
     }
 
     private IEnumerator Countdown()
@@ -43,28 +68,23 @@ public class GameManager : MonoBehaviour
             if (textoCuenta != null)
                 textoCuenta.text = tiempo.ToString();
 
-            yield return new WaitForSeconds(1f);
+            // CLAVE: Usamos WaitForSecondsRealtime. Esto sigue contando aunque Time.timeScale sea 0 (pausa).
+            yield return new WaitForSecondsRealtime(1f);
+
             tiempo--;
         }
 
         if (textoCuenta != null)
             textoCuenta.text = "¡0!";
 
-        // Activar todos los spawners
-        foreach (var spawner in spawnersObstaculos)
-            spawner.spawnerActivo = true;
+        // ACTIVAción de Spawners: SOLO ocurre aquí, al final de la corrutina.
+        ActivarSpawners();
 
-        foreach (var spawner in spawnersNubes)
-            spawner.enabled = true;
+        // Notificamos que la fase de inicio terminó.
+        OnGameStarted?.Invoke();
 
-        foreach (var spawner in spawnersDianas)
-            spawner.enabled = true;
+        yield return new WaitForSecondsRealtime(1f);
 
-        foreach (var spawner in spawnersPowerUps)
-            spawner.enabled = true; // ← activar powerups
-
-        // Limpiar texto después de un segundo
-        yield return new WaitForSeconds(1f);
         if (textoCuenta != null)
             textoCuenta.text = "";
     }

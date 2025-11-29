@@ -18,8 +18,8 @@ public class MenuGameManager : MonoBehaviour
     [Header("Estado inicial")]
     public GameState initialState = GameState.PLAY;
 
-    [Header("Referencias UI (¡Arrastra aquí!)")]
-    public GameObject panelPausa; // <--- AQUÍ ESTÁ LA CLAVE
+    [Header("Referencias UI ()")]
+    public GameObject panelPausa;
 
     [Header("Configuración Automática")]
     public bool autoRefreshReferences = true;
@@ -31,6 +31,9 @@ public class MenuGameManager : MonoBehaviour
 
     private GameState currentState;
     public GameState CurrentState => currentState;
+
+    // Bandera para saber si la cuenta regresiva terminó
+    private bool gameplayActivo = false;
 
     private void Awake()
     {
@@ -45,13 +48,31 @@ public class MenuGameManager : MonoBehaviour
         AudioListener.pause = false;
     }
 
+    private void OnEnable()
+    {
+        // Suscribirse al evento del otro GameManager al activarse
+        GameManager.OnGameStarted += HandleGameStarted;
+    }
+
+    private void OnDisable()
+    {
+        // Desuscribirse al desactivarse
+        GameManager.OnGameStarted -= HandleGameStarted;
+    }
+
+    // Método llamado cuando el Countdown finaliza
+    private void HandleGameStarted()
+    {
+        gameplayActivo = true;
+    }
+
     private void Start()
     {
         if (autoRefreshReferences) RefreshReferences();
 
-        // Aseguramos que el panel empiece apagado si estamos jugando
         if (panelPausa != null) panelPausa.SetActive(false);
 
+        // El juego comienza EN ESTADO PLAY, pero gameplayActivo es FALSE hasta que la cuenta regresiva termine
         currentState = initialState;
         ApplyGameState(currentState);
     }
@@ -60,14 +81,26 @@ public class MenuGameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePause();
+            // Solo se permite pausar/reanudar si el gameplay ya está activo
+            if (gameplayActivo || currentState == GameState.PAUSE)
+            {
+                TogglePause();
+            }
         }
     }
 
     public void TogglePause()
     {
-        if (currentState == GameState.PLAY) OnPausePressed();
-        else if (currentState == GameState.PAUSE) OnResumePressed();
+        // La Pausa SÓLO se permite si el juego está en PLAY Y gameplayActivo es TRUE
+        if (currentState == GameState.PLAY && gameplayActivo)
+        {
+            OnPausePressed();
+        }
+        else if (currentState == GameState.PAUSE)
+        {
+            OnResumePressed();
+        }
+        // Si no se cumple ninguna de las dos condiciones (ej. durante el countdown), no hace nada.
     }
 
     public void RefreshReferences()
@@ -100,14 +133,14 @@ public class MenuGameManager : MonoBehaviour
             AudioListener.pause = false;
         }
 
-        // 2. CONTROL DEL PANEL DE PAUSA (NUEVO)
+        // 2. CONTROL DEL PANEL DE PAUSA
         if (panelPausa != null)
         {
-            // Solo activamos el panel si el estado es PAUSE
             panelPausa.SetActive(state == GameState.PAUSE);
         }
 
         // 3. Control de Jugador y Scripts
+        // Nota: Los Spawners solo se activan si el GameManager les da la orden final.
         if (jugador != null) jugador.enabled = isGameplayActive;
 
         foreach (var anim in animators)

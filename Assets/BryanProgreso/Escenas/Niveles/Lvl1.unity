@@ -313,7 +313,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 7014848391307294649, guid: cea7f8450a5e3df4e926b726e69aee6a, type: 3}
-  spawnerActivo: 1
+  limiteX: 20
+  limiteY: 15
+  probabilidadAtaque: 0.6
+  tiempoMaxSinMovimiento: 2.5
+  margenQuietud: 0.5
   distanciaZMin: 70
   distanciaZMax: 80
   tiempoEntreSpawn: 6
@@ -1346,7 +1350,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 8399555538034048709, guid: f26b0cf3424cde94b86026afdea92b04, type: 3}
-  spawnerActivo: 1
+  limiteX: 20
+  limiteY: 15
+  probabilidadAtaque: 0.905
+  tiempoMaxSinMovimiento: 2.5
+  margenQuietud: 0.5
   distanciaZMin: 70
   distanciaZMax: 80
   tiempoEntreSpawn: 5
@@ -2287,7 +2295,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  spawnerActivo: 1
+  limiteX: 20
+  limiteY: 15
+  probabilidadAtaque: 0.801
+  tiempoMaxSinMovimiento: 2.5
+  margenQuietud: 0.5
   distanciaZMin: 65
   distanciaZMax: 75
   tiempoEntreSpawn: 1.8

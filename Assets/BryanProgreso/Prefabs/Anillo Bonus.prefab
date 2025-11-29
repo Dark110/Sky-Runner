@@ -100,15 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c2acb58f885294d8cd5801cc9c0214, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidadZMin: 8
+  velocidadZMin: 10
   velocidadZMax: 15
-  variacionLateral: 0.2
-  variacionVertical: 0.3
+  variacionLateral: 0.3
+  variacionVertical: 0.4
   puntos: 20
   margenDespawn: 10
   particulasPrefab: {fileID: 8461169857442880525, guid: 54068cb2c720051478a7bec72e51d0bf, type: 3}
   fadeDuration: 1
-  velocidadZ: 10
+  velocidadZ: 20
 --- !u!135 &893034660634111673
 SphereCollider:
   m_ObjectHideFlags: 0

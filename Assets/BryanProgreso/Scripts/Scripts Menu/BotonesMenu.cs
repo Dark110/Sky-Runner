@@ -11,14 +11,14 @@ public class MenuManager : MonoBehaviour
 
     public void Nivel1()
     {
-        GameStateTracker.LastLevel = "Gameplay";
-        SceneManager.LoadScene("Gameplay");
+        GameStateTracker.LastLevel = "Lvl1";
+        SceneManager.LoadScene("Lvl1");
     }
 
     public void Nivel2()
     {
-        GameStateTracker.LastLevel = "Gameplay Lvl 2";
-        SceneManager.LoadScene("Gameplay Lvl 2");
+        GameStateTracker.LastLevel = "Lvl2";
+        SceneManager.LoadScene("Lvl2");
     }
 
     public void Opciones()

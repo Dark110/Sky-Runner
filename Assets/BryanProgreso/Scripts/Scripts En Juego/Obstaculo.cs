@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstaculoSpawnerCaoticoFinal : MonoBehaviour
+public class ObstaculoSpawnerFinal : MonoBehaviour
 {
     [Header("Jugador")]
     public Transform jugador;

@@ -1863,9 +1863,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialState: 0
-  jugador: {fileID: 1992936764}
-  animators: []
-  scriptsExtras: []
+  panelPausa: {fileID: 0}
+  autoRefreshReferences: 1
 --- !u!1 &998845553
 GameObject:
   m_ObjectHideFlags: 0
@@ -3953,6 +3952,10 @@ PrefabInstance:
     - target: {fileID: 4019641470368181859, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: retrasoGameOver
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4019641470368181859, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
+      propertyPath: nombreEscenaDerrota
+      value: Gameover
       objectReference: {fileID: 0}
     - target: {fileID: 5702201251560563831, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: m_Radius
