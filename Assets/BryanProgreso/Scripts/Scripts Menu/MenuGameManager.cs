@@ -12,188 +12,151 @@ public enum GameState
 
 public class MenuGameManager : MonoBehaviour
 {
-    private static MenuGameManager _instance;
-    public static MenuGameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindFirstObjectByType<MenuGameManager>();
-                if (_instance == null)
-                {
-                    GameObject go = new GameObject("MenuGameManager");
-                    _instance = go.AddComponent<MenuGameManager>();
-                }
-            }
-            return _instance;
-        }
-    }
+    public static MenuGameManager Instance { get; private set; }
 
     public event Action<GameState> OnGameStateChanged;
 
     [Header("Estado inicial")]
     public GameState initialState = GameState.PLAY;
 
-    [Header("Objetos a pausar")]
-    public MovimientoParacaidista jugador;
-    public Animator[] animators;
-    public MonoBehaviour[] scriptsExtras;
+    [Header("Configuración Automática")]
+    [Tooltip("Si es true, busca referencias automáticamente al iniciar")]
+    public bool autoRefreshReferences = true;
+
+    // Referencias internas
+    private MovimientoParacaidista jugador;
+    private List<Animator> animators = new List<Animator>();
+    private List<MonoBehaviour> scriptsExtras = new List<MonoBehaviour>(); // Spawners y otros
 
     private GameState currentState;
     public GameState CurrentState => currentState;
 
-    private List<MonoBehaviour> spawners = new List<MonoBehaviour>();
-
     private void Awake()
     {
-        if (_instance != null && _instance != this)
+        // Singleton Básico (Solo para esta escena, se destruye al recargar)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
+        Instance = this;
 
-        _instance = this;
-        DontDestroyOnLoad(gameObject);
-
-        currentState = initialState;
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // Aseguramos que el tiempo corra al nacer el script
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
     }
 
-    private void OnDestroy() => SceneManager.sceneLoaded -= OnSceneLoaded;
+    private void Start()
+    {
+        if (autoRefreshReferences)
+        {
+            RefreshReferences();
+        }
+
+        // Aplicar estado inicial
+        currentState = initialState;
+        ApplyGameState(currentState);
+    }
 
     private void Update()
     {
-        // Control manual de pausa
+        // Control manual de pausa con Teclado (PC)
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (currentState == GameState.PLAY) OnPausePressed();
-            else if (currentState == GameState.PAUSE) OnResumePressed();
+            TogglePause();
         }
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public void TogglePause()
     {
-        // Reactivar tiempo y audio siempre al cambiar escena
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
+        if (currentState == GameState.PLAY) OnPausePressed();
+        else if (currentState == GameState.PAUSE) OnResumePressed();
+    }
 
-        // Solo refrescar referencias si es un nivel que contenga GUI / gameplay
-        if (scene.name.Contains("Gameplay") || scene.name.Contains("Lvl"))
+    // -----------------------------
+    // Refrescar referencias
+    // -----------------------------
+    public void RefreshReferences()
+    {
+        // 1. Buscar Jugador
+        jugador = FindFirstObjectByType<MovimientoParacaidista>();
+
+        // 2. Buscar Animators (Incluyendo inactivos por si acaso)
+        animators.Clear();
+        animators.AddRange(FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None));
+
+        // 3. Buscar Spawners y scripts extras
+        scriptsExtras.Clear();
+        var allScripts = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var mb in allScripts)
         {
-            RefreshReferences();
-            currentState = GameState.PLAY;
-            ApplyGameState(currentState);
+            // Agrega aquí cualquier otro tag o tipo de script que necesites pausar
+            if (mb.CompareTag("Spawner"))
+            {
+                scriptsExtras.Add(mb);
+            }
+        }
+    }
+
+    // -----------------------------
+    // Lógica de Estado
+    // -----------------------------
+    private void ApplyGameState(GameState state)
+    {
+        currentState = state;
+        bool isGameplayActive = (state == GameState.PLAY);
+
+        // 1. Control del Tiempo y Audio
+        if (state == GameState.PAUSE)
+        {
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
         }
         else
         {
-            jugador = null;
-            animators = null;
-            spawners.Clear();
+            Time.timeScale = 1f;
+            AudioListener.pause = false; // En GameOver también queremos escuchar sonidos (ej. música triste)
         }
-    }
 
-    // -----------------------------
-    // Refrescar referencias automáticamente
-    // -----------------------------
-    private void RefreshReferences()
-    {
-        // Buscamos jugador automáticamente
-        jugador = FindFirstObjectByType<MovimientoParacaidista>();
+        // 2. Control del Jugador
+        if (jugador != null)
+            jugador.enabled = (state == GameState.PLAY); // Solo activo en PLAY
 
-        // Animadores activos o inactivos
-        animators = FindObjectsByType<Animator>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-
-        // Limpiar y detectar spawners
-        spawners.Clear();
-        MonoBehaviour[] allObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (var mb in allObjects)
+        // 3. Control de Animaciones
+        foreach (var anim in animators)
         {
-            if (mb != null && mb.gameObject.CompareTag("Spawner"))
-                spawners.Add(mb);
+            if (anim != null) anim.enabled = isGameplayActive;
         }
-    }
 
-    // -----------------------------
-    // Aplicar estado de juego
-    // -----------------------------
-    private void ApplyGameStateInternal(GameState state, bool notify)
-    {
-        currentState = state;
-        bool enableGameplay = (state == GameState.PLAY);
-
-        switch (state)
+        // 4. Control de Spawners y Extras
+        foreach (var script in scriptsExtras)
         {
-            case GameState.PLAY:
-                Time.timeScale = 1f;
-                AudioListener.pause = false;
-                break;
-
-            case GameState.PAUSE:
-                Time.timeScale = 0f;
-                AudioListener.pause = true;
-                break;
-
-            case GameState.GAMEOVER:
-                Time.timeScale = 1f; // no pausamos
-                AudioListener.pause = false;
-                enableGameplay = false;
-                break;
+            if (script != null) script.enabled = isGameplayActive;
         }
 
-        // Aplicar a jugador, animadores y scripts
-        if (jugador) jugador.enabled = enableGameplay;
-        SetEnabledForAnimators(animators, enableGameplay);
-        SetEnabledForScripts(scriptsExtras, enableGameplay);
-        SetEnabledForScripts(spawners.ToArray(), enableGameplay);
-
-        if (notify)
-            OnGameStateChanged?.Invoke(state);
-    }
-
-    private void ApplyGameState(GameState state) => ApplyGameStateInternal(state, true);
-
-    private void SetEnabledForScripts(MonoBehaviour[] scripts, bool enabled)
-    {
-        if (scripts == null) return;
-        foreach (var s in scripts)
-            if (s) s.enabled = enabled;
-    }
-
-    private void SetEnabledForAnimators(Animator[] anims, bool enabled)
-    {
-        if (anims == null) return;
-        foreach (var a in anims)
-            if (a) a.enabled = enabled;
+        // Notificar a la UI (Opcional, si tienes un UIManager escuchando)
+        OnGameStateChanged?.Invoke(state);
     }
 
     // -----------------------------
-    // Funciones de estado y UI
+    // Funciones Públicas para Botones UI
     // -----------------------------
     public void OnPausePressed() => ApplyGameState(GameState.PAUSE);
+
     public void OnResumePressed() => ApplyGameState(GameState.PLAY);
+
     public void OnGameOver() => ApplyGameState(GameState.GAMEOVER);
-
-    // Pausa sin afectar UI (usado en GameOverManager)
-    public void PauseWithoutMenu()
-    {
-        currentState = GameState.PAUSE;
-
-        if (jugador) jugador.enabled = false;
-        SetEnabledForAnimators(animators, false);
-        SetEnabledForScripts(scriptsExtras, false);
-        SetEnabledForScripts(spawners.ToArray(), false);
-    }
 
     public void OnResetPressed()
     {
+        // Importante: Antes de recargar, aseguramos timeScale 1 para que la carga no se congele si es asíncrona
         Time.timeScale = 1f;
-        currentState = GameState.PLAY;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    public void OnExitPressed() => SceneManager.LoadScene("MenuInicio");
-
-    public void ForceRefreshReferences() => RefreshReferences();
+    public void OnExitPressed()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MenuInicio");
+    }
 }

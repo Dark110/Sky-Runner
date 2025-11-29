@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
+// Clase auxiliar para guardar datos entre escenas sin crear un Singleton complejo
 public static class GameStateTracker
 {
     public static string LastLevel = "Gameplay";
@@ -12,7 +13,7 @@ public class GameOverManager : MonoBehaviour
 {
     [Header("Configuración de Game Over")]
     public string nombreEscena = "Derrota";
-    private float retrasoGameOver = 2.5f; 
+    private float retrasoGameOver = 2.5f;
 
     private bool gameOver = false;
     private Image fadeOverlay;
@@ -20,11 +21,13 @@ public class GameOverManager : MonoBehaviour
 
     private void Start()
     {
+        // Creamos el fade negro programáticamente para no depender de prefabs en cada nivel
         CrearOverlayNegro();
     }
 
     private void CrearOverlayNegro()
     {
+        // Limpieza preventiva por si quedó uno de la escena anterior
         GameObject canvasExistente = GameObject.Find("FadeCanvas");
         if (canvasExistente != null)
         {
@@ -34,21 +37,22 @@ public class GameOverManager : MonoBehaviour
         fadeCanvasObj = new GameObject("FadeCanvas");
         Canvas canvas = fadeCanvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 1000; // Capa superior
+        canvas.sortingOrder = 1000; // Capa superior para tapar todo
 
-        fadeCanvasObj.AddComponent<CanvasGroup>(); // Ayuda a manejar la transparencia
+        fadeCanvasObj.AddComponent<CanvasGroup>();
+        fadeCanvasObj.AddComponent<GraphicRaycaster>(); // Importante si hubiera botones, aunque aquí es solo visual
 
-        // Mantener este objeto al cambiar de escena para que el fade se vea continuo
+        // Importante: No destruir al cargar para poder hacer el efecto de "Fade In" en la siguiente escena
         DontDestroyOnLoad(fadeCanvasObj);
 
         GameObject imgObj = new GameObject("FadeImage");
         imgObj.transform.SetParent(fadeCanvasObj.transform, false);
 
         fadeOverlay = imgObj.AddComponent<Image>();
-        // Empieza totalmente transparente
-        fadeOverlay.color = new Color(0f, 0f, 0f, 0f);
+        fadeOverlay.color = new Color(0f, 0f, 0f, 0f); // Invisible al inicio
+        fadeOverlay.raycastTarget = false; // Permitir clicks a través mientras es transparente
 
-        // Configurar para que ocupe toda la pantalla
+        // Estirar imagen a toda la pantalla
         RectTransform rt = fadeOverlay.GetComponent<RectTransform>();
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
@@ -76,26 +80,33 @@ public class GameOverManager : MonoBehaviour
         if (SaveDataManager.Instance != null)
             SaveDataManager.Instance.EndGame();
 
+        // Guardamos el nombre de la escena actual para el botón "Reintentar"
         GameStateTracker.LastLevel = SceneManager.GetActiveScene().name;
 
-        AudioListener.pause = true;
-        Time.timeScale = 0f; // Congelar juego
-
+        // 1. Notificar al Manager Global
+        // Esto desactiva inputs, spawners y animaciones automáticamente
         if (MenuGameManager.Instance != null)
-            MenuGameManager.Instance.PauseWithoutMenu();
+        {
+            MenuGameManager.Instance.OnGameOver();
+        }
         else
         {
-            MovimientoParacaidista jugador = FindFirstObjectByType<MovimientoParacaidista>();
+            // Fallback por si acaso no hay manager en la escena
+            var jugador = FindFirstObjectByType<MovimientoParacaidista>();
             if (jugador != null) jugador.enabled = false;
         }
+
+        // 2. Efecto de congelar el juego (opcional, pero da buen feedback de impacto)
+        Time.timeScale = 0f;
+        AudioListener.pause = true;
 
         StartCoroutine(SecuenciaMuerte());
     }
 
-    // Unifiqué las corrutinas para tener mejor control del flujo
     private IEnumerator SecuenciaMuerte()
     {
-        // fade
+        // --- FASE 1: Fade Out (Pantalla a Negro) ---
+        // Usamos unscaledDeltaTime porque el TimeScale está en 0
         float t = 0f;
         while (t < retrasoGameOver)
         {
@@ -105,40 +116,38 @@ public class GameOverManager : MonoBehaviour
             yield return null;
         }
 
-        // Negro total
+        // Asegurar negro total
         if (fadeOverlay != null) fadeOverlay.color = Color.black;
 
-        // Restaurar tiempo y lógica antes de cambiar escena
+        // --- FASE 2: Cambio de Escena ---
+
+        // Restaurar tiempo antes de cambiar de escena para evitar bugs en la UI de Derrota
         Time.timeScale = 1f;
         AudioListener.pause = false;
 
-        if (MenuGameManager.Instance != null)
-            MenuGameManager.Instance.OnGameOver();
-
-        // 3. Cambiar Escena
+        // Cargamos la escena de derrota
         SceneManager.LoadScene(nombreEscena);
 
+        // --- FASE 3: Fade In (Aclarar pantalla en la nueva escena) ---
         t = 0f;
-        while (t < 1.5f) // Duración del aclarado (1.5 seg)
+        while (t < 1.5f)
         {
             t += Time.unscaledDeltaTime;
-            float alpha = 1f - (t / 1.5f); // Inverso: de 1 a 0
+            float alpha = 1f - (t / 1.5f); // De 1 a 0
             if (fadeOverlay != null) fadeOverlay.color = new Color(0f, 0f, 0f, alpha);
             yield return null;
         }
 
-        // Destruir el Canvas ya que terminamos
+        // --- FASE 4: Limpieza ---
         if (fadeCanvasObj != null)
             Destroy(fadeCanvasObj);
-
-        // Restaurar EventSystem si es necesario para que funcionen los botones
-        var eventSystem = FindObjectOfType<UnityEngine.EventSystems.EventSystem>();
-        if (eventSystem != null) eventSystem.enabled = true;
     }
 
     public void JugarDeNuevo()
     {
+        Time.timeScale = 1f; // Seguridad extra
         string nivel = GameStateTracker.LastLevel;
+
         if (!string.IsNullOrEmpty(nivel))
             SceneManager.LoadScene(nivel);
         else
