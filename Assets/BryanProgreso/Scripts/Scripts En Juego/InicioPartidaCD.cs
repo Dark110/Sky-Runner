@@ -2,14 +2,20 @@
 using TMPro;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement; 
 
 public class GameManager : MonoBehaviour
 {
+    // Mantenemos el evento por si otros scripts lo necesitan
     public static event Action OnGameStarted;
 
     [Header("Cuenta regresiva")]
     public TMP_Text textoCuenta;
     public int tiempoInicial = 3;
+
+    [Header("Referencias UI")]
+    // Referencia al objeto Game Object del botón de Pausa en la UI
+    public GameObject botonPausaUI;
 
     [Header("Spawners")]
     public ObstaculoSpawnerFinal[] spawnersObstaculos;
@@ -21,9 +27,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
+        // Ocultamos el botón de Pausa antes de empezar la cuenta
+        if (botonPausaUI != null)
+        {
+            botonPausaUI.SetActive(false);
+        }
+
+        // Desactivamos los Spawners
         DesactivarSpawners();
 
+        // Iniciamos el Countdown
         StartCoroutine(Countdown());
     }
 
@@ -68,7 +81,7 @@ public class GameManager : MonoBehaviour
             if (textoCuenta != null)
                 textoCuenta.text = tiempo.ToString();
 
-            // CLAVE: Usamos WaitForSecondsRealtime. Esto sigue contando aunque Time.timeScale sea 0 (pausa).
+            // Usamos WaitForSecondsRealtime para que la pausa no detenga la cuenta
             yield return new WaitForSecondsRealtime(1f);
 
             tiempo--;
@@ -77,8 +90,14 @@ public class GameManager : MonoBehaviour
         if (textoCuenta != null)
             textoCuenta.text = "¡0!";
 
-        // ACTIVAción de Spawners: SOLO ocurre aquí, al final de la corrutina.
+        // Activación de Spawners
         ActivarSpawners();
+
+        // Activación del Botón de Pausa (permitimos al jugador pausar)
+        if (botonPausaUI != null)
+        {
+            botonPausaUI.SetActive(true);
+        }
 
         // Notificamos que la fase de inicio terminó.
         OnGameStarted?.Invoke();

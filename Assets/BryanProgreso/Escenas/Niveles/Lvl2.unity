@@ -1863,7 +1863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialState: 0
-  panelPausa: {fileID: 0}
+  panelPausa: {fileID: 1468950605}
   autoRefreshReferences: 1
 --- !u!1 &998845553
 GameObject:
