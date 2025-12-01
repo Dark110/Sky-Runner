@@ -3,10 +3,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 
-// Esta clase estática guarda información que sobrevive al cambio de escenas
 public static class GameStateTracker
 {
-    // Por defecto lo dejamos vacío para obligar a llenarlo dinámicamente
     public static string LastLevel = "";
 }
 
@@ -20,27 +18,20 @@ public class GameOverManager : MonoBehaviour
     private Image fadeOverlay;
     private GameObject fadeCanvasObj;
 
-    // Referencia al script del jugador para verificar la invulnerabilidad
     private MovimientoParacaidista jugadorScript;
 
     private void Start()
     {
         CrearOverlayNegro();
 
-        // Obtenemos la referencia al script del jugador al inicio
         jugadorScript = GetComponent<MovimientoParacaidista>();
         if (jugadorScript == null)
         {
-            // Si este script no está en el jugador, búscalo.
             jugadorScript = FindFirstObjectByType<MovimientoParacaidista>();
-            if (jugadorScript == null)
-            {
-                Debug.LogError("GameOverManager no encontró el script MovimientoParacaidista.");
-            }
         }
     }
 
-    // ... (Tu código de CrearOverlayNegro se queda igual, omitido por brevedad) ...
+    // ... (CrearOverlayNegro se mantiene igual) ...
     private void CrearOverlayNegro()
     {
         GameObject canvasExistente = GameObject.Find("FadeCanvas");
@@ -66,17 +57,13 @@ public class GameOverManager : MonoBehaviour
         rt.offsetMax = Vector2.zero;
     }
 
-
-    // ⭐ MODIFICACIÓN CLAVE: Verificación de Invulnerabilidad en las Colisiones ⭐
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Obstaculo"))
         {
             if (jugadorScript != null && jugadorScript.invulnerable)
             {
-                // El jugador es invulnerable, ignoramos el Game Over.
-                Debug.Log("<color=lime>Colisión con Obstáculo ignorada por invulnerabilidad (Trigger).</color>");
-                // Opcional: Destruir el obstáculo para que el jugador pase a través.
+                Debug.Log("<color=lime>Colisión ignorada por invulnerabilidad.</color>");
                 Destroy(other.gameObject);
                 return;
             }
@@ -90,32 +77,25 @@ public class GameOverManager : MonoBehaviour
         {
             if (jugadorScript != null && jugadorScript.invulnerable)
             {
-                // El jugador es invulnerable, ignoramos el Game Over.
-                Debug.Log("<color=lime>Colisión con Obstáculo ignorada por invulnerabilidad (Hit).</color>");
-                // Opcional: Destruir el obstáculo para que el jugador pase a través.
+                Debug.Log("<color=lime>Colisión ignorada por invulnerabilidad.</color>");
                 Destroy(hit.gameObject);
                 return;
             }
             TriggerGameOver();
         }
     }
-    // ⭐ FIN MODIFICACIÓN CLAVE ⭐
 
-    private void TriggerGameOver()
+    // ⭐ Este método público maneja TODO el proceso de Game Over, incluyendo el fade.
+    public void TriggerGameOver()
     {
         if (gameOver) return;
         gameOver = true;
 
-        // Guardamos el nombre de la escena ACTUAL ("Nivel 1", "Nivel 2", etc.)
-
         GameStateTracker.LastLevel = SceneManager.GetActiveScene().name;
+        Debug.Log($"Game Over activado. Nivel: {GameStateTracker.LastLevel}");
 
-        Debug.Log($"Jugador perdió en el nivel: {GameStateTracker.LastLevel}");
+        if (SaveDataManager.Instance != null) SaveDataManager.Instance.EndGame();
 
-        if (SaveDataManager.Instance != null)
-            SaveDataManager.Instance.EndGame();
-
-        // Manager Global para pausar lógica
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.OnGameOver();
         else
@@ -132,7 +112,6 @@ public class GameOverManager : MonoBehaviour
 
     private IEnumerator SecuenciaMuerte()
     {
-        // Fade
         float t = 0f;
         while (t < retrasoGameOver)
         {
@@ -141,15 +120,10 @@ public class GameOverManager : MonoBehaviour
             if (fadeOverlay != null) fadeOverlay.color = new Color(0f, 0f, 0f, alpha);
             yield return null;
         }
-
         if (fadeOverlay != null) fadeOverlay.color = Color.black;
-
-        // Restaurar tiempo para la escena de UI
         Time.timeScale = 1f;
         AudioListener.pause = false;
         SceneManager.LoadScene(nombreEscenaDerrota);
-
-        // Aclarar en la nueva escena
         t = 0f;
         while (t < 1.5f)
         {
@@ -158,27 +132,14 @@ public class GameOverManager : MonoBehaviour
             if (fadeOverlay != null) fadeOverlay.color = new Color(0f, 0f, 0f, alpha);
             yield return null;
         }
-
         if (fadeCanvasObj != null) Destroy(fadeCanvasObj);
     }
 
-    //Boton reiniciar nivel
     public void JugarDeNuevo()
     {
         Time.timeScale = 1f;
-
-        // Verifica si hay un nivel guardado
-        if (!string.IsNullOrEmpty(GameStateTracker.LastLevel))
-        {
-            // Cargamos ("Nivel 1", etc.)
-            SceneManager.LoadScene(GameStateTracker.LastLevel);
-        }
-        else
-        {
-            // volvemos al menú principal para evitar errores.
-            Debug.LogWarning("No se encontró nivel anterior, volviendo al menú.");
-            SceneManager.LoadScene("MenuInicio");
-        }
+        if (!string.IsNullOrEmpty(GameStateTracker.LastLevel)) SceneManager.LoadScene(GameStateTracker.LastLevel);
+        else SceneManager.LoadScene("MenuInicio");
     }
 
     public void SalirAlMenu()

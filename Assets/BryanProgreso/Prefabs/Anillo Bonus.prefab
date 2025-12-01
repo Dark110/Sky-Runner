@@ -104,7 +104,8 @@ MonoBehaviour:
   velocidadZMax: 15
   variacionLateral: 0.3
   variacionVertical: 0.4
-  puntos: 20
+  Puntos: 20
+  ResistenciaARecuperar: 20
   margenDespawn: 10
   particulasPrefab: {fileID: 8461169857442880525, guid: 54068cb2c720051478a7bec72e51d0bf, type: 3}
   fadeDuration: 1
