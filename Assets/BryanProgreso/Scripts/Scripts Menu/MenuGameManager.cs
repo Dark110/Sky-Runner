@@ -95,25 +95,29 @@ public class MenuGameManager : MonoBehaviour
         currentState = state;
         bool isGameplayActive = (state == GameState.PLAY);
 
-        // Control del Tiempo
+        // 1. Control del Tiempo (Solo Time.timeScale)
         if (state == GameState.PAUSE)
         {
             Time.timeScale = 0f;
-            AudioListener.pause = true;
         }
         else
         {
             Time.timeScale = 1f;
-            AudioListener.pause = false;
         }
 
-        // CONTROL DEL PANEL DE PAUSA
+        if (AudioManager.Instance != null)
+        {
+            
+            AudioManager.Instance.sfxSource.enabled = isGameplayActive;
+        }
+
+      
         if (panelPausa != null)
         {
             panelPausa.SetActive(state == GameState.PAUSE);
         }
 
-        // Control de Jugador y Scripts
+        // Control de Jugador y Scripts (Tu código actual)
         if (jugador != null) jugador.enabled = isGameplayActive;
 
         foreach (var anim in animators)

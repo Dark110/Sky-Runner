@@ -20,7 +20,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MUSICA
+  m_Name: MusicVolume
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: aa6e32c9bd3ad7249964504444489d92
   m_Children: []
@@ -147,7 +147,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SFX
+  m_Name: SFXVolume
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: 9562494c0017cc544b838791e574e512
   m_Children: []

@@ -48,7 +48,6 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         // Solo inicia la música si no está sonando ya. 
-        // Esto evita que se reinicie si el objeto Manager ya existe.
         if (!musicSource.isPlaying)
         {
             // Asegúrate de que "Musica" coincida exactamente con el nombre de tu AudioClip
@@ -95,27 +94,22 @@ public class AudioManager : MonoBehaviour
     }
 
     // --- CONTROL DE VOLUMEN ---
-    // (Estos métodos asumen que has configurado los parámetros "MasterVolume", "MusicVolume" y "SFXVolume" 
-    // en tu Audio Mixer y que el rango del slider de UI va de 0.0001 a 1.0)
+
+    // ⭐ VERSIÓN SIMPLIFICADA (ESTABLE)
     public void SetMasterVolume(float value)
     {
-        // Si el valor del slider está muy cerca de cero, lo forzamos a -80 dB.
-        if (value < 0.001f)
-        {
-            mainMixer.SetFloat("MasterVolume", -80f);
-        }
-        else
-        {
-            // La conversión Logarítmica es necesaria para el Audio Mixer
-            mainMixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20);
-        }
+        // Usamos la fórmula logarítmica directamente. 
+        // Si el slider tiene Min Value = 0.00001, esto silencia el audio sin necesidad de 'if'.
+        mainMixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20);
     }
 
+    // ⭐ VERSIÓN SIMPLIFICADA (ESTABLE)
     public void SetMusicVolume(float value)
     {
         mainMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
     }
 
+    // ⭐ VERSIÓN SIMPLIFICADA (ESTABLE)
     public void SetSFXVolume(float value)
     {
         mainMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
