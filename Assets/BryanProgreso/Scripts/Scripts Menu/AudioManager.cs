@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        // ⭐ 1. Patrón Singleton y Persistencia
+        //  1. Patrón Singleton y Persistencia
         if (Instance == null)
         {
             Instance = this;
@@ -44,7 +44,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // ⭐ 2. Inicio de la Música
+    //  2. Inicio de la Música
     void Start()
     {
         // Solo inicia la música si no está sonando ya. 
@@ -55,7 +55,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // --- MÚSICA ---
+    // --- MÚSICA -
     public void PlayMusic(string name, bool loop = true)
     {
         AudioClip clip = System.Array.Find(musicClips, m => m.name == name);
@@ -95,7 +95,7 @@ public class AudioManager : MonoBehaviour
 
     // --- CONTROL DE VOLUMEN ---
 
-    // ⭐ VERSIÓN SIMPLIFICADA (ESTABLE)
+    //  VERSIÓN SIMPLIFICADA (ESTABLE)
     public void SetMasterVolume(float value)
     {
         // Usamos la fórmula logarítmica directamente. 
@@ -103,13 +103,13 @@ public class AudioManager : MonoBehaviour
         mainMixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20);
     }
 
-    // ⭐ VERSIÓN SIMPLIFICADA (ESTABLE)
+    //  VERSIÓN SIMPLIFICADA (ESTABLE)
     public void SetMusicVolume(float value)
     {
         mainMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
     }
 
-    // ⭐ VERSIÓN SIMPLIFICADA (ESTABLE)
+    //  VERSIÓN SIMPLIFICADA (ESTABLE)
     public void SetSFXVolume(float value)
     {
         mainMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);

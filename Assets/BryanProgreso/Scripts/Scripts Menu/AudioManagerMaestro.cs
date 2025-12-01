@@ -23,7 +23,7 @@ public class MasterVolumeTester : MonoBehaviour
         float volumeInDB = Mathf.Log10(value) * 20;
 
         // Establece el parámetro 'MasterVolume'.
-        // ⭐ RECUERDA: El parámetro debe llamarse EXACAMENTE "MasterVolume" en el Mixer.
+        //  RECUERDA: El parámetro debe llamarse EXACAMENTE "MasterVolume" en el Mixer.
         testMixer.SetFloat("MasterVolume", volumeInDB);
 
         // Opcional: para ver en la consola lo que se está enviando
