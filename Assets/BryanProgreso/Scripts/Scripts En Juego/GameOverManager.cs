@@ -67,6 +67,11 @@ public class GameOverManager : MonoBehaviour
                 Destroy(other.gameObject);
                 return;
             }
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX("Hit");
+            }
             TriggerGameOver();
         }
     }

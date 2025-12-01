@@ -56,10 +56,19 @@ public class PowerUp : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
+    { 
+       
+        
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX("PowerUp"); // ⬅️ ¡Aquí está!
+        }
+
         if (other.CompareTag("Player"))
         {
             var jugadorScript = other.GetComponent<MovimientoParacaidista>();
+
+
 
             if (jugadorScript != null)
             {

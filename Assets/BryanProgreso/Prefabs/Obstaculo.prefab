@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4078848787069957928}
   - component: {fileID: -8766562561970643651}
   - component: {fileID: 4936637169219083529}
+  - component: {fileID: 807387056972753042}
   m_Layer: 0
   m_Name: Obstaculo
   m_TagString: Obstaculo
@@ -159,3 +160,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &807387056972753042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4863116390095206224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee519173c5b241c4e8c184f165d8465b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  whooshSFXName: Woosh
+  triggerOffsetZ: 1

@@ -110,11 +110,10 @@ public class DianaPuntos : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            // ⭐ 1. Sumar Puntuación
+           
             if (ScoreManager.Instance != null)
                 ScoreManager.Instance.AddScore(Puntos);
 
-            // ⭐ 2. Recargar Resistencia
             SistemaResistencia resistencia = other.GetComponent<SistemaResistencia>();
             if (resistencia != null)
             {
@@ -125,7 +124,11 @@ public class DianaPuntos : MonoBehaviour
                 Debug.LogWarning("Player no tiene SistemaResistencia adjunto. La recarga de barra falló.");
             }
 
-            // ⭐ 3. Efectos y Desactivación
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySFX("Ring");
+            }
+
             if (particulasPrefab != null)
             {
                 GameObject ps = Instantiate(particulasPrefab, transform.position, Quaternion.identity);
