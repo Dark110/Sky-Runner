@@ -1887,6 +1887,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a107c527bc63d34b871b3fe38676960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &666489340
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1176.0612
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1531.3523
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8056996
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.28930292
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.19436806
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.47892904
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 40.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 2.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 1427007939921249849, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -60.444
+      objectReference: {fileID: 0}
+    - target: {fileID: 4366029552158189128, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
+      propertyPath: m_Name
+      value: Viento
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 99bd2bca7a0d74b4fab09bba3dfafcfd, type: 3}
 --- !u!1 &796246759
 GameObject:
   m_ObjectHideFlags: 0
@@ -5477,3 +5534,4 @@ SceneRoots:
   - {fileID: 248208108}
   - {fileID: 1334137218}
   - {fileID: 650943401}
+  - {fileID: 666489340}

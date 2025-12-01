@@ -316,14 +316,14 @@ MonoBehaviour:
   spawnerActivo: 1
   distanciaZMin: 70
   distanciaZMax: 80
-  tiempoEntreSpawn: 6
+  tiempoEntreSpawn: 5
   maxObstaculos: 12
   distanciaDetras: 10
   habilitarSpawnMultiple: 1
-  probabilidadMultiple: 0.1
+  probabilidadMultiple: 0.3
   minObstaculosMultiples: 2
-  maxObstaculosMultiples: 4
-  separacionMultiple: 2
+  maxObstaculosMultiples: 3
+  separacionMultiple: 6
 --- !u!1 &158377768
 GameObject:
   m_ObjectHideFlags: 0
@@ -2953,16 +2953,16 @@ MonoBehaviour:
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
   spawnerActivo: 1
-  distanciaZMin: 65
+  distanciaZMin: 70
   distanciaZMax: 75
-  tiempoEntreSpawn: 1.8
+  tiempoEntreSpawn: 1.6
   maxObstaculos: 12
   distanciaDetras: 10
   habilitarSpawnMultiple: 1
-  probabilidadMultiple: 0.3
+  probabilidadMultiple: 0.5
   minObstaculosMultiples: 2
   maxObstaculosMultiples: 3
-  separacionMultiple: 4
+  separacionMultiple: 8
 --- !u!4 &1172232244
 Transform:
   m_ObjectHideFlags: 0
@@ -5369,16 +5369,20 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 693784797337653401, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
+      propertyPath: m_ClearFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 693784797337653401, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: m_BackGroundColor.b
-      value: 0.4056604
+      value: 0.49056602
       objectReference: {fileID: 0}
     - target: {fileID: 693784797337653401, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: m_BackGroundColor.g
-      value: 0.2735231
+      value: 0.49056602
       objectReference: {fileID: 0}
     - target: {fileID: 693784797337653401, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: m_BackGroundColor.r
-      value: 0.18943574
+      value: 0.49056602
       objectReference: {fileID: 0}
     - target: {fileID: 1807342399814654679, guid: 35ec466a4b8eeaa4db2374c253b9c3a7, type: 3}
       propertyPath: m_Name
