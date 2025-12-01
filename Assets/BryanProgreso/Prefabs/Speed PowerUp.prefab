@@ -293,7 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipo: 0
   duracion: 5
-  multiplicadorVelocidad: 2
-  velocidadMovimiento: 30
+  multiplicadorVelocidad: 1.5
+  velocidadMovimiento: 25
   limiteDespawnZ: 40
   duracionFade: 1

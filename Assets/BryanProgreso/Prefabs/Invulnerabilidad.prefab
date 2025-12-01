@@ -292,8 +292,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tipo: 1
-  duracion: 3
-  multiplicadorVelocidad: 1.5
+  duracion: 4
+  multiplicadorVelocidad: 1
   velocidadMovimiento: 20
   limiteDespawnZ: 40
   duracionFade: 1
