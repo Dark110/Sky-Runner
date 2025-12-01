@@ -2879,6 +2879,8 @@ MonoBehaviour:
   rangoX: 10
   rangoY: 5
   alturaBaseY: 2
+  probabilidadDobleSpawn: 0.403
+  separacionMinimaX: 3
   tiempoMin: 8
   tiempoMax: 12
 --- !u!1 &1462504626
