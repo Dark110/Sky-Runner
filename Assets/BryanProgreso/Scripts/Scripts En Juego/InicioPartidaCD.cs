@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Referencias de Sistemas de Juego")]
     [Tooltip("Arrastra aquí el script SistemaResistencia del jugador.")]
-    public SistemaResistencia sistemaResistencia; // ⭐ ¡NUEVA REFERENCIA! ⭐
+    public SistemaResistencia sistemaResistencia; //  ¡NUEVA REFERENCIA! 
 
     [Header("Spawners")]
     public ObstaculoSpawnerFinal[] spawnersObstaculos;
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
             botonPausaUI.SetActive(false);
         }
 
-        // ⭐ Desactivamos todos los sistemas de juego
+        //  Desactivamos todos los sistemas de juego
         DesactivarSistemasDeJuego();
 
         // Iniciamos el Countdown
@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
         foreach (var spawner in spawnersPowerUps)
             spawner.enabled = false;
 
-        // ⭐ Desactiva el sistema de resistencia ⭐
+        //  Desactiva el sistema de resistencia 
         if (sistemaResistencia != null)
         {
             sistemaResistencia.enabled = false;
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
         foreach (var spawner in spawnersPowerUps)
             spawner.enabled = true;
 
-        // ⭐ Activa el sistema de resistencia ⭐
+        //  Activa el sistema de resistencia 
         if (sistemaResistencia != null)
         {
             sistemaResistencia.enabled = true;
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
         if (textoCuenta != null)
             textoCuenta.text = "¡0!";
 
-        // ⭐ Activación de Spawners y Resistencia ⭐
+        //  Activación de Spawners y Resistencia 
         ActivarSistemasDeJuego();
 
         // Activación del Botón de Pausa

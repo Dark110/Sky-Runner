@@ -58,7 +58,7 @@ public class SistemaResistencia : MonoBehaviour
         }
     }
 
-    // ⭐ Método para llamar desde los anillos
+    //  Método para llamar desde los anillos
     public void RecargarResistencia(float cantidad)
     {
         resistenciaActual += cantidad;

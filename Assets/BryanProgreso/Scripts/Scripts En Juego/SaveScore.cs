@@ -27,9 +27,7 @@ public class SaveDataManager : MonoBehaviour
         highScore = PlayerPrefs.GetInt("HighScore", 0);
     }
 
-    // ------------------------
     // Fin de partida: actualizar HighScore global
-    // ------------------------
     public void EndGame()
     {
         if (ScoreManager.Instance != null)
@@ -48,9 +46,7 @@ public class SaveDataManager : MonoBehaviour
         Debug.Log($"[SaveDataManager] Score: {scoreInGame}, HighScore: {highScore}");
     }
 
-    // ------------------------
     // Resetear HighScore global
-    // ------------------------
     public void ResetHighScore()
     {
         scoreInGame = 0;

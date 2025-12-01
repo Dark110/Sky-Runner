@@ -50,7 +50,7 @@ public class MovObstaculo : MonoBehaviour
 
     void Update()
     {
-        // 🔹 Calcular velocidad aproximada del jugador
+        //  Calcular velocidad aproximada del jugador
         if (jugador != null)
         {
             velJugador = (jugador.position - ultimaPosJugador) / Time.deltaTime;
