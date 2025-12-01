@@ -246,10 +246,7 @@ PrefabInstance:
       addedObject: {fileID: 5346619736460737619}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5fa865a50bc45e4291a9e8df5f92df3, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8552179983961727367}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a5fa865a50bc45e4291a9e8df5f92df3, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 8847334091252658297}
+      addedObject: {fileID: -1340089793775485922}
   m_SourcePrefab: {fileID: 100100000, guid: a5fa865a50bc45e4291a9e8df5f92df3, type: 3}
 --- !u!4 &925228610151944359 stripped
 Transform:
@@ -280,9 +277,9 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.4671631, y: 0.63700354, z: 0.533371}
-  m_Center: {x: 0.0014038086, y: 0.4195401, z: -0.029884338}
---- !u!114 &8552179983961727367
+  m_Size: {x: 0.30476686, y: 0.35854778, z: 0.30270573}
+  m_Center: {x: -0.000021362304, y: 0.5237579, z: -0.004023147}
+--- !u!114 &-1340089793775485922
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -291,24 +288,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2238549392526863599}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e9ce2ad2c4bd5349bba100705c6e1e3, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d33ba4e479c8c447886b1bfae20fb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tipo: 0
   duracion: 5
-  multiplicadorVelocidad: 1
-  velocidadMovimiento: 10
-  limiteDespawnZ: -50
---- !u!114 &8847334091252658297
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238549392526863599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd335a289869ab7419abca736f76ea83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocidadZ: 2
+  multiplicadorVelocidad: 2
+  velocidadMovimiento: 30
+  limiteDespawnZ: 40
+  duracionFade: 1

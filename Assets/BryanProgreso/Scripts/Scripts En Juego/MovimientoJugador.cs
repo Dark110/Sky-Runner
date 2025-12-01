@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class MovimientoParacaidista : MonoBehaviour
 {
     [Header("Velocidades")]
     public float Velocidad = 10f;
+    private float velocidadBase; // Para recordar la velocidad original
 
     [Header("Inclinación visual")]
     public float AnguloMaxX = 15f;
@@ -15,8 +17,9 @@ public class MovimientoParacaidista : MonoBehaviour
     public bool CalibrarAlInicio = true;
     public Vector3 offsetFijo = Vector3.zero;
 
-    [Header("PowerUps")]
+    [Header("PowerUps Estado")]
     public bool invulnerable = false;
+    public bool boostVelocidadActivo = false; // Para evitar bugs de doble velocidad
 
     [Header("Suavizado de rotación")]
     public float NivelSuavidad = 10f;
@@ -36,6 +39,7 @@ public class MovimientoParacaidista : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         rotacionInicial = transform.rotation;
+        velocidadBase = Velocidad; // Guardamos la velocidad inicial al arrancar
     }
 
     private void Start()
@@ -50,8 +54,53 @@ public class MovimientoParacaidista : MonoBehaviour
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
     }
 
+    public void ActivarVelocidad(float multiplicador, float duracion)
+    {
+        StartCoroutine(RutinaVelocidad(multiplicador, duracion));
+    }
+
+    public void ActivarInvulnerabilidad(float duracion)
+    {
+        StartCoroutine(RutinaInvulnerabilidad(duracion));
+    }
+
+    private IEnumerator RutinaVelocidad(float multiplicador, float duracion)
+    {
+        if (!boostVelocidadActivo)
+        {
+            boostVelocidadActivo = true;
+            Velocidad = velocidadBase * multiplicador;
+            Debug.Log($"<color=cyan>[POWERUP] Velocidad AUMENTADA a: {Velocidad}</color>");
+        }
+        else
+        {
+            Debug.Log("<color=cyan>[POWERUP] Tiempo de velocidad extendido o reiniciado</color>");
+        }
+
+        yield return new WaitForSeconds(duracion);
+
+        Velocidad = velocidadBase;
+        boostVelocidadActivo = false;
+        Debug.Log($"<color=cyan>[POWERUP] Velocidad TERMINADA. Vuelta a: {Velocidad}</color>");
+    }
+
+    private IEnumerator RutinaInvulnerabilidad(float duracion)
+    {
+        invulnerable = true;
+        Debug.Log("<color=yellow>[POWERUP] ¡Jugador INVULNERABLE activado!</color>");
+
+
+        yield return new WaitForSeconds(duracion);
+
+        invulnerable = false;
+        Debug.Log("<color=yellow>[POWERUP] Invulnerabilidad TERMINADA.</color>");
+    }
+
+    // -------------------------------------
+
     private void Update()
     {
+        // (Tu código de Update original intacto...)
         if (MenuGameManager.Instance != null &&
             MenuGameManager.Instance.CurrentState == GameState.PAUSE)
         {
@@ -62,8 +111,8 @@ public class MovimientoParacaidista : MonoBehaviour
         float inputY;
 
 #if UNITY_STANDALONE || UNITY_EDITOR
-        inputX = Input.GetAxis("Horizontal"); // A/D
-        inputY = Input.GetAxis("Vertical");   // W/S
+        inputX = Input.GetAxis("Horizontal");
+        inputY = Input.GetAxis("Vertical");
 #else
         float deadZone = 0.05f;
         float rawX = Input.acceleration.x - offset.x;
@@ -76,12 +125,10 @@ public class MovimientoParacaidista : MonoBehaviour
         inputY = Mathf.Clamp(inputY, -1f, 1f);
 #endif
 
-        // ✅ Invertimos solo el eje X (izquierda/derecha)
         movimiento = new Vector3(-inputX, inputY, 0f);
         if (movimiento.magnitude > 1f)
             movimiento.Normalize();
 
-        // ✅ Ajuste visual coherente con movimiento corregido
         float tiltX = inputY * AnguloMaxX;
         float tiltZ = inputX * AnguloMaxZ;
         Quaternion rotacionTilt = Quaternion.Euler(tiltX, 0f, tiltZ);
@@ -91,7 +138,6 @@ public class MovimientoParacaidista : MonoBehaviour
         float velocidadSlerp = NivelSuavidad * factorInput * DeltaMultiplicador * Time.deltaTime;
         transform.rotation = Quaternion.Slerp(transform.rotation, rotacionObjetivo, velocidadSlerp);
 
-        // Skybox coherente
         float objetivoSkybox = rotacionInicialSkybox - inputX * intensidadSkybox;
         rotacionSkybox = Mathf.Lerp(rotacionSkybox, objetivoSkybox, Time.deltaTime * 2f);
         RenderSettings.skybox.SetFloat("_Rotation", rotacionSkybox);
@@ -104,7 +150,6 @@ public class MovimientoParacaidista : MonoBehaviour
         {
             return;
         }
-
         controller.Move(movimiento * Velocidad * Time.fixedDeltaTime);
     }
 

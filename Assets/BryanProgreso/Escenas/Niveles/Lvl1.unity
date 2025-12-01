@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &259420
 Transform:
   m_ObjectHideFlags: 0
@@ -313,11 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 7014848391307294649, guid: cea7f8450a5e3df4e926b726e69aee6a, type: 3}
-  limiteX: 20
-  limiteY: 15
-  probabilidadAtaque: 0.6
-  tiempoMaxSinMovimiento: 2.5
-  margenQuietud: 0.5
+  spawnerActivo: 1
   distanciaZMin: 70
   distanciaZMax: 80
   tiempoEntreSpawn: 6
@@ -1350,11 +1346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 8399555538034048709, guid: f26b0cf3424cde94b86026afdea92b04, type: 3}
-  limiteX: 20
-  limiteY: 15
-  probabilidadAtaque: 0.905
-  tiempoMaxSinMovimiento: 2.5
-  margenQuietud: 0.5
+  spawnerActivo: 1
   distanciaZMin: 70
   distanciaZMax: 80
   tiempoEntreSpawn: 5
@@ -1393,7 +1385,7 @@ GameObject:
   - component: {fileID: 644384252}
   - component: {fileID: 644384251}
   m_Layer: 5
-  m_Name: Pausa (1)
+  m_Name: Pausa Boton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1482,52 +1474,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &645249319
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 645249320}
-  - component: {fileID: 645249321}
-  m_Layer: 0
-  m_Name: PowerUpManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &645249320
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645249319}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 650943401}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &645249321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 645249319}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07e1c8e7b3eed1044ba61752e4d80b7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1992936764}
-  powerUpsActivos: []
 --- !u!1 &650943400
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,7 +1505,6 @@ Transform:
   m_Children:
   - {fileID: 1678354865}
   - {fileID: 524265857}
-  - {fileID: 645249320}
   - {fileID: 2143995276}
   - {fileID: 1762320831}
   - {fileID: 653709445}
@@ -2076,7 +2021,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1095609123
 Transform:
   m_ObjectHideFlags: 0
@@ -2295,11 +2240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jugador: {fileID: 1992936761}
   prefabObstaculo: {fileID: 4863116390095206224, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
-  limiteX: 20
-  limiteY: 15
-  probabilidadAtaque: 0.801
-  tiempoMaxSinMovimiento: 2.5
-  margenQuietud: 0.5
+  spawnerActivo: 1
   distanciaZMin: 65
   distanciaZMax: 75
   tiempoEntreSpawn: 1.8
@@ -2704,10 +2645,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d13bd08fc63894c478312cea1c0b5b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jugador: {fileID: 1992936761}
   powerUpPrefabs:
   - {fileID: 2238549392526863599, guid: 3b70ab0af8c6e604c8d95df3de171e12, type: 3}
   - {fileID: 2238549392526863599, guid: caebf05db2cf7484587628d74f4ca0bf, type: 3}
-  rango: {x: 20, y: 0, z: 20}
+  spawnDistanceZ: 100
+  rangoX: 10
+  rangoY: 5
+  alturaBaseY: 2
+  tiempoMin: 8
+  tiempoMax: 12
 --- !u!1 &1462504626
 GameObject:
   m_ObjectHideFlags: 0
@@ -3539,6 +3486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textoCuenta: {fileID: 796246760}
   tiempoInicial: 3
+  botonPausaUI: {fileID: 644384249}
   spawnersObstaculos:
   - {fileID: 1172232243}
   - {fileID: 601726307}
@@ -3923,7 +3871,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2481955886127931554, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 37.49
+      value: 37.54
       objectReference: {fileID: 0}
     - target: {fileID: 2481955886127931554, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
       propertyPath: m_LocalRotation.w
@@ -4001,17 +3949,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2481955886127931554, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
   m_PrefabInstance: {fileID: 1992936760}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1992936764 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 225223001494368994, guid: 8ffc6179f0cfa4b4b8573418a2434d65, type: 3}
-  m_PrefabInstance: {fileID: 1992936760}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5749eb4abb57e8e48993c3887021a656, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2143995275
 GameObject:
   m_ObjectHideFlags: 0

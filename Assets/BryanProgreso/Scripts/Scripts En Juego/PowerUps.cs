@@ -1,89 +1,106 @@
-﻿using UnityEngine;
+﻿// PowerUp.cs
+using UnityEngine;
 using System.Collections;
 
 public class PowerUp : MonoBehaviour
 {
-    public enum TipoPowerUp
-    {
-        Velocidad,
-        Invulnerabilidad
-    }
-
-    [Header("Configuración del PowerUp")]
-    public TipoPowerUp tipo = TipoPowerUp.Velocidad;
+    [Header("Configuración del Efecto")]
+    public TipoPowerUp tipo = TipoPowerUp.Velocidad; // Usa el enum global
     public float duracion = 5f;
     public float multiplicadorVelocidad = 1.5f;
 
-    [Header("Movimiento")]
-    public float velocidadMovimiento = 5f;   // Movimiento hacia +Z
-    public float limiteDespawnZ = 20f;       // Cuando pasa delante del jugador, se destruye
+    [Header("Movimiento y Despawn")]
+    [Tooltip("Velocidad con la que el PowerUp avanza hacia Z Positivo.")]
+    public float velocidadMovimiento = 5f;
+    [Tooltip("El PowerUp se destruye si su Z es mayor que este valor (ej: 10f).")]
+    public float limiteDespawnZ = 10f;
 
-    private Transform jugador;
+    // --- Lógica de Apariencia (Fade In) ---
+    [Header("Apariencia")]
+    public float duracionFade = 0.5f;
+    private SpriteRenderer spriteRenderer;
+    private Color colorOriginal;
+    // -------------------------------------
+
+    void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            colorOriginal = spriteRenderer.color;
+        }
+    }
 
     private void Start()
     {
-        // Buscar al jugador automáticamente
-        var player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            jugador = player.transform;
+        // Iniciar Fade In visual
+        if (spriteRenderer != null)
+        {
+            Color c = colorOriginal;
+            c.a = 0f; // Alpha 0 (invisible)
+            spriteRenderer.color = c;
+            StartCoroutine(FadeIn());
+        }
     }
 
     private void Update()
     {
-        // Movimiento hacia adelante (+Z global)
+        // 1. Movimiento hacia adelante (+Z Global)
         transform.Translate(Vector3.forward * velocidadMovimiento * Time.deltaTime, Space.World);
 
-        // Si sobrepasa el límite frente al jugador, se destruye
-        if (jugador != null && transform.position.z > jugador.position.z + limiteDespawnZ)
+        // 2. Despawn por Límite Z Positivo
+        if (transform.position.z > limiteDespawnZ)
         {
-           // Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
-
-        var jugador = other.GetComponent<MovimientoParacaidista>();
-        if (jugador == null) return;
-
-        switch (tipo)
+        if (other.CompareTag("Player"))
         {
-            case TipoPowerUp.Velocidad:
-                StartCoroutine(AumentarVelocidadTemporal(jugador));
-                break;
+            var jugadorScript = other.GetComponent<MovimientoParacaidista>();
 
-            case TipoPowerUp.Invulnerabilidad:
-                StartCoroutine(ActivarInvulnerabilidadTemporal(jugador));
-                break;
+            if (jugadorScript != null)
+            {
+                Debug.Log($"<color=green>[PowerUp] Colisión detectada con objeto: {tipo}. Aplicando efecto...</color>");
+
+                switch (tipo)
+                {
+                    case TipoPowerUp.Velocidad:
+                        jugadorScript.ActivarVelocidad(multiplicadorVelocidad, duracion);
+                        break;
+
+                    case TipoPowerUp.Invulnerabilidad:
+                        jugadorScript.ActivarInvulnerabilidad(duracion);
+                        break;
+                }
+
+                // Destruir el objeto una vez que el efecto se ha transferido al jugador
+                Destroy(gameObject);
+            }
         }
-
-        Destroy(gameObject);
     }
 
-    private IEnumerator AumentarVelocidadTemporal(MovimientoParacaidista jugador)
+    // Coroutine para el Fade In
+    IEnumerator FadeIn()
     {
-        var field = jugador.GetType().GetField("Velocidad") ??
-                    jugador.GetType().GetField("velocidad");
-
-        if (field == null)
+        float timer = 0f;
+        while (timer < duracionFade && spriteRenderer != null)
         {
-            Debug.LogWarning("[PowerUp] No se encontró campo de velocidad en el jugador.");
-            yield break;
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(0f, 1f, timer / duracionFade);
+
+            Color c = colorOriginal;
+            c.a = alpha;
+            spriteRenderer.color = c;
+
+            yield return null;
         }
 
-        float velocidadOriginal = (float)field.GetValue(jugador);
-        field.SetValue(jugador, velocidadOriginal * multiplicadorVelocidad);
-
-        yield return new WaitForSeconds(duracion);
-
-        field.SetValue(jugador, velocidadOriginal);
-    }
-
-    private IEnumerator ActivarInvulnerabilidadTemporal(MovimientoParacaidista jugador)
-    {
-        jugador.invulnerable = true;
-        yield return new WaitForSeconds(duracion);
-        jugador.invulnerable = false;
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = colorOriginal;
+        }
     }
 }

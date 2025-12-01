@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
       propertyPath: tiempoPrediccion
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: -8766562561970643651, guid: 29f58bd81c1cdd24a9422224190fae60, type: 3}
       propertyPath: usarHomingAngular
