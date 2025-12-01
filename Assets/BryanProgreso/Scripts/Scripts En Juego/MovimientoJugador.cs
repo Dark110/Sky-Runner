@@ -13,11 +13,11 @@ public class MovimientoParacaidista : MonoBehaviour
     public float AnguloMaxX = 15f;
     public float AnguloMaxZ = 15f;
 
-    // ⭐ Referencia necesaria para la UI ⭐
+    //  Referencia necesaria para la UI 
     [Header("PowerUp UI")]
     [Tooltip("Arrastra el GameObject que tenga el script PowerUpUI")]
     public PowerUpUI powerUpUI;
-    // ⭐ Fin Referencia UI ⭐
+    //  Fin Referencia UI 
 
     [Header("Sensibilidad en Android")]
     public float Sensibilidad = 2.2f;
@@ -51,11 +51,9 @@ public class MovimientoParacaidista : MonoBehaviour
 
     private void Start()
     {
-        // ⭐ CORRECCIÓN DE SEGURIDAD: Fuerza el estado inicial al comienzo del juego
         invulnerable = false;
         boostVelocidadActivo = false;
         Velocidad = velocidadBase;
-        // ⭐ FIN CORRECCIÓN DE SEGURIDAD ⭐
 
 #if !UNITY_STANDALONE && !UNITY_EDITOR
         if (CalibrarAlInicio)
@@ -69,20 +67,16 @@ public class MovimientoParacaidista : MonoBehaviour
 
     public void ActivarVelocidad(float multiplicador, float duracion)
     {
-        // ⭐ LLAMADA PARA INICIAR EL TIMER VISUAL DE VELOCIDAD ⭐
         if (powerUpUI != null)
             powerUpUI.IniciarTimer(TipoPowerUp.Velocidad, duracion);
-        // ⭐ -------------------------------------------------- ⭐
-
+        
         StartCoroutine(RutinaVelocidad(multiplicador, duracion));
     }
 
     public void ActivarInvulnerabilidad(float duracion)
     {
-        // ⭐ LLAMADA PARA INICIAR EL TIMER VISUAL DE INVULNERABILIDAD ⭐
         if (powerUpUI != null)
             powerUpUI.IniciarTimer(TipoPowerUp.Invulnerabilidad, duracion);
-        // ⭐ --------------------------------------------------------- ⭐
 
         StartCoroutine(RutinaInvulnerabilidad(duracion));
     }
@@ -120,13 +114,8 @@ public class MovimientoParacaidista : MonoBehaviour
         Debug.Log("<color=yellow>[POWERUP] Invulnerabilidad TERMINADA.</color>");
     }
 
-    // -------------------------------------
-
     private void Update()
     {
-        // (Tu código de Update original intacto...)
-        // Nota: Asumiendo que MenuGameManager.Instance y GameState están definidos en otro lugar.
-        // Si no tienes MenuGameManager, comenta o elimina el siguiente bloque 'if'.
         if (MenuGameManager.Instance != null &&
             MenuGameManager.Instance.CurrentState == GameState.PAUSE)
         {

@@ -33,9 +33,7 @@ public class DianaPuntos : MonoBehaviour
     private Vector3 scaleOriginal;
     private bool desactivando = false;
 
-    // -------------------------------
     // Inicialización desde el spawner/pool
-    // -------------------------------
     public void Initialize()
     {
         // ... (Tu inicialización existente) ...
@@ -81,9 +79,7 @@ public class DianaPuntos : MonoBehaviour
         desactivando = false;
     }
 
-    // -------------------------------
     // Update: movimiento hacia adelante + desviación
-    // -------------------------------
     void Update()
     {
         if (desactivando) return;
@@ -101,9 +97,7 @@ public class DianaPuntos : MonoBehaviour
         }
     }
 
-    // -------------------------------
     // Colisión con el jugador
-    // -------------------------------
     private void OnTriggerEnter(Collider other)
     {
         if (desactivando) return;
@@ -141,9 +135,7 @@ public class DianaPuntos : MonoBehaviour
         }
     }
 
-    // -------------------------------
     // Coroutines (Fade In/Out) - (Tu código original)
-    // -------------------------------
     private IEnumerator FadeInCoroutine(float duracion)
     {
         float t = 0f;

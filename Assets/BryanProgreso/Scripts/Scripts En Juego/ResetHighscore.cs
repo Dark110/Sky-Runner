@@ -5,7 +5,7 @@ public class ResetScoresData : MonoBehaviour
 {
     public void ResetScores()
     {
-        // 🔹 Borra el highscore global (usado por SaveDataManager)
+        //  Borra el highscore global (usado por SaveDataManager)
         PlayerPrefs.DeleteKey("HighScore");
         int sceneCount = SceneManager.sceneCountInBuildSettings;
         for (int i = 0; i < sceneCount; i++)
