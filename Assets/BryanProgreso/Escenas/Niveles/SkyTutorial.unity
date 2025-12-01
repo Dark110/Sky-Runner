@@ -540,6 +540,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1340089793775485922, guid: 3b70ab0af8c6e604c8d95df3de171e12, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1466832501468739157, guid: 3b70ab0af8c6e604c8d95df3de171e12, type: 3}
       propertyPath: m_LocalPosition.x
       value: 589.76
@@ -1095,6 +1099,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1044471023}
   - component: {fileID: 1044471022}
+  - component: {fileID: 1044471024}
   m_Layer: 0
   m_Name: Tutorial Giroscopio
   m_TagString: Untagged
@@ -1172,6 +1177,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1112705563}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1044471024
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044471021}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5311642761b7cb0459c5bcb416d7a022, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1048313020 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4785285cfbf2cd94cbc725a4bc24d991, type: 3}
