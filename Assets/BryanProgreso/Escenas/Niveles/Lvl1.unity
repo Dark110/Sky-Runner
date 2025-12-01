@@ -3964,7 +3964,7 @@ GameObject:
   - component: {fileID: 1735838094}
   - component: {fileID: 1735838093}
   m_Layer: 5
-  m_Name: Image
+  m_Name: IndicadorResistencia
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4079,6 +4079,7 @@ MonoBehaviour:
   textoCuenta: {fileID: 796246760}
   tiempoInicial: 3
   botonPausaUI: {fileID: 644384249}
+  sistemaResistencia: {fileID: 1992936767}
   spawnersObstaculos:
   - {fileID: 1172232243}
   - {fileID: 601726307}

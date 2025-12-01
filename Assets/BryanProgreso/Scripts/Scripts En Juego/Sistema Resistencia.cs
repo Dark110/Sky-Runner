@@ -9,9 +9,7 @@ public class SistemaResistencia : MonoBehaviour
 
     [Tooltip("Arrastra aquí la imagen de la barra (debe ser tipo Filled).")]
     public Image barraUI;
-
-    [Header("Referencias")]
-    public GameOverManager gameOverManager;
+    private GameOverManager gameOverManager;
 
     private float resistenciaActual;
 
