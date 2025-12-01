@@ -20,12 +20,27 @@ public class GameOverManager : MonoBehaviour
     private Image fadeOverlay;
     private GameObject fadeCanvasObj;
 
+    // Referencia al script del jugador para verificar la invulnerabilidad
+    private MovimientoParacaidista jugadorScript;
+
     private void Start()
     {
         CrearOverlayNegro();
+
+        // Obtenemos la referencia al script del jugador al inicio
+        jugadorScript = GetComponent<MovimientoParacaidista>();
+        if (jugadorScript == null)
+        {
+            // Si este script no está en el jugador, búscalo.
+            jugadorScript = FindFirstObjectByType<MovimientoParacaidista>();
+            if (jugadorScript == null)
+            {
+                Debug.LogError("GameOverManager no encontró el script MovimientoParacaidista.");
+            }
+        }
     }
 
-    // ... (Tu código de CrearOverlayNegro se queda igual, lo omito para ahorrar espacio) ...
+    // ... (Tu código de CrearOverlayNegro se queda igual, omitido por brevedad) ...
     private void CrearOverlayNegro()
     {
         GameObject canvasExistente = GameObject.Find("FadeCanvas");
@@ -51,15 +66,40 @@ public class GameOverManager : MonoBehaviour
         rt.offsetMax = Vector2.zero;
     }
 
+
+    // ⭐ MODIFICACIÓN CLAVE: Verificación de Invulnerabilidad en las Colisiones ⭐
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Obstaculo")) TriggerGameOver();
+        if (other.CompareTag("Obstaculo"))
+        {
+            if (jugadorScript != null && jugadorScript.invulnerable)
+            {
+                // El jugador es invulnerable, ignoramos el Game Over.
+                Debug.Log("<color=lime>Colisión con Obstáculo ignorada por invulnerabilidad (Trigger).</color>");
+                // Opcional: Destruir el obstáculo para que el jugador pase a través.
+                Destroy(other.gameObject);
+                return;
+            }
+            TriggerGameOver();
+        }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if (hit.gameObject.CompareTag("Obstaculo")) TriggerGameOver();
+        if (hit.gameObject.CompareTag("Obstaculo"))
+        {
+            if (jugadorScript != null && jugadorScript.invulnerable)
+            {
+                // El jugador es invulnerable, ignoramos el Game Over.
+                Debug.Log("<color=lime>Colisión con Obstáculo ignorada por invulnerabilidad (Hit).</color>");
+                // Opcional: Destruir el obstáculo para que el jugador pase a través.
+                Destroy(hit.gameObject);
+                return;
+            }
+            TriggerGameOver();
+        }
     }
+    // ⭐ FIN MODIFICACIÓN CLAVE ⭐
 
     private void TriggerGameOver()
     {
@@ -67,7 +107,7 @@ public class GameOverManager : MonoBehaviour
         gameOver = true;
 
         // Guardamos el nombre de la escena ACTUAL ("Nivel 1", "Nivel 2", etc.)
-     
+
         GameStateTracker.LastLevel = SceneManager.GetActiveScene().name;
 
         Debug.Log($"Jugador perdió en el nivel: {GameStateTracker.LastLevel}");
@@ -75,7 +115,7 @@ public class GameOverManager : MonoBehaviour
         if (SaveDataManager.Instance != null)
             SaveDataManager.Instance.EndGame();
 
-        //  Manager Global para pausar lógica
+        // Manager Global para pausar lógica
         if (MenuGameManager.Instance != null)
             MenuGameManager.Instance.OnGameOver();
         else

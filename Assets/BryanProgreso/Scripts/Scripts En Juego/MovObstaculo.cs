@@ -41,6 +41,7 @@ public class MovObstaculo : MonoBehaviour
         if (velocidadRotacion == Vector3.zero)
             velocidadRotacion = Vector3.up * Random.Range(RotMin, RotMax);
 
+        // Usamos FindWithTag para encontrar el transform del jugador
         jugador = GameObject.FindWithTag("Player")?.transform;
 
         if (jugador != null)
@@ -86,16 +87,49 @@ public class MovObstaculo : MonoBehaviour
             }
         }
 
-        // Verifica si ya pasó al jugador
+        // Verifica si ya pasó al jugador 
         if (JugadorFueraDeRango())
         {
-            if (ScoreManager.Instance != null)
-                ScoreManager.Instance.AddScore(puntosAlEsquivar);
-
+            // Suma puntos por esquivar 
+            SumarPuntos();
             Destroy(gameObject);
         }
     }
 
+    //  Método para sumar puntos, usado tanto al esquivar como al neutralizar 
+    void SumarPuntos()
+    {
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.AddScore(puntosAlEsquivar);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //  Verificar que colisiona
+        if (other.CompareTag("Player"))
+        {
+            //  Game Over/Invulnerabilidad en el jugador
+            var jugadorScript = other.GetComponent<MovimientoParacaidista>();
+
+            if (jugadorScript != null)
+            {
+                //Verificar el estado de invulnerabilidad
+                if (jugadorScript.invulnerable)
+                {
+                    Debug.Log("<color=lime>¡Obstáculo neutralizado por invulnerabilidad!</color>");
+                    SumarPuntos();
+                    Destroy(gameObject);
+                    return; 
+                }
+
+                //  El GameOverManager está manejando el Game Over. 
+                //  El obstáculo desaparezca.
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    // El método JugadorFueraDeRango() permanece sin cambios
     bool JugadorFueraDeRango()
     {
         if (jugador == null) return false;

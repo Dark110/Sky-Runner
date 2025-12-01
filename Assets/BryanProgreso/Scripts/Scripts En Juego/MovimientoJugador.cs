@@ -12,14 +12,20 @@ public class MovimientoParacaidista : MonoBehaviour
     public float AnguloMaxX = 15f;
     public float AnguloMaxZ = 15f;
 
+    // ⭐ Referencia necesaria para la UI ⭐
+    [Header("PowerUp UI")]
+    [Tooltip("Arrastra el GameObject que tenga el script PowerUpUI")]
+    public PowerUpUI powerUpUI;
+    // ⭐ Fin Referencia UI ⭐
+
     [Header("Sensibilidad en Android")]
-    public float Sensibilidad = 2f;
+    public float Sensibilidad = 2.2f;
     public bool CalibrarAlInicio = true;
     public Vector3 offsetFijo = Vector3.zero;
 
     [Header("PowerUps Estado")]
     public bool invulnerable = false;
-    public bool boostVelocidadActivo = false; // Para evitar bugs de doble velocidad
+    public bool boostVelocidadActivo = false; 
 
     [Header("Suavizado de rotación")]
     public float NivelSuavidad = 10f;
@@ -56,11 +62,21 @@ public class MovimientoParacaidista : MonoBehaviour
 
     public void ActivarVelocidad(float multiplicador, float duracion)
     {
+        // ⭐ LLAMADA PARA INICIAR EL TIMER VISUAL DE VELOCIDAD ⭐
+        if (powerUpUI != null)
+            powerUpUI.IniciarTimer(TipoPowerUp.Velocidad, duracion);
+        // ⭐ -------------------------------------------------- ⭐
+
         StartCoroutine(RutinaVelocidad(multiplicador, duracion));
     }
 
     public void ActivarInvulnerabilidad(float duracion)
     {
+        // ⭐ LLAMADA PARA INICIAR EL TIMER VISUAL DE INVULNERABILIDAD ⭐
+        if (powerUpUI != null)
+            powerUpUI.IniciarTimer(TipoPowerUp.Invulnerabilidad, duracion);
+        // ⭐ --------------------------------------------------------- ⭐
+
         StartCoroutine(RutinaInvulnerabilidad(duracion));
     }
 
@@ -74,6 +90,7 @@ public class MovimientoParacaidista : MonoBehaviour
         }
         else
         {
+            // Si ya está activo, la UI ya se reinició en ActivarVelocidad
             Debug.Log("<color=cyan>[POWERUP] Tiempo de velocidad extendido o reiniciado</color>");
         }
 
